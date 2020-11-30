@@ -1,0 +1,7 @@
+aiohttp==3.6.3
+asyncio==3.4.3
+selectors==0.0.14
+cchardet==2.1.7
+uvloop==0.14.0
+aiodns==2.0.0
+orjson==3.4.3

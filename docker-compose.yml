@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  aiowebapp:
+    build: app
+    restart: always
+    networks:
+      - aio
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app/app:/usr/src/app/app
+
+  postgres:
+    build: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+    networks:
+      - aio
+    ports:
+      - "5432:5432"
+
+  redis:
+    build: redis
+    restart: always
+    networks:
+      - aio
+    ports:
+      - "6379:6379"
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - 5557:5557
+    networks:
+      - aio
+    volumes:
+      - ./app/app/static:/usr/share/nginx/html/static
+    depends_on:
+      - aiowebapp
+
+networks:
+  aio:
+
