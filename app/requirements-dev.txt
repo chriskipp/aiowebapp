@@ -11,3 +11,4 @@ aiohttp-devtools==0.13.1
 aiohttp-debugtoolbar==0.6.0
 pyfmt-svtter==0.1.0
 aiohttp-client-manager==1.1.1
+mypy==0.790

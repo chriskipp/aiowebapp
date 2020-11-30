@@ -5,6 +5,8 @@ import sys
 
 from aiohttp import web
 
+from app.db import setup_pg, teardown_pg
+from app.redis import setup_redis, teardown_redis
 from app.settings import get_config
 
 
@@ -14,7 +16,16 @@ def handler(request):
 
 def create_app(loop, argv=None):
     app = web.Application(loop=loop)
-    app['config'] = get_config(argv)
+    app["config"] = get_config(argv)
+
+    # create db connection on startup, shutdown on exit
+    app.on_startup.append(setup_redis)
+    app.on_cleanup.append(teardown_redis)
+
+    # create db connection on startup, shutdown on exit
+    app.on_startup.append(setup_pg)
+    app.on_cleanup.append(teardown_pg)
+
     app.router.add_get("/", handler)
     return app
 
@@ -27,7 +38,7 @@ def main(argv):
 
     config = get_config(argv)
 
-    web.run_app(app, host=app['config']["host"], port=app['config']["port"])
+    web.run_app(app, host=app["config"]["host"], port=app["config"]["port"])
 
 
 if __name__ == "__main__":
