@@ -4,9 +4,13 @@ import logging
 import sys
 
 from aiohttp import web
+from aiohttp_security import setup as setup_security
+from aiohttp_session import setup as setup_session
 
-from app.db import setup_pg, teardown_pg
+from app.db import setup_pg, teardown_pg, teardown_pgsa
+from app.handlers import Login
 from app.redis import setup_redis, teardown_redis
+from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
 
@@ -26,7 +30,21 @@ def create_app(loop, argv=None):
     app.on_startup.append(setup_pg)
     app.on_cleanup.append(teardown_pg)
 
-    app.router.add_get("/", handler)
+    # create SQLalchemy db connection on startup, shutdown on exit
+    # app.on_startup.append(setup_pgsa)
+    app.on_cleanup.append(teardown_pgsa)
+
+    # create session on startup, shutdown on exit
+    app.on_startup.append(setup_session)
+    app.on_cleanup.append(teardown_session)
+
+    # create SQLalchemy db connection on startup
+    app.on_startup.append(setup_security)
+
+    # app.router.add_get("/", handler)
+    login_handler = Login()
+    login_handler.configure(app)
+
     return app
 
 

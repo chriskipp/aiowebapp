@@ -18,6 +18,17 @@ TRAFARET = t.Dict(
                 "maxsize": t.Int(),
             }
         ),
+        t.Key("postgres_sa"): t.Dict(
+            {
+                "database": t.String(),
+                "user": t.String(),
+                "password": t.String(),
+                "host": t.String(),
+                "port": t.Int(),
+                "minsize": t.Int(),
+                "maxsize": t.Int(),
+            }
+        ),
         t.Key("redis"): t.Dict(
             {
                 "host": t.String(),

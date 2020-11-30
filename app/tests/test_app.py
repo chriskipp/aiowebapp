@@ -3,7 +3,7 @@ import logging
 
 from aiohttp import web
 
-from app.db import execute_sql, setup_pg, teardown_pg
+from app.db import execute_sql, setup_pg, setup_pgsa, teardown_pg, teardown_pgsa
 from app.main import create_app
 from app.redis import (
     del_redis_key,
@@ -205,3 +205,11 @@ async def test_db_drop_table(loop=loop):
     assert len(res) == 2
     assert res[0].decode() == statement
     assert res[1] == "DROP TABLE"
+
+
+async def test_dbsa_setup_teardown(loop=loop):
+    app = create_app(loop)
+    await setup_pgsa(app)
+    assert "dbsa" in {k for k in app.keys()}
+    await teardown_pgsa(app)
+    assert app["dbsa"].closed

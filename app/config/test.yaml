@@ -10,6 +10,15 @@ postgres:
   minsize: 1
   maxsize: 5
 
+postgres_sa:
+  database: test
+  user: test_aioapp
+  password: testaioapppw
+  host: postgres
+  port: 5432
+  minsize: 1
+  maxsize: 5
+
 redis:
   host: redis
   port: 6379

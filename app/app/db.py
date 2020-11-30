@@ -1,4 +1,7 @@
 import aiopg
+import aiopg.sa
+
+# aiopg
 
 
 async def setup_pg(app):
@@ -35,3 +38,25 @@ async def execute_sql(query, pool):
                 return cur.query, e
 
     return ret
+
+
+# aiopg[sa]
+
+
+async def setup_pgsa(app):
+    conf = app["config"]["postgres_sa"]
+    engine = await aiopg.sa.create_engine(
+        database=conf["database"],
+        user=conf["user"],
+        password=conf["password"],
+        host=conf["host"],
+        port=conf["port"],
+        minsize=conf["minsize"],
+        maxsize=conf["maxsize"],
+    )
+    app["dbsa"] = engine
+
+
+async def teardown_pgsa(app):
+    app["dbsa"].close()
+    await app["dbsa"].wait_closed()
