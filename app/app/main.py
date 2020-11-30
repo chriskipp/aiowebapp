@@ -5,6 +5,8 @@ import sys
 
 from aiohttp import web
 
+from app.settings import get_config
+
 
 def handler(request):
     return web.Response(text="Hello World!")
@@ -12,6 +14,7 @@ def handler(request):
 
 def create_app(loop, argv=None):
     app = web.Application(loop=loop)
+    app['config'] = get_config(argv)
     app.router.add_get("/", handler)
     return app
 
@@ -22,10 +25,9 @@ def main(argv):
     loop = asyncio.get_event_loop()
     app = create_app(loop)
 
-    # config = get_config(argv)
-    config = {"host": "0.0.0.0", "port": 8080}
+    config = get_config(argv)
 
-    web.run_app(app, host=config["host"], port=config["port"])
+    web.run_app(app, host=app['config']["host"], port=app['config']["port"])
 
 
 if __name__ == "__main__":
