@@ -2,7 +2,7 @@ import sqlalchemy as sa
 
 metadata = sa.MetaData()
 
-
+# Users
 users = sa.Table(
     "users",
     metadata,
@@ -17,6 +17,7 @@ users = sa.Table(
 )
 
 
+# Permissions
 permissions = sa.Table(
     "permissions",
     metadata,

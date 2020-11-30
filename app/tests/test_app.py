@@ -3,6 +3,7 @@ import logging
 
 from aiohttp import web
 
+from app.auth import AuthorizationPolicy, check_credentials
 from app.db import execute_sql, setup_pg, setup_pgsa, teardown_pg, teardown_pgsa
 from app.main import create_app
 from app.redis import (
@@ -14,6 +15,7 @@ from app.redis import (
     setup_redis,
     teardown_redis,
 )
+from app.session import setup_security
 
 loop = asyncio.get_event_loop()
 
@@ -207,9 +209,74 @@ async def test_db_drop_table(loop=loop):
     assert res[1] == "DROP TABLE"
 
 
+async def test_db_invalid_query(loop=loop):
+    statement = """
+        DROP PRESIDENT WHERE country = 'us';
+    """
+    app = create_app(loop)
+    await setup_pg(app)
+
+    res = await execute_sql(statement, app["db"])
+    assert len(res) == 2
+    assert res[0].decode() == statement
+    assert res[1].__class__ != str
+
+
 async def test_dbsa_setup_teardown(loop=loop):
     app = create_app(loop)
     await setup_pgsa(app)
     assert "dbsa" in {k for k in app.keys()}
     await teardown_pgsa(app)
     assert app["dbsa"].closed
+
+
+async def test_login_check_credentials(loop=loop):
+    users = ["user", "moderator", "admin"]
+    password = "password"
+
+    app = create_app(loop)
+    await setup_security(app)
+
+    for user in users:
+        assert await check_credentials(app["dbsa"], user, password)
+    assert not await check_credentials(app["dbsa"], "nouser", password)
+
+
+async def test_login_authorized_userid(loop=loop):
+    users = ["user", "moderator", "admin"]
+
+    app = create_app(loop)
+    await setup_security(app)
+    policy = AuthorizationPolicy(app["dbsa"])
+
+    for user in users:
+        authorized_id = await policy.authorized_userid(user)
+        assert authorized_id == user
+    authorized_id = await policy.authorized_userid("nouser")
+    assert authorized_id == None
+
+
+async def test_login_permit(loop=loop):
+    users = {
+        "admin": {"public", "protected"},
+        "moderator": {"public", "protected"},
+        "user": {"public"},
+    }
+    nousers = ["nouser", None]
+    permissions = ["public", "protected"]
+
+    app = create_app(loop)
+    await setup_security(app)
+    policy = AuthorizationPolicy(app["dbsa"])
+
+    for user in users:
+        for permission in permissions:
+            if permission in users[user]:
+                assert await policy.permits(user, permission)
+            else:
+                assert not await policy.permits(user, permission)
+
+    for nouser in nousers:
+        for permission in permissions:
+            has_accsess = await policy.permits(nouser, permission)
+            assert has_accsess == False

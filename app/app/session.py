@@ -6,7 +6,7 @@ from aiohttp_security import setup as securitysetup
 from aiohttp_session import setup as sessionsetup
 from aiohttp_session.redis_storage import RedisStorage
 
-from app.auth import DBAuthorizationPolicy
+from app.auth import AuthorizationPolicy
 from app.db import setup_pgsa
 
 
@@ -27,4 +27,4 @@ async def teardown_session(app):
 
 async def setup_security(app):
     await setup_pgsa(app)
-    securitysetup(app, SessionIdentityPolicy(), DBAuthorizationPolicy(app["dbsa"]))
+    securitysetup(app, SessionIdentityPolicy(), AuthorizationPolicy(app["dbsa"]))

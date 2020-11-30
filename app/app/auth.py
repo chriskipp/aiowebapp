@@ -5,7 +5,7 @@ from passlib.hash import sha256_crypt
 import app.models as models
 
 
-class DBAuthorizationPolicy(AbstractAuthorizationPolicy):
+class AuthorizationPolicy(AbstractAuthorizationPolicy):
     def __init__(self, dbengine):
         self.dbengine = dbengine
 

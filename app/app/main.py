@@ -30,18 +30,17 @@ def create_app(loop, argv=None):
     app.on_startup.append(setup_pg)
     app.on_cleanup.append(teardown_pg)
 
-    # create SQLalchemy db connection on startup, shutdown on exit
-    # app.on_startup.append(setup_pgsa)
+    # shutdown SQLalchemy db connection on exit
     app.on_cleanup.append(teardown_pgsa)
 
     # create session on startup, shutdown on exit
     app.on_startup.append(setup_session)
     app.on_cleanup.append(teardown_session)
 
-    # create SQLalchemy db connection on startup
+    # create security using SQLalchemy db connection on startup
     app.on_startup.append(setup_security)
 
-    # app.router.add_get("/", handler)
+    app.router.add_get("/", handler)
     login_handler = Login()
     login_handler.configure(app)
 

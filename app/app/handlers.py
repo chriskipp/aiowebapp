@@ -33,7 +33,7 @@ class Login(object):
     """
     )
 
-    async def index(self, request):
+    async def get_login(self, request):
         username = await authorized_userid(request)
         if username:
             template = self.index_template.format(
@@ -44,7 +44,7 @@ class Login(object):
         response = web.Response(body=template.encode(), content_type="text/html")
         return response
 
-    async def login(self, request):
+    async def post_login(self, request):
         response = web.HTTPFound("/")
         form = await request.post()
         login = form.get("login")
@@ -74,8 +74,8 @@ class Login(object):
 
     def configure(self, app):
         router = app.router
-        router.add_route("GET", "/", self.index, name="index")
-        router.add_route("POST", "/login", self.login, name="login")
+        router.add_route("GET", "/login", self.get_login, name="login")
+        router.add_route("POST", "/login", self.post_login)
         router.add_route("GET", "/logout", self.logout, name="logout")
         router.add_route("GET", "/public", self.internal_page, name="public")
         router.add_route("GET", "/protected", self.protected_page, name="protected")
