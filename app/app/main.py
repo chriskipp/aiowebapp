@@ -4,6 +4,7 @@ import logging
 import sys
 import time
 
+import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
 import orjson
@@ -42,6 +43,10 @@ def create_app(loop=None, argv=None):
 
     app = web.Application(loop=loop)
     app["config"] = get_config(argv)
+
+    # setup aiohttp-debugtoolbar
+    # aiohttp_debugtoolbar.setup(app, check_host=False)
+    aiohttp_debugtoolbar.setup(app, intercept_redirects=False, check_host=False)
 
     # setup Jinja2 template renderer
     aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("app", "templates"))

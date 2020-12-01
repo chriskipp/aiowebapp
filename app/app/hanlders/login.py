@@ -7,7 +7,7 @@ from aiohttp_security import (
     forget,
     remember,
 )
-from aiohttp_session import new_session, get_session
+from aiohttp_session import get_session, new_session
 
 from app.auth import check_credentials
 

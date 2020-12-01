@@ -6,6 +6,8 @@ services:
     restart: always
     networks:
       - aio
+    ports:
+      - "8080:8080"
     volumes:
       - ./app/app:/usr/src/app/app
 
