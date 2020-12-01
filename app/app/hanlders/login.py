@@ -1,5 +1,4 @@
-from textwrap import dedent
-
+import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_security import (
     authorized_userid,
@@ -8,44 +7,27 @@ from aiohttp_security import (
     forget,
     remember,
 )
+from aiohttp_session import new_session, get_session
 
 from app.auth import check_credentials
 
 
 class Login(object):
-    index_template = dedent(
-        """<!DOCTYPE html>
-            <html>
-            <head>
-            </head>
-            <body>
-                <p>{message}</p>
-                <form action="/login" method="post">
-                  Login:
-                  <input type="text" name="login">
-                  Password:
-                  <input type="password" name="password">
-                  <input type="submit" value="Login">
-                </form>
-                <a href="/logout">Logout</a>
-            </body>
-            </html>
-    """
-    )
-
-    async def get_login(self, request):
+    async def loginform(self, request):
         username = await authorized_userid(request)
         if username:
-            template = self.index_template.format(
-                message="Hello, {username}!".format(username=username)
+            response = aiohttp_jinja2.render_template(
+                "login.html", request, context={"message": username}
             )
         else:
-            template = self.index_template.format(message="You need to login")
-        response = web.Response(body=template.encode(), content_type="text/html")
+            response = aiohttp_jinja2.render_template(
+                "login.html", request, context={"message": "Anonymous"}
+            )
         return response
 
-    async def post_login(self, request):
-        response = web.HTTPFound("/")
+    async def login(self, request):
+        session = await new_session(request)
+        response = web.HTTPFound("/session")
         form = await request.post()
         login = form.get("login")
         password = form.get("password")
@@ -57,9 +39,11 @@ class Login(object):
         raise web.HTTPUnauthorized(text="Invalid username/password combination")
 
     async def logout(self, request):
+        session = await get_session(request)
         await check_authorized(request)
         response = web.Response(text="You have been logged out")
         await forget(request, response)
+        session.invalidate()
         return response
 
     async def internal_page(self, request):
@@ -74,8 +58,8 @@ class Login(object):
 
     def configure(self, app):
         router = app.router
-        router.add_route("GET", "/login", self.get_login, name="login")
-        router.add_route("POST", "/login", self.post_login)
+        router.add_route("GET", "/login", self.loginform, name="loginform")
+        router.add_route("POST", "/login", self.login, name="login")
         router.add_route("GET", "/logout", self.logout, name="logout")
         router.add_route("GET", "/public", self.internal_page, name="public")
         router.add_route("GET", "/protected", self.protected_page, name="protected")

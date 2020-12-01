@@ -2,25 +2,49 @@
 import asyncio
 import logging
 import sys
+import time
 
+import aiohttp_jinja2
+import jinja2
+import orjson
 from aiohttp import web
 from aiohttp_security import setup as setup_security
+from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
 from app.db import setup_pg, teardown_pg, teardown_pgsa
-from app.handlers import Login
+from app.hanlders.login import Login
 from app.redis import setup_redis, teardown_redis
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
 
-def handler(request):
+async def handler(request):
     return web.Response(text="Hello World!")
 
 
-def create_app(loop, argv=None):
+async def showsession(request):
+    session = await get_session(request)
+    session["age"] = time.time() - session.created
+    text = (
+        str(session.identity)
+        + "\n"
+        + orjson.dumps(
+            {k: v for k, v in session.items()}, option=orjson.OPT_INDENT_2
+        ).decode()
+    )
+    return web.Response(text=text)
+
+
+def create_app(loop=None, argv=None):
+    if loop == None:
+        loop = asyncio.get_event_loop()
+
     app = web.Application(loop=loop)
     app["config"] = get_config(argv)
+
+    # setup Jinja2 template renderer
+    aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("app", "templates"))
 
     # create db connection on startup, shutdown on exit
     app.on_startup.append(setup_redis)
@@ -41,6 +65,7 @@ def create_app(loop, argv=None):
     app.on_startup.append(setup_security)
 
     app.router.add_get("/", handler)
+    app.router.add_get("/session", showsession)
     login_handler = Login()
     login_handler.configure(app)
 

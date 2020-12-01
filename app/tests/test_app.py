@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 from aiohttp import web
+from aiohttp_session import get_session
 
 from app.auth import AuthorizationPolicy, check_credentials
 from app.db import execute_sql, setup_pg, setup_pgsa, teardown_pg, teardown_pgsa
@@ -15,7 +16,7 @@ from app.redis import (
     setup_redis,
     teardown_redis,
 )
-from app.session import setup_security
+from app.session import setup_security, setup_session
 
 loop = asyncio.get_event_loop()
 
@@ -244,6 +245,7 @@ async def test_login_check_credentials(loop=loop):
 
 async def test_login_authorized_userid(loop=loop):
     users = ["user", "moderator", "admin"]
+    nousers = ["nouser", None]
 
     app = create_app(loop)
     await setup_security(app)
@@ -252,8 +254,9 @@ async def test_login_authorized_userid(loop=loop):
     for user in users:
         authorized_id = await policy.authorized_userid(user)
         assert authorized_id == user
-    authorized_id = await policy.authorized_userid("nouser")
-    assert authorized_id == None
+    for nouser in nousers:
+        authorized_id = await policy.authorized_userid(nouser)
+        assert authorized_id == None
 
 
 async def test_login_permit(loop=loop):
@@ -280,3 +283,52 @@ async def test_login_permit(loop=loop):
         for permission in permissions:
             has_accsess = await policy.permits(nouser, permission)
             assert has_accsess == False
+
+
+async def test_loginhandler_login(aiohttp_client):
+    users = ["user", "moderator", "admin"]
+    nousers = ["nouser", None]
+
+    async def identity(request):
+        session = await get_session(request)
+        if "logSessionId" in session.keys():
+            return web.Response(text=session["logSessionId"])
+        else:
+            return web.Response(text="")
+
+    app = create_app()
+    await setup_session(app)
+    await setup_security(app)
+    app.router.add_get("/identity", identity)
+    client = await aiohttp_client(app)
+
+    for user in users:
+        res = await client.post("/login", data={"login": user, "password": "password"})
+        assert res.status == 200
+        res = await client.get("/identity")
+        assert res.status == 200
+        txt = await res.text()
+        assert txt == user
+
+        res = await client.get("/logout")
+        res = await client.get("/identity")
+        assert res.status == 200
+        txt = await res.text()
+        assert txt == ""
+
+    for nouser in nousers:
+        res = await client.post(
+            "/login", data={"login": nouser, "password": "password"}
+        )
+        assert res.status == 401
+        res = await client.get("/identity")
+        assert res.status == 200
+        txt = await res.text()
+        assert txt == ""
+
+        res = await client.get("/logout")
+        assert res.status == 401
+        res = await client.get("/identity")
+        assert res.status == 200
+        txt = await res.text()
+        assert txt == ""

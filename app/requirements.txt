@@ -1,9 +1,9 @@
-aiohttp==3.6.3
+aiohttp[speedups]==3.6.3
 asyncio==3.4.3
 selectors==0.0.14
-cchardet==2.1.7
+#cchardet==2.1.7
 uvloop==0.14.0
-aiodns==2.0.0
+#aiodns==2.0.0
 orjson==3.4.3
 PyYAML==5.3.1
 trafaret-config==2.0.2
@@ -13,3 +13,4 @@ sqlalchemy==1.3.20
 aioredis==1.3.1
 aiohttp_security[session]==0.4.0
 passlib==1.7.4
+aiohttp-jinja2==1.4.2

@@ -27,4 +27,8 @@ async def teardown_session(app):
 
 async def setup_security(app):
     await setup_pgsa(app)
-    securitysetup(app, SessionIdentityPolicy(), AuthorizationPolicy(app["dbsa"]))
+    securitysetup(
+        app,
+        SessionIdentityPolicy(session_key="logSessionId"),
+        AuthorizationPolicy(app["dbsa"]),
+    )
