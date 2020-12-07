@@ -212,7 +212,7 @@ async def test_db_drop_table(loop=loop):
 
 async def test_db_invalid_query(loop=loop):
     statement = """
-        DROP PRESIDENT WHERE country = 'us';
+        DROP erro FROM noch_mehr ERROR... test fail!;
     """
     app = create_app(loop)
     await setup_pg(app)

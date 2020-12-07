@@ -1,5 +1,3 @@
-\c app
-
 -- create users table
 CREATE TABLE IF NOT EXISTS users
 (
@@ -12,8 +10,6 @@ CREATE TABLE IF NOT EXISTS users
   CONSTRAINT user_login_key UNIQUE (login)
 );
 
-ALTER TABLE users OWNER TO app;
-
 -- and permissions for them
 CREATE TABLE IF NOT EXISTS permissions
 (
@@ -25,8 +21,6 @@ CREATE TABLE IF NOT EXISTS permissions
       REFERENCES users (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
-
-ALTER TABLE permissions OWNER TO app;
 
 -- insert some data
 INSERT INTO users(id, login, passwd, is_superuser, disabled)

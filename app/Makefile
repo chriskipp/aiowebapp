@@ -18,7 +18,15 @@ black:
 	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose tests
 
 test:
+	
 	pytest -c config/test.yaml -vvv --disable-warnings tests
+
+localtest:
+	pytest -c config/local_test.yaml -vvv --disable-warnings tests
+
+cov:
+	pytest --coverage=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
+
 
 clean:
 	rm -rf `find . -name __pycache__`
