@@ -16,6 +16,7 @@ from aiohttp_session import setup as setup_session
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.hanlders.login import Login
 from app.redis import setup_redis, teardown_redis
+from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
@@ -73,6 +74,7 @@ def create_app(loop=None, argv=None):
     app.router.add_get("/session", showsession)
     login_handler = Login()
     login_handler.configure(app)
+    setup_routes(app)
 
     return app
 
