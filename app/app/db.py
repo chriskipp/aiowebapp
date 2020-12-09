@@ -40,9 +40,6 @@ async def execute_sql(query, pool):
     return ret
 
 
-# aiopg[sa]
-
-
 async def setup_pgsa(app):
     conf = app["config"]["postgres_sa"]
     engine = await aiopg.sa.create_engine(

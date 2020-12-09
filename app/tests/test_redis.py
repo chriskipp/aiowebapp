@@ -1,8 +1,11 @@
-import asyncio
+from pathlib import Path
+
+import orjson
 import pytest
 
 from app.main import create_app
 from app.redis import (
+    del_redis_json,
     del_redis_key,
     get_redis_json,
     get_redis_key,
@@ -19,8 +22,20 @@ redis_keys = [
     ("test", 0.1),
     ("test", True),
     ("test", False),
-    ("test", None)
+    ("test", None),
 ]
+
+
+def get_json_objs():
+    path = Path("tests/data")
+    for jsonf in path.glob("*.json"):
+        with open(jsonf) as f:
+            json_obj = orjson.loads(f.read())
+            yield ("test", json_obj)
+
+
+json_objs = get_json_objs()
+
 
 @pytest.fixture
 async def create_app_with_redis():
@@ -29,11 +44,12 @@ async def create_app_with_redis():
     yield app
     await teardown_redis(app)
 
+
 @pytest.mark.asyncio
 async def test_redis_setup_teardown(create_app_with_redis):
     app = create_app_with_redis
 
-    assert "redis" in {k for k in app.keys()}
+    assert "redis" in app.keys()
     await teardown_redis(app)
     assert app["redis"].closed
 
@@ -44,22 +60,25 @@ async def test_set_get_del_keys(create_app_with_redis, key, value):
     app = create_app_with_redis
 
     await set_redis_key(app["redis"], key, value)
-    v = await get_redis_key(app["redis"], key)
-    assert v == value
+    res = await get_redis_key(app["redis"], key)
+    assert res == value
 
     await del_redis_key(app["redis"], key)
-    v = await get_redis_key(app["redis"], key)
-    assert v == None
+    res = await get_redis_key(app["redis"], key)
+    assert res == None
 
 
 @pytest.mark.asyncio
-async def test_redis_set_json(create_app_with_redis):
-    json_obj = {"a": 1, "b": 2, "c": 3}
+@pytest.mark.parametrize("key,value", json_objs)
+async def test_get_set_del_json(create_app_with_redis, key, value):
     app = create_app_with_redis
 
-    await set_redis_json(app["redis"], "test_obj", json_obj)
-    res = await get_redis_json(app["redis"], "test_obj")
-    assert res == json_obj
+    await set_redis_json(app["redis"], key, value)
+    res = await get_redis_json(app["redis"], key)
+    assert res == res
+
+    res = await del_redis_json(app["redis"], key)
+    assert res == None
 
 
 @pytest.mark.asyncio
@@ -67,6 +86,6 @@ async def test_redis_set_json(create_app_with_redis):
 async def test_redis_modules(create_app_with_redis, module):
     app = create_app_with_redis
 
-    modules = await app['redis'].execute("MODULE", "LIST")
+    modules = await app["redis"].execute("MODULE", "LIST")
     modules = {m[1].decode() for m in modules}
     assert module in modules

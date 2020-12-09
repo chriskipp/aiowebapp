@@ -21,11 +21,11 @@ async def teardown_redis(app):
 
 
 async def set_redis_key(pool, key, value):
-    await pool.execute('SET', key, orjson.dumps(value))
+    await pool.execute("SET", key, orjson.dumps(value))
 
 
 async def get_redis_key(pool, key):
-    value = await pool.execute('GET', key)
+    value = await pool.execute("GET", key)
     if value is not None:
         return orjson.loads(value)
     else:
@@ -42,3 +42,7 @@ async def set_redis_json(pool, key, obj, path="."):
 
 async def get_redis_json(pool, key, path="."):
     return orjson.loads(await pool.execute("JSON.GET", key, path))
+
+
+async def del_redis_json(pool, key, path="."):
+    await pool.execute("JSON.DEL", key, path)
