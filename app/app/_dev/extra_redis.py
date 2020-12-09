@@ -39,6 +39,10 @@ class RequestHandler(object):
                     break
 
             elapsed = time.time() - start
+            if len(args) == 2:
+                args = tuple([args[0]] + args[1].split())
+            if len(args) == 2:
+                args = tuple(list(args) + [''])
             arg = {
                 "command": (
                     args[1].decode("UTF-8").strip()
