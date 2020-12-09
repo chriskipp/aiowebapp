@@ -38,12 +38,12 @@ async def showsession(request):
     return web.Response(text=text)
 
 
-def create_app(loop=None, argv=None):
+def create_app(loop=None, config=None):
     if loop == None:
         loop = asyncio.get_event_loop()
 
     app = web.Application(loop=loop)
-    app["config"] = get_config(argv)
+    app["config"] = get_config(config)
 
     # setup aiohttp-debugtoolbar
     # aiohttp_debugtoolbar.setup(app, check_host=False)
@@ -82,13 +82,15 @@ def create_app(loop=None, argv=None):
 def main(argv):
     logging.basicConfig(level=logging.DEBUG)
 
-    loop = asyncio.get_event_loop()
-    app = create_app(loop)
+    config = None
+    for i in range(len(argv)):
+        if i in {"-c", "--config"}:
+            config = argv[i + 1]
 
-    config = get_config(argv)
+    app = create_app(config=config)
 
     web.run_app(app, host=app["config"]["host"], port=app["config"]["port"])
 
 
 if __name__ == "__main__":
-    main(sys.argv[-1:])
+    main(sys.argv)

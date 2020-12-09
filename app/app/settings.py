@@ -43,6 +43,7 @@ TRAFARET = t.Dict(
 )
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
+# BASE_DIR = pathlib.Path(__file__).parent
 DEFAULT_CONFIG_PATH = BASE_DIR / "config" / "dev.yaml"
 
 

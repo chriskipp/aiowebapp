@@ -39,6 +39,7 @@ services:
       - aio
     volumes:
       - ./app/app/static:/usr/share/nginx/html/static
+      - ./app/app/storage:/usr/share/nginx/html/storage
     depends_on:
       - aiowebapp
 

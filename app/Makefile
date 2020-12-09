@@ -18,7 +18,10 @@ black:
 	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose tests
 
 test:
-	#pytest -c config/test.yaml -vvv --disable-warnings tests
+	pytest -c config/test.yaml -vvv --disable-warnings tests
+
+test_from_local:
+	docker exec -it aiowebapp_aiowebapp_1 make test
 
 localtest:
 	pytest -c config/local_test.yaml -vvv --disable-warnings tests
