@@ -19,6 +19,9 @@ from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
+from app._dev.extra_pgsql import RequestPgDebugPanel
+from app._dev.extra_redis import RequestRedisDebugPanel
+
 
 async def handler(request):
     return web.Response(text="Hello World!")
@@ -45,7 +48,13 @@ def create_app(loop=None, config=None):
     app["config"] = get_config(config)
 
     # setup aiohttp-debugtoolbar
-    aiohttp_debugtoolbar.setup(app, intercept_redirects=False, check_host=False)
+    aiohttp_debugtoolbar.setup(
+        app,
+        intercept_redirects=False,
+        check_host=False,
+        extra_templates="/usr/src/app/_dev/extra_tpl",
+        extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+    )
 
     # setup Jinja2 template renderer
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("./app/templates/"))
