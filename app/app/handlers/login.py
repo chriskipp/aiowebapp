@@ -12,7 +12,7 @@ from aiohttp_session import get_session, new_session
 from app.auth import check_credentials
 
 
-class Login(object):
+class LoginHandler(object):
     async def loginform(self, request):
         username = await authorized_userid(request)
         if username:

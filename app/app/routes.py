@@ -1,18 +1,14 @@
 # routes.py
 import pathlib
+import aiohttp_jinja2
 
-# from .handlers import *
+from .handlers.login import LoginHandler
 
 PROJECT_ROOT = pathlib.Path(__file__).parent
 
-
-def setup_routes(app):
-    # app.router.add_get("/", index_handler)
-
-    # app.router.add_get("/base", base_handler)
-    # app.router.add_get("/layout", layout_handler)
-
-    setup_static_routes(app)
+def base_handler(request):
+    response = aiohttp_jinja2.render_template("base.html", request, context=None)
+    return response
 
 
 def setup_static_routes(app):
@@ -27,3 +23,16 @@ def setup_static_routes(app):
         show_index=True,
         append_version=False,
     )
+
+def setup_routes(app):
+    # app.router.add_get("/", index_handler)
+
+    app.router.add_get("/base", base_handler)
+    # app.router.add_get("/layout", layout_handler)
+
+    # Setup LoginHandler
+    loginhandler = LoginHandler()
+    loginhandler.configure(app)
+
+    setup_static_routes(app)
+

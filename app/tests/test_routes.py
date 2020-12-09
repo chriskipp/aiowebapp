@@ -11,6 +11,7 @@ routes_nologin = [
     ("/protected", 401),
     ("/storage", 200),
     ("/logout", 401),
+    ("/static/images/favicon.ico", 200)
 ]
 
 routes_user = [

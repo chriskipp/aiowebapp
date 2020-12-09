@@ -14,7 +14,6 @@ from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
 from app.db import setup_pg, teardown_pg, teardown_pgsa
-from app.hanlders.login import Login
 from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
@@ -46,11 +45,10 @@ def create_app(loop=None, config=None):
     app["config"] = get_config(config)
 
     # setup aiohttp-debugtoolbar
-    # aiohttp_debugtoolbar.setup(app, check_host=False)
     aiohttp_debugtoolbar.setup(app, intercept_redirects=False, check_host=False)
 
     # setup Jinja2 template renderer
-    aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("app", "templates"))
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("./app/templates/"))
 
     # create db connection on startup, shutdown on exit
     app.on_startup.append(setup_redis)
@@ -72,8 +70,6 @@ def create_app(loop=None, config=None):
 
     app.router.add_get("/", handler)
     app.router.add_get("/session", showsession)
-    login_handler = Login()
-    login_handler.configure(app)
     setup_routes(app)
 
     return app
