@@ -8,6 +8,7 @@ import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
 import orjson
+import uvloop
 from aiohttp import web
 from aiohttp_security import setup as setup_security
 from aiohttp_session import get_session
@@ -77,6 +78,8 @@ def create_app(config=None):
 
     app.router.add_get("/", handler)
     app.router.add_get("/session", showsession)
+
+    uvloop.install()
     setup_routes(app)
 
     return app
