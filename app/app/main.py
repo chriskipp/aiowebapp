@@ -1,27 +1,24 @@
 # main.py
-import asyncio
 import logging
+import pathlib
 import sys
 import time
-import pathlib
-import uvloop
 
-import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
 import orjson
+import uvloop
 from aiohttp import web
 from aiohttp_security import setup as setup_security
 from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
-from app._dev.extra_pgsql import RequestPgDebugPanel
-from app._dev.extra_redis import RequestRedisDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
+
 
 async def showsession(request):
     session = await get_session(request)
@@ -41,16 +38,16 @@ def create_app(config=None):
     app = web.Application()
     app["config"] = get_config(config)
 
-    app['project_root'] = pathlib.Path(__file__).parent.as_posix()
+    app["project_root"] = pathlib.Path(__file__).parent.as_posix()
 
     # setup aiohttp-debugtoolbar
-    aiohttp_debugtoolbar.setup(
-        app,
-        intercept_redirects=False,
-        check_host=False,
-        extra_templates="/usr/src/app/_dev/extra_tpl",
-        extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
-    )
+    # aiohttp_debugtoolbar.setup(
+    #    app,
+    #    intercept_redirects=False,
+    #    check_host=False,
+    #    extra_templates="/usr/src/app/_dev/extra_tpl",
+    #    extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+    # )
 
     # setup Jinja2 template renderer
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("./app/templates/"))

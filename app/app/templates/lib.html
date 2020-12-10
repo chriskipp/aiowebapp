@@ -1,3 +1,28 @@
+{% macro key_value_table(rows, tableheader=['Key', 'Value'], heading=None) -%}
+  {% if heading %}
+    <h3>{{ heading }}</h3>
+  {% endif %}
+  <div class="container-fluid table-responsive">
+    <table class="table table-striped table-bordered table-hover" style="width:100%;">
+      <thead>
+        <tr>
+  	{% for headerfield in tableheader %}
+  	  <th>{{ headerfield }}</th>
+  	{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+      	  {% for field in row %}
+            <td>{{ field }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{%- endmacro %}
 
 {% macro sidebar_section(title, links=[], color='white') -%}
   <h5>{{ title }}</h5>
@@ -56,7 +81,7 @@
           </a>
         </div>
         <div class="mynavitem" style="padding:0px;padding-right:10px;">
-          <button href="/logout" type="button" class="btn btn-outline-warning" >
+          <button href="/logout" type="button" class="btn btn-outline-warning">
             <a style="color:inherit;text-decoration:none;" href="/logout">Logout</a>
           </button>
         </div>
