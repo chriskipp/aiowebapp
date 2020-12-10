@@ -40,11 +40,9 @@ async def showsession(request):
     return web.Response(text=text)
 
 
-def create_app(loop=None, config=None):
-    if loop == None:
-        loop = asyncio.get_event_loop()
+def create_app(config=None):
 
-    app = web.Application(loop=loop)
+    app = web.Application()
     app["config"] = get_config(config)
 
     # setup aiohttp-debugtoolbar

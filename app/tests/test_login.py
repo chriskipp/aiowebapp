@@ -9,7 +9,6 @@ from app.auth import AuthorizationPolicy, check_credentials
 from app.main import create_app
 from app.session import setup_security, setup_session
 
-loop = asyncio.get_event_loop()
 
 logins = [
     {
@@ -107,7 +106,7 @@ async def test_login_authorized_userid(login):
 
 @pytest.mark.parametrize("user,permission", user_permissions)
 async def test_login_permit(user, permission):
-    app = create_app(loop)
+    app = create_app()
     await setup_security(app)
     policy = AuthorizationPolicy(app["dbsa"])
 
