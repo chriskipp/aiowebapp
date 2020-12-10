@@ -3,14 +3,14 @@
 
 {% block main %}
   {{ super() }}
-  {{ lib.loginModal() }}
+  {{ lib.logoutModal() }}
 {% endblock %}
 
 {% block tail_js %}
   {{ super() }}
   <script>
     $(document).ready(function() {
-      $('#loginModal').modal('show')
+      $('#logoutModal').modal('show')
     });
   </script>
 {% endblock %}

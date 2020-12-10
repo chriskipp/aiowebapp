@@ -3,6 +3,8 @@ import asyncio
 import logging
 import sys
 import time
+import pathlib
+import uvloop
 
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
@@ -13,19 +15,13 @@ from aiohttp_security import setup as setup_security
 from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
+from app._dev.extra_pgsql import RequestPgDebugPanel
+from app._dev.extra_redis import RequestRedisDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
-
-from app._dev.extra_pgsql import RequestPgDebugPanel
-from app._dev.extra_redis import RequestRedisDebugPanel
-
-
-async def handler(request):
-    return web.Response(text="Hello World!")
-
 
 async def showsession(request):
     session = await get_session(request)
@@ -40,12 +36,12 @@ async def showsession(request):
     return web.Response(text=text)
 
 
-def create_app(loop=None, config=None):
-    if loop == None:
-        loop = asyncio.get_event_loop()
+def create_app(config=None):
 
-    app = web.Application(loop=loop)
+    app = web.Application()
     app["config"] = get_config(config)
+
+    app['project_root'] = pathlib.Path(__file__).parent.as_posix()
 
     # setup aiohttp-debugtoolbar
     aiohttp_debugtoolbar.setup(
@@ -77,7 +73,6 @@ def create_app(loop=None, config=None):
     # create security using SQLalchemy db connection on startup
     app.on_startup.append(setup_security)
 
-    app.router.add_get("/", handler)
     app.router.add_get("/session", showsession)
     setup_routes(app)
 
@@ -94,6 +89,7 @@ def main(argv):
 
     app = create_app(config=config)
 
+    uvloop.install()
     web.run_app(app, host=app["config"]["host"], port=app["config"]["port"])
 
 

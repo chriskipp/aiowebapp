@@ -1,0 +1,5 @@
+[
+  {"data": {"href": "/me", "icon":"fa-address-card", "label": "Profile"}, "requires": ["logged_in"], "category": "User"},
+  {"data": {"href": "/login", "icon":"fa-sign-in-alt", "label": "Login"}, "requires": ["logged_out"], "category": "User"},
+  {"data": {"href": "/logout", "icon":"fa-sign-out-alt", "label": "Logout"}, "requires": ["logged_in"], "category": "User"}
+]

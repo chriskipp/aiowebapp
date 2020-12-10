@@ -1,0 +1,118 @@
+
+{% macro sidebar_section(title, links=[], color='white') -%}
+  <h5>{{ title }}</h5>
+  <ul style="box-shadow:inset 0px 0 7px 2px {{ color }}">
+    {% for link in links %}
+      <li><a href="{{ link['href'] }}"
+	     {% if link['onClick'] %}
+	       onClick="{{ link['onClick'] }}"
+	     {% endif %}
+	>
+        {% if link['icon'] %}
+	  <i class="fas {{ link['icon'] }}"></i>
+	{% endif %}
+        {{ link['label'] }}
+      </a></li>
+    {% endfor %}
+  </ul>
+{%- endmacro %}
+
+
+{% macro login_error_toast() -%}
+  <div class="toast" data-autohide="false" role="alert" style="position:absolute;top:50%;left:50%;" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-danger text-dark">
+      <i class="fas fa-exclamation-triangle"></i>
+      <strong class="mr-auto">Login Failure</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body text-dark">
+      Invalid username/password combination
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro navbar(username) -%}
+  <div class="borderdiv">
+    <div class="navbar mynavbar">
+
+      <!-- Togglebutton -->
+      <div class="mynavitem" style="padding:0;">
+        <a class="mynavlink" onClick="collapseSidebar()"><i class="fa fa-bars"></i></a>
+      </div>
+    
+      <!-- Searchbox -->
+      <select id="search" class="select2" onChange="getVal(this)" style="width:400px"></select>
+    
+      <!-- mynavspacer -->
+      <div class="mynavspacer"></div>
+
+      <!-- Login/LogoutButton -->
+      {% if username %}
+        <div class="mynavitem" style="padding:0px;padding-right:10px;">
+          <a style="color:royalblue;" href="/me" >
+    	<i class="fa fa-user" aria-hidden="true"></i> {{ username }}
+          </a>
+        </div>
+        <div class="mynavitem" style="padding:0px;padding-right:10px;">
+          <button href="/logout" type="button" class="btn btn-outline-warning" >
+            <a style="color:inherit;text-decoration:none;" href="/logout">Logout</a>
+          </button>
+        </div>
+      {% else %}
+        <div class="mynavitem" style="padding:0px;padding-right:10px;">
+          <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#loginModal">Login</button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{%- endmacro %}
+
+
+<!-- loginModal -->
+{% macro loginModal() -%}
+  <div id="loginModal" class="modal fade">
+    <div class="modal-dialog modal-login">
+      <div class="modal-content">
+        <form action="/login" method="post">
+          <div class="modal-header">        
+            <h4 class="modal-title">Login</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">        
+            <div class="form-group">
+              <label>Username</label>
+              <input id="loginField" name="loginField" type="text" class="form-control" required="required">
+            </div>
+            <div class="form-group">
+              <div class="clearfix">
+                <label>Password</label>
+              </div>
+              <input id="passwordField" name="passwordField" type="password" class="form-control" required="required">
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <input type="submit" class="btn btn-primary" value="Login">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
+
+<!-- logoutModal -->
+{% macro logoutModal() -%}
+  <div class="modal fade modal-success" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-success">
+        <div class="modal-header modal-header-success">
+          <h4 class="modal-title">You have loged out succsessfully!</h5>
+        </div>
+        <div class="modal-footer modal-footer-success">
+          <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
