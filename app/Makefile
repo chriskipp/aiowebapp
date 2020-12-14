@@ -30,7 +30,7 @@ cov:
 	#pytest --cov=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
 
 localcov:
-	pytest --cov=app --cov-report=html:coverage -c config/local_test.yaml -vvv --disable-warnings tests
+	pytest --cov-config=.coveragerc --cov=app --cov-report=html:coverage -c config/local_test.yaml -vvv --disable-warnings tests
 
 
 clean:

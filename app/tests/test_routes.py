@@ -7,37 +7,48 @@ routes_nologin = [
     ("/", 200),
     ("/login", 200),
     ("/session", 200),
+    ("/users/me", 401),
+    ("/users/1", 401),
     ("/public", 401),
     ("/protected", 401),
     ("/storage", 200),
     ("/logout", 401),
     ("/static/images/favicon.ico", 200),
+    ("/not_defined_route", 404),
 ]
 
 routes_user = [
     ("/", 200),
     ("/login", 200),
     ("/session", 200),
+    ("/users/me", 200),
+    ("/users/1", 200),
     ("/public", 200),
     ("/protected", 403),
     ("/storage", 200),
     ("/logout", 200),
+    ("/not_defined_route", 404),
 ]
 
 routes_moderator = [
     ("/", 200),
     ("/login", 200),
     ("/session", 200),
+    ("/users/me", 200),
+    ("/users/1", 200),
     ("/public", 200),
     ("/protected", 200),
     ("/storage", 200),
     ("/logout", 200),
+    ("/not_defined_route", 404),
 ]
 
 routes_admin = [
     ("/", 200),
     ("/login", 200),
     ("/session", 200),
+    ("/users/me", 200),
+    ("/users/1", 200),
     ("/public", 200),
     ("/protected", 200),
     ("/storage", 200),

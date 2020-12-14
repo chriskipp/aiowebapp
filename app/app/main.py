@@ -1,16 +1,13 @@
 # main.py
 import logging
 import sys
-import time
 
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
-import orjson
 import uvloop
 from aiohttp import web
 from aiohttp_security import setup as setup_security
-from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
 from app._dev.extra_pgsql import RequestPgDebugPanel
@@ -21,23 +18,6 @@ from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
-
-
-async def handler(request):
-    return web.Response(text="Hello World!")
-
-
-async def showsession(request):
-    session = await get_session(request)
-    session["age"] = time.time() - session.created
-    text = (
-        str(session.identity)
-        + "\n"
-        + orjson.dumps(
-            {k: v for k, v in session.items()}, option=orjson.OPT_INDENT_2
-        ).decode()
-    )
-    return web.Response(text=text)
 
 
 def create_app(config=None):
@@ -77,9 +57,6 @@ def create_app(config=None):
 
     # setup middlewares
     setup_middlewares(app)
-
-    app.router.add_get("/", handler)
-    app.router.add_get("/session", showsession)
 
     uvloop.install()
     setup_routes(app)

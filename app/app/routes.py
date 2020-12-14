@@ -1,15 +1,32 @@
 # routes.py
 import pathlib
+import time
 
 import aiohttp_jinja2
+import orjson
+from aiohttp import web
+from aiohttp_session import get_session
 
 from .handlers.login import LoginHandler
 
 PROJECT_ROOT = pathlib.Path(__file__).parent
 
 
-def base_handler(request):
-    response = aiohttp_jinja2.render_template("base.html", request, context=None)
+async def showsession(request):
+    session = await get_session(request)
+    session["age"] = time.time() - session.created
+    text = (
+        str(session.identity)
+        + "\n"
+        + orjson.dumps(
+            {k: v for k, v in session.items()}, option=orjson.OPT_INDENT_2
+        ).decode()
+    )
+    return web.Response(text=text)
+
+
+async def index_handler(request):
+    response = aiohttp_jinja2.render_template("layout.html", request, context=None)
     return response
 
 
@@ -28,10 +45,9 @@ def setup_static_routes(app):
 
 
 def setup_routes(app):
-    # app.router.add_get("/", index_handler)
+    app.router.add_get("/", index_handler)
 
-    app.router.add_get("/base", base_handler)
-    # app.router.add_get("/layout", layout_handler)
+    app.router.add_get("/session", showsession, name="session")
 
     # Setup LoginHandler
     loginhandler = LoginHandler()

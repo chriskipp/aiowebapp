@@ -32,15 +32,6 @@ routes = [
 
 
 class LoginHandler:
-    async def index(self, request):
-        username = await authorized_userid(request)
-        response = aiohttp_jinja2.render_template(
-            "layout.html",
-            request,
-            context={"username": username, "sidebar": self.sidebar_sections},
-        )
-        return response
-
     async def me(self, request):
         username = await authorized_userid(request)
         if username:
@@ -57,13 +48,13 @@ class LoginHandler:
                 request,
                 context={
                     "username": username,
-                    "sidebar": self.sidebar_sections,
+                    "sidebar": self.sidebar_sections_loggedin,
                     "data": user,
                     "rows": user,
                 },
             )
         else:
-            raise web.HTTPFound("/login")
+            raise web.HTTPUnauthorized()
 
     async def user(self, request):
         username = await authorized_userid(request)
@@ -82,21 +73,21 @@ class LoginHandler:
                 request,
                 context={
                     "username": username,
-                    "sidebar": self.sidebar_sections,
+                    "sidebar": self.sidebar_sections_loggedin,
                     "data": user,
                     "rows": user,
                 },
             )
             return web.Response(text=str(user))
         else:
-            return web.HTTPFound("/login")
+            raise web.HTTPUnauthorized()
 
     async def loginForm(self, request):
         username = await authorized_userid(request)
         response = aiohttp_jinja2.render_template(
             "login.html",
             request,
-            context={"username": username, "sidebar": self.sidebar_sections},
+            context={"username": username, "sidebar": self.sidebar_sections_loggedout},
         )
         return response
 
@@ -111,7 +102,6 @@ class LoginHandler:
             await remember(request, response, login)
             raise response
 
-        # raise web.HTTPFound("/login")
         raise web.HTTPUnauthorized(text="Invalid username/password combination")
 
     async def logout(self, request):
@@ -120,13 +110,11 @@ class LoginHandler:
         response = aiohttp_jinja2.render_template(
             "logout.html",
             request,
-            context={"username": None, "sidebar": self.sidebar_sections},
+            context={"username": None, "sidebar": self.sidebar_sections_loggedout},
         )
         await forget(request, response)
         session.invalidate()
         return response
-
-        # raise web.HTTPFound("/")
 
     async def public_page(self, request):
         await check_permission(request, "public")
@@ -140,15 +128,29 @@ class LoginHandler:
 
     def configure(self, app):
 
-        self.sidebar_sections = [
+        self.sidebar_sections_loggedin = [
             {
                 "title": "User",
-                "links": [r["data"] for r in routes if r["category"] == "User"],
+                "links": [
+                    r["data"]
+                    for r in routes
+                    if r["category"] == "User" and "logged_in" in r["requires"]
+                ],
+            }
+        ]
+
+        self.sidebar_sections_loggedout = [
+            {
+                "title": "User",
+                "links": [
+                    r["data"]
+                    for r in routes
+                    if r["category"] == "User" and "logged_out" in r["requires"]
+                ],
             }
         ]
 
         router = app.router
-        router.add_route("GET", "/", self.index, name="index")
         router.add_route("GET", "/users/me", self.me, name="me")
         router.add_route("GET", r"/users/{uid:\d+}", self.user, name="user")
         router.add_route("GET", "/login", self.loginForm, name="loginForm")
