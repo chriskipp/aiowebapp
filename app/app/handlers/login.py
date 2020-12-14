@@ -1,5 +1,6 @@
+import time
+
 import aiohttp_jinja2
-import orjson
 from aiohttp import web
 from aiohttp_security import (
     check_authorized,
@@ -7,13 +8,29 @@ from aiohttp_security import (
     forget,
     remember,
 )
-from aiohttp_session import get_session, new_session
+from aiohttp_session import new_session
 
 from app.auth import check_credentials
 from app.models import users
 
+from .base import BaseHandler
 
-class LoginHandler:
+
+class LoginHandler(BaseHandler):
+    async def session(self, request):
+        session = request["session"]
+        session["age"] = time.time() - session.created
+        return aiohttp_jinja2.render_template(
+            "key_value_table.html",
+            request,
+            context={
+                "username": request["user"],
+                "heading": "Session",
+                "rows": {k: v for k, v in session.items()},
+                "sidebar": await self.get_sidebar(request),
+            },
+        )
+
     async def me(self, request):
         if request["user"]:
 
@@ -29,7 +46,7 @@ class LoginHandler:
                 request,
                 context={
                     "username": request["user"],
-                    "sidebar": self.sidebar_sections_loggedin,
+                    "sidebar": await self.get_sidebar(request),
                     "data": user,
                     "rows": user,
                 },
@@ -52,7 +69,7 @@ class LoginHandler:
                 request,
                 context={
                     "username": request["user"],
-                    "sidebar": self.sidebar_sections_loggedin,
+                    "sidebar": await self.get_sidebar(request),
                     "data": user,
                     "rows": user,
                 },
@@ -61,6 +78,14 @@ class LoginHandler:
             raise web.HTTPUnauthorized()
 
     async def login_form(self, request):
+        #        return aiohttp_jinja2.render_template(
+        #            "login.html",
+        #            request,
+        #            context={
+        #                "username": request["user"],
+        #                "sidebar": await self.get_sidebar(request),
+        #            },
+        #        )
         if request["user"]:
             return aiohttp_jinja2.render_template(
                 "login.html",
@@ -95,11 +120,12 @@ class LoginHandler:
         )
 
     async def logout(self, request):
-        session = await get_session(request)
+        session = request["session"]
         response = aiohttp_jinja2.render_template(
             "logout.html",
             request,
             context={
+                "username": None,
                 "sidebar": self.sidebar_sections_loggedout,
             },
         )
@@ -120,31 +146,9 @@ class LoginHandler:
 
     def configure(self, app):
 
-        with open("routes.json") as f:
-            routes = orjson.loads(f.read())
-
-        self.sidebar_sections_loggedin = [
-            {
-                "title": k,
-                "links": [
-                    r["data"] for r in v if "logged_in" in r["requires"]
-                ],
-            }
-            for k, v in routes.items()
-        ]
-
-        self.sidebar_sections_loggedout = [
-            {
-                "title": k,
-                "links": [
-                    r["data"] for r in v if "logged_out" in r["requires"]
-                ],
-            }
-            for k, v in routes.items()
-        ]
-
         router = app.router
         router.add_route("GET", "/me", self.me, name="me")
+        router.add_route("GET", "/session", self.session, name="session")
         router.add_route("GET", r"/users/{uid:\d+}", self.user, name="user")
         router.add_route("GET", "/login", self.login_form, name="loginForm")
         router.add_route("POST", "/login", self.login, name="login")

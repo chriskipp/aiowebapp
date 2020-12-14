@@ -1,79 +1,39 @@
-import aiohttp_jinja2
-from aiohttp_security import authorized_userid
-
-routes = [
-    {
-        "data": {
-            "href": "/users/me",
-            "icon": "fa-address-card",
-            "label": "Profile",
-        },
-        "requires": {"logged_in"},
-        "category": "User",
-    },
-    {
-        "data": {"href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
-        "requires": {"logged_out"},
-        "category": "User",
-    },
-    {
-        "data": {
-            "href": "/logout",
-            "icon": "fa-sign-out-alt",
-            "label": "Logout",
-        },
-        "requires": {"logged_in"},
-        "category": "User",
-    },
-]
+import orjson
 
 
 class BaseHandler:
-    async def index(self, request):
-        username = await authorized_userid(request)
-        if username:
-            return aiohttp_jinja2.render_template(
-                "layout.html",
-                request,
-                context={
-                    "username": username,
-                    "sidebar": self.sidebar_sections_loggedin,
-                },
-            )
-        else:
-            return aiohttp_jinja2.render_template(
-                "layout.html",
-                request,
-                context={
-                    "username": None,
-                    "sidebar": self.sidebar_sections_loggedout,
-                },
-            )
+    def __init__(self):
+        sidebar_sections = ["User", "Tools"]
 
-    def configure(self, app):
+        with open("routes.json") as f:
+            self.routes = orjson.loads(f.read())
 
         self.sidebar_sections_loggedin = [
             {
-                "title": "User",
+                "title": k,
                 "links": [
                     r["data"]
-                    for r in routes
-                    if r["category"] == "User" and "logged_in" in r["requires"]
+                    for r in self.routes[k]
+                    if "logged_in" in r["requires"]
                 ],
             }
+            for k in sidebar_sections
         ]
 
         self.sidebar_sections_loggedout = [
             {
-                "title": "User",
+                "title": k,
                 "links": [
                     r["data"]
-                    for r in routes
-                    if r["category"] == "User"
-                    and "logged_out" in r["requires"]
+                    for r in self.routes[k]
+                    if "logged_out" in r["requires"]
                 ],
             }
+            for k in sidebar_sections
         ]
 
-        router = app.router
-        router.add_route("GET", "/", self.index, name="index")
+    async def get_sidebar(self, request):
+        if request["user"]:
+            return self.sidebar_sections_loggedin
+        else:
+            return self.sidebar_sections_loggedout

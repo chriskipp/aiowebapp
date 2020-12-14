@@ -9,7 +9,7 @@ http_errors = {
         "status": 401,
         "status_message": "Unauthorized",
         "message": "The request requires user authentication.",
-        "append": ["loginform"],
+        "append": [{"loginform": "loginform"}],
     },
     403: {
         "status": 403,
@@ -41,7 +41,7 @@ http_errors = {
         "status_message": "Internal Server Error",
         "message": """The server encountered an unexpected condition which
             prevented it from fulfilling the request.""",
-        "append": [],
+        "append": ["exception"],
     },
 }
 
@@ -76,6 +76,8 @@ async def handle_405(request):
 
 async def handle_500(request):
     # InternalServerError
+    context = http_errors[500]
+    context["append"] = {"exception": str(request["error"])}
     return aiohttp_jinja2.render_template(
         "error.html", request, http_errors[500], status=500
     )
@@ -92,7 +94,8 @@ def create_error_middleware(overrides):
                 return await override(request)
 
             raise
-        except Exception:
+        except Exception as e:
+            request["error"] = e
             return await overrides[500](request)
 
     return error_middleware

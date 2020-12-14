@@ -1,28 +1,12 @@
 # routes.py
 import pathlib
-import time
 
-import orjson
 from aiohttp import web
-from aiohttp_session import get_session
 
-from .handlers.base import BaseHandler
+from .handlers.index import IndexHandler
 from .handlers.login import LoginHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
-
-
-async def showsession(request: web.Request) -> web.Response:
-    session = await get_session(request)
-    session["age"] = time.time() - session.created
-    text = (
-        str(session.identity)
-        + "\n"
-        + orjson.dumps(
-            {k: v for k, v in session.items()}, option=orjson.OPT_INDENT_2
-        ).decode()
-    )
-    return web.Response(text=text)
 
 
 def setup_static_routes(app: web.Application) -> None:
@@ -44,11 +28,11 @@ def setup_static_routes(app: web.Application) -> None:
 
 def setup_routes(app: web.Application) -> None:
 
-    app.router.add_get("/session", showsession, name="session")
+    # app.router.add_get("/session", showsession, name="session")
 
-    # Setup BaseHandler
-    basehandler = BaseHandler()
-    basehandler.configure(app)
+    # Setup IndexHandler
+    indexhandler = IndexHandler()
+    indexhandler.configure(app)
 
     # Setup LoginHandler
     loginhandler = LoginHandler()

@@ -8,6 +8,8 @@
   {% for item in append %}
     {% if item == 'loginform' %}
       {{ lib.loginModal() }}
+    {% elif item == 'exception' %}
+      <p>{{ item['exception'] }}</p>
     {% endif %}
   {% endfor %}
 {% endblock %}
