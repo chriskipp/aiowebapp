@@ -1,4 +1,3 @@
-import asyncio
 from collections import defaultdict
 
 import pytest
@@ -8,7 +7,6 @@ from aiohttp_session import get_session
 from app.auth import AuthorizationPolicy, check_credentials
 from app.main import create_app
 from app.session import setup_security, setup_session
-
 
 logins = [
     {
@@ -134,7 +132,9 @@ async def test_loginhandler_login(aiohttp_client):
     client = await aiohttp_client(app)
 
     for user in users:
-        res = await client.post("/login", data={"login": user, "password": "password"})
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
         assert res.status == 200
         res = await client.get("/identity")
         assert res.status == 200
@@ -149,7 +149,7 @@ async def test_loginhandler_login(aiohttp_client):
 
     for nouser in nousers:
         res = await client.post(
-            "/login", data={"login": nouser, "password": "password"}
+            "/login", data={"loginField": nouser, "passwordField": "password"}
         )
         assert res.status == 401
         res = await client.get("/identity")

@@ -11,7 +11,7 @@ routes_nologin = [
     ("/protected", 401),
     ("/storage", 200),
     ("/logout", 401),
-    ("/static/images/favicon.ico", 200)
+    ("/static/images/favicon.ico", 200),
 ]
 
 routes_user = [
@@ -60,7 +60,9 @@ async def test_route_admin(aiohttp_client, route, status):
     await setup_security(app)
     client = await aiohttp_client(app)
 
-    res = await client.post("/login", data={"login": "admin", "password": "password"})
+    res = await client.post(
+        "/login", data={"loginField": "admin", "passwordField": "password"}
+    )
     assert res.status == 200
 
     res = await client.get(route)
@@ -75,7 +77,9 @@ async def test_route_user(aiohttp_client, route, status):
     await setup_security(app)
     client = await aiohttp_client(app)
 
-    res = await client.post("/login", data={"login": "user", "password": "password"})
+    res = await client.post(
+        "/login", data={"loginField": "user", "passwordField": "password"}
+    )
     assert res.status == 200
 
     res = await client.get(route)
@@ -91,7 +95,7 @@ async def test_route_moderator(aiohttp_client, route, status):
     client = await aiohttp_client(app)
 
     res = await client.post(
-        "/login", data={"login": "moderator", "password": "password"}
+        "/login", data={"loginField": "moderator", "passwordField": "password"}
     )
     assert res.status == 200
 

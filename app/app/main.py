@@ -1,5 +1,4 @@
 # main.py
-import asyncio
 import logging
 import sys
 import time
@@ -14,14 +13,14 @@ from aiohttp_security import setup as setup_security
 from aiohttp_session import get_session
 from aiohttp_session import setup as setup_session
 
+from app._dev.extra_pgsql import RequestPgDebugPanel
+from app._dev.extra_redis import RequestRedisDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
+from app.middlewares import setup_middlewares
 from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
-
-from app._dev.extra_pgsql import RequestPgDebugPanel
-from app._dev.extra_redis import RequestRedisDebugPanel
 
 
 async def handler(request):
@@ -75,6 +74,9 @@ def create_app(config=None):
 
     # create security using SQLalchemy db connection on startup
     app.on_startup.append(setup_security)
+
+    # setup middlewares
+    setup_middlewares(app)
 
     app.router.add_get("/", handler)
     app.router.add_get("/session", showsession)

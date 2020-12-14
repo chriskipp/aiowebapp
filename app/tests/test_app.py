@@ -1,10 +1,8 @@
-import asyncio
 import logging
 
 from aiohttp import web
 
 from app.main import create_app
-
 
 
 async def test_app_creation():
