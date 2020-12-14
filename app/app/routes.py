@@ -2,11 +2,11 @@
 import pathlib
 import time
 
-import aiohttp_jinja2
 import orjson
 from aiohttp import web
 from aiohttp_session import get_session
 
+from .handlers.base import BaseHandler
 from .handlers.login import LoginHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
@@ -23,10 +23,6 @@ async def showsession(request: web.Request) -> web.Response:
         ).decode()
     )
     return web.Response(text=text)
-
-
-async def index_handler(request: web.Request) -> web.Response:
-    return aiohttp_jinja2.render_template("layout.html", request, context=None)
 
 
 def setup_static_routes(app: web.Application) -> None:
@@ -47,9 +43,12 @@ def setup_static_routes(app: web.Application) -> None:
 
 
 def setup_routes(app: web.Application) -> None:
-    app.router.add_get("/", index_handler)
 
     app.router.add_get("/session", showsession, name="session")
+
+    # Setup BaseHandler
+    basehandler = BaseHandler()
+    basehandler.configure(app)
 
     # Setup LoginHandler
     loginhandler = LoginHandler()

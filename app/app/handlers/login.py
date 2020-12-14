@@ -1,7 +1,7 @@
 import aiohttp_jinja2
+import orjson
 from aiohttp import web
 from aiohttp_security import (
-    authorized_userid,
     check_authorized,
     check_permission,
     forget,
@@ -12,50 +12,23 @@ from aiohttp_session import get_session, new_session
 from app.auth import check_credentials
 from app.models import users
 
-routes = [
-    {
-        "data": {
-            "href": "/users/me",
-            "icon": "fa-address-card",
-            "label": "Profile",
-        },
-        "requires": ["logged_in"],
-        "category": "User",
-    },
-    {
-        "data": {"href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
-        "requires": ["logged_out"],
-        "category": "User",
-    },
-    {
-        "data": {
-            "href": "/logout",
-            "icon": "fa-sign-out-alt",
-            "label": "Logout",
-        },
-        "requires": ["logged_in"],
-        "category": "User",
-    },
-]
-
 
 class LoginHandler:
     async def me(self, request):
-        username = await authorized_userid(request)
-        if username:
-            await check_authorized(request)
+        if request["user"]:
 
             async with request.app["dbsa"].acquire() as conn:
-                query = users.select().where(users.c.login == username)
+                query = users.select().where(users.c.login == request["user"])
                 ret = await conn.execute(query)
                 values = await ret.fetchone()
+
             user = dict(values)
-            user["passwd"] = "***"
+            user["passwd"] = "************"
             return aiohttp_jinja2.render_template(
                 "user.html",
                 request,
                 context={
-                    "username": username,
+                    "username": request["user"],
                     "sidebar": self.sidebar_sections_loggedin,
                     "data": user,
                     "rows": user,
@@ -65,9 +38,7 @@ class LoginHandler:
             raise web.HTTPUnauthorized()
 
     async def user(self, request):
-        username = await authorized_userid(request)
-        if username:
-            await check_authorized(request)
+        if request["user"]:
             query_uid = request.match_info["uid"]
 
             async with request.app["dbsa"].acquire() as conn:
@@ -80,7 +51,7 @@ class LoginHandler:
                 "user.html",
                 request,
                 context={
-                    "username": username,
+                    "username": request["user"],
                     "sidebar": self.sidebar_sections_loggedin,
                     "data": user,
                     "rows": user,
@@ -90,19 +61,27 @@ class LoginHandler:
             raise web.HTTPUnauthorized()
 
     async def login_form(self, request):
-        username = await authorized_userid(request)
-        return aiohttp_jinja2.render_template(
-            "login.html",
-            request,
-            context={
-                "username": username,
-                "sidebar": self.sidebar_sections_loggedout,
-            },
-        )
+        if request["user"]:
+            return aiohttp_jinja2.render_template(
+                "login.html",
+                request,
+                context={
+                    "username": request["user"],
+                    "sidebar": self.sidebar_sections_loggedin,
+                },
+            )
+        else:
+            return aiohttp_jinja2.render_template(
+                "login.html",
+                request,
+                context={
+                    "sidebar": self.sidebar_sections_loggedout,
+                },
+            )
 
     async def login(self, request):
         await new_session(request)
-        response = web.HTTPFound("/users/me")
+        response = web.HTTPFound("/me")
         form = await request.post()
         login = form.get("loginField")
         password = form.get("passwordField")
@@ -121,7 +100,6 @@ class LoginHandler:
             "logout.html",
             request,
             context={
-                "username": None,
                 "sidebar": self.sidebar_sections_loggedout,
             },
         )
@@ -142,31 +120,31 @@ class LoginHandler:
 
     def configure(self, app):
 
+        with open("routes.json") as f:
+            routes = orjson.loads(f.read())
+
         self.sidebar_sections_loggedin = [
             {
-                "title": "User",
+                "title": k,
                 "links": [
-                    r["data"]
-                    for r in routes
-                    if r["category"] == "User" and "logged_in" in r["requires"]
+                    r["data"] for r in v if "logged_in" in r["requires"]
                 ],
             }
+            for k, v in routes.items()
         ]
 
         self.sidebar_sections_loggedout = [
             {
-                "title": "User",
+                "title": k,
                 "links": [
-                    r["data"]
-                    for r in routes
-                    if r["category"] == "User"
-                    and "logged_out" in r["requires"]
+                    r["data"] for r in v if "logged_out" in r["requires"]
                 ],
             }
+            for k, v in routes.items()
         ]
 
         router = app.router
-        router.add_route("GET", "/users/me", self.me, name="me")
+        router.add_route("GET", "/me", self.me, name="me")
         router.add_route("GET", r"/users/{uid:\d+}", self.user, name="user")
         router.add_route("GET", "/login", self.login_form, name="loginForm")
         router.add_route("POST", "/login", self.login, name="login")

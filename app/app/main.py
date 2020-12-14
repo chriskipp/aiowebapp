@@ -52,7 +52,7 @@ def create_app(config=None) -> web.Application:
     app.on_startup.append(setup_security)
 
     # setup middlewares
-    setup_middlewares(app)
+    app.on_startup.append(setup_middlewares)
 
     setup_routes(app)
 

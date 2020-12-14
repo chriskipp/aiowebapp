@@ -1,12 +1,15 @@
 # middlewares.py
 import aiohttp_jinja2
 from aiohttp import web
+from aiohttp_security import authorized_userid, check_authorized
+from aiohttp_session import get_session
 
 http_errors = {
     401: {
         "status": 401,
         "status_message": "Unauthorized",
         "message": "The request requires user authentication.",
+        "append": ["loginform"],
     },
     403: {
         "status": 403,
@@ -14,6 +17,7 @@ http_errors = {
         "message": """The server understood the request, but is refusing to
             fulfill it. Authorization will not help and the request SHOULD
             NOT be repeated.""",
+        "append": [],
     },
     404: {
         "status": 404,
@@ -21,6 +25,7 @@ http_errors = {
         "message": """The server has not found anything matching the
             Request-URI. No indication is given of whether the condition is
             temporary or permanent.""",
+        "append": [],
     },
     405: {
         "status": 405,
@@ -29,12 +34,14 @@ http_errors = {
             for the resource identified by the Request-URI. The response MUST
             include an Allow header containing a list of valid methods for the
             requested resource.""",
+        "append": [],
     },
     500: {
         "status": 500,
         "status_message": "Internal Server Error",
         "message": """The server encountered an unexpected condition which
             prevented it from fulfilling the request.""",
+        "append": [],
     },
 }
 
@@ -91,7 +98,23 @@ def create_error_middleware(overrides):
     return error_middleware
 
 
-def setup_middlewares(app):
+@web.middleware
+async def session_middleware(request, handler):
+    request["session"] = await get_session(request)
+    return await handler(request)
+
+
+@web.middleware
+async def login_middleware(request, handler):
+    request["user"] = None
+    username = await authorized_userid(request)
+    if username:
+        await check_authorized(request)
+        request["user"] = username
+    return await handler(request)
+
+
+async def setup_middlewares(app):
     error_middleware = create_error_middleware(
         {
             401: handle_401,
@@ -102,3 +125,5 @@ def setup_middlewares(app):
         }
     )
     app.middlewares.append(error_middleware)
+    app.middlewares.append(session_middleware)
+    app.middlewares.append(login_middleware)

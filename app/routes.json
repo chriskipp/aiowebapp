@@ -1,0 +1,34 @@
+{
+    "User": [
+        {
+            "data": {
+                "href": "/me",
+                "icon": "fa-address-card",
+                "label": "Profile"
+            },
+            "requires": ["logged_in"]
+        },
+        {
+            "data": {"href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
+            "requires": ["logged_out"]
+        },
+        {
+            "data": {
+                "href": "/logout",
+                "icon": "fa-sign-out-alt",
+                "label": "Logout"
+            },
+            "requires": ["logged_in"]
+        }
+    ],
+    "Tools": [
+        {
+            "data": {
+                "href": "/editor",
+                "icon": "fa-file-alt",
+                "label": "Editor"
+            },
+            "requires": ["logged_in", "logged_out"]
+        }
+    ]
+}
