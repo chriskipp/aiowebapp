@@ -33,7 +33,9 @@ class RequestHandler(object):
             called_from = []
             for stack in inspect.stack()[1:]:
                 called_from.append(
-                    "/{0}:{1}".format("/".join(stack[1].split("/")[-3:]), stack[2])
+                    "/{0}:{1}".format(
+                        "/".join(stack[1].split("/")[-3:]), stack[2]
+                    )
                 )
                 if len(called_from) >= 2:
                     break
@@ -45,9 +47,9 @@ class RequestHandler(object):
                 args = tuple(list(args) + [""])
             arg = {
                 "command": (
-                    args[1].decode("UTF-8").strip()
-                    if isinstance(args[1], bytes)
-                    else args[1]
+                    isinstance(args[1], bytes)
+                    and args[1].decode("UTF-8").strip()
+                    or args[1]
                 ),
                 "return": bool(context),
                 "key": args[2].strip(),
@@ -97,7 +99,9 @@ class RequestRedisDebugPanel(DebugPanel):
                     "Total time": "%0.3f sec" % self._handler.total_time,
                     "Total": len(self._handler.queries),
                 }.items(),
-                "queries": [(k, v) for k, v in enumerate(self._handler.queries)],
+                "queries": [
+                    (k, v) for k, v in enumerate(self._handler.queries)
+                ],
             }
         )
 

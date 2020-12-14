@@ -28,12 +28,12 @@ class RequestHandler(object):
         async def wrapped(*args, **kwargs):
             start = time.time()
 
-            context = await func(*args, **kwargs)
-
             called_from = []
             for stack in inspect.stack()[1:]:
                 called_from.append(
-                    "/{0}:{1}".format("/".join(stack[1].split("/")[-3:]), stack[2])
+                    "/{0}:{1}".format(
+                        "/".join(stack[1].split("/")[-3:]), stack[2]
+                    )
                 )
                 if len(called_from) >= 2:
                     break
@@ -45,7 +45,7 @@ class RequestHandler(object):
                 .replace("\n", "<br>")
                 .replace("\t", "&nbsp;&nbsp;")
                 .replace("    ", "&nbsp;&nbsp;"),
-                "params": args[2] if len(args) > 2 else [],
+                "params": len(args) > 2 and args[2] or [],
                 "other": dict(kwargs),
                 "elapsed": "%0.3f sec" % elapsed,
                 "called_from": "<br/>".join(reversed(called_from)),
@@ -53,7 +53,7 @@ class RequestHandler(object):
             self._queries.append(arg)
             self._total_time += elapsed
 
-            return context
+            return await func(*args, **kwargs)
 
         return wrapped
 
@@ -92,7 +92,9 @@ class RequestPgDebugPanel(DebugPanel):
                     "Total time": "%0.3f sec" % self._handler.total_time,
                     "Total": len(self._handler.queries),
                 }.items(),
-                "queries": [(k, v) for k, v in enumerate(self._handler.queries)],
+                "queries": [
+                    (k, v) for k, v in enumerate(self._handler.queries)
+                ],
             }
         )
 

@@ -9,10 +9,10 @@ from aiohttp_session import get_session
 
 from .handlers.login import LoginHandler
 
-PROJECT_ROOT = pathlib.Path(__file__).parent
+PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 
 
-async def showsession(request):
+async def showsession(request: web.Request) -> web.Response:
     session = await get_session(request)
     session["age"] = time.time() - session.created
     text = (
@@ -25,14 +25,16 @@ async def showsession(request):
     return web.Response(text=text)
 
 
-async def index_handler(request):
-    response = aiohttp_jinja2.render_template("layout.html", request, context=None)
-    return response
+async def index_handler(request: web.Request) -> web.Response:
+    return aiohttp_jinja2.render_template("layout.html", request, context=None)
 
 
-def setup_static_routes(app):
+def setup_static_routes(app: web.Application) -> None:
     app.router.add_static(
-        "/static/", path=PROJECT_ROOT / "static", name="static", append_version=True
+        "/static/",
+        path=PROJECT_ROOT / "static",
+        name="static",
+        append_version=True,
     )
 
     app.router.add_static(
@@ -44,7 +46,7 @@ def setup_static_routes(app):
     )
 
 
-def setup_routes(app):
+def setup_routes(app: web.Application) -> None:
     app.router.add_get("/", index_handler)
 
     app.router.add_get("/session", showsession, name="session")

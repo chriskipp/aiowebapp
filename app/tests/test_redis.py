@@ -37,7 +37,7 @@ def get_json_objs():
 json_objs = get_json_objs()
 
 
-@pytest.fixture
+@pytest.fixture()
 async def create_app_with_redis():
     app = create_app()
     await setup_redis(app)
@@ -55,7 +55,7 @@ async def test_redis_setup_teardown(create_app_with_redis):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("key,value", redis_keys)
+@pytest.mark.parametrize(("key", "value"), redis_keys)
 async def test_set_get_del_keys(create_app_with_redis, key, value):
     app = create_app_with_redis
 
@@ -65,11 +65,11 @@ async def test_set_get_del_keys(create_app_with_redis, key, value):
 
     await del_redis_key(app["redis"], key)
     res = await get_redis_key(app["redis"], key)
-    assert res == None
+    assert res is None
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("key,value", json_objs)
+@pytest.mark.parametrize(("key", "value"), json_objs)
 async def test_get_set_del_json(create_app_with_redis, key, value):
     app = create_app_with_redis
 
@@ -78,7 +78,7 @@ async def test_get_set_del_json(create_app_with_redis, key, value):
     assert res == res
 
     res = await del_redis_json(app["redis"], key)
-    assert res == None
+    assert res is None
 
 
 @pytest.mark.asyncio

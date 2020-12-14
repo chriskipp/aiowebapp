@@ -1,10 +1,16 @@
 import pytest
 
-from app.db import execute_sql, setup_pg, setup_pgsa, teardown_pg, teardown_pgsa
+from app.db import (
+    execute_sql,
+    setup_pg,
+    setup_pgsa,
+    teardown_pg,
+    teardown_pgsa,
+)
 from app.main import create_app
 
 
-@pytest.fixture
+@pytest.fixture()
 async def create_app_with_db():
     app = create_app()
     await setup_pg(app)
@@ -12,7 +18,7 @@ async def create_app_with_db():
     await teardown_pg(app)
 
 
-@pytest.fixture
+@pytest.fixture()
 async def create_app_with_dbsa():
     app = create_app()
     await setup_pgsa(app)
@@ -64,7 +70,7 @@ async def test_db_insert_into(create_app_with_db):
     statement = """
             INSERT INTO test (
               a, b, c
-            ) VALUES 
+            ) VALUES
               {}
             ;"""
     app = create_app_with_db

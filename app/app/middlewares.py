@@ -11,22 +11,30 @@ http_errors = {
     403: {
         "status": 403,
         "status_message": "Forbidden",
-        "message": "The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.",
+        "message": """The server understood the request, but is refusing to
+            fulfill it. Authorization will not help and the request SHOULD
+            NOT be repeated.""",
     },
     404: {
         "status": 404,
         "status_message": "Not Found",
-        "message": "The server has not found anything matching the Request-URI. No indication is given of whether the condition is temporary or permanent.",
+        "message": """The server has not found anything matching the
+            Request-URI. No indication is given of whether the condition is
+            temporary or permanent.""",
     },
     405: {
         "status": 405,
         "status_message": "Method not allowed",
-        "message": "The method specified in the Request-Line is not allowed for the resource identified by the Request-URI. The response MUST include an Allow header containing a list of valid methods for the requested resource.",
+        "message": """The method specified in the Request-Line is not allowed
+            for the resource identified by the Request-URI. The response MUST
+            include an Allow header containing a list of valid methods for the
+            requested resource.""",
     },
     500: {
         "status": 500,
         "status_message": "Internal Server Error",
-        "message": "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+        "message": """The server encountered an unexpected condition which
+            prevented it from fulfilling the request.""",
     },
 }
 

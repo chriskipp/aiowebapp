@@ -12,7 +12,8 @@ class AuthorizationPolicy(AbstractAuthorizationPolicy):
     async def authorized_userid(self, identity):
         async with self.dbengine.acquire() as conn:
             where = sa.and_(
-                models.users.c.login == identity, sa.not_(models.users.c.disabled)
+                models.users.c.login == identity,
+                sa.not_(models.users.c.disabled),
             )
             query = models.users.count().where(where)
             ret = await conn.scalar(query)
@@ -27,7 +28,8 @@ class AuthorizationPolicy(AbstractAuthorizationPolicy):
 
         async with self.dbengine.acquire() as conn:
             where = sa.and_(
-                models.users.c.login == identity, sa.not_(models.users.c.disabled)
+                models.users.c.login == identity,
+                sa.not_(models.users.c.disabled),
             )
             query = models.users.select().where(where)
             ret = await conn.execute(query)

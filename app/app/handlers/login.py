@@ -14,7 +14,11 @@ from app.models import users
 
 routes = [
     {
-        "data": {"href": "/users/me", "icon": "fa-address-card", "label": "Profile"},
+        "data": {
+            "href": "/users/me",
+            "icon": "fa-address-card",
+            "label": "Profile",
+        },
         "requires": ["logged_in"],
         "category": "User",
     },
@@ -24,7 +28,11 @@ routes = [
         "category": "User",
     },
     {
-        "data": {"href": "/logout", "icon": "fa-sign-out-alt", "label": "Logout"},
+        "data": {
+            "href": "/logout",
+            "icon": "fa-sign-out-alt",
+            "label": "Logout",
+        },
         "requires": ["logged_in"],
         "category": "User",
     },
@@ -78,21 +86,22 @@ class LoginHandler:
                     "rows": user,
                 },
             )
-            return web.Response(text=str(user))
         else:
             raise web.HTTPUnauthorized()
 
-    async def loginForm(self, request):
+    async def login_form(self, request):
         username = await authorized_userid(request)
-        response = aiohttp_jinja2.render_template(
+        return aiohttp_jinja2.render_template(
             "login.html",
             request,
-            context={"username": username, "sidebar": self.sidebar_sections_loggedout},
+            context={
+                "username": username,
+                "sidebar": self.sidebar_sections_loggedout,
+            },
         )
-        return response
 
     async def login(self, request):
-        session = await new_session(request)
+        await new_session(request)
         response = web.HTTPFound("/users/me")
         form = await request.post()
         login = form.get("loginField")
@@ -102,29 +111,34 @@ class LoginHandler:
             await remember(request, response, login)
             raise response
 
-        raise web.HTTPUnauthorized(text="Invalid username/password combination")
+        raise web.HTTPUnauthorized(
+            text="Invalid username/password combination"
+        )
 
     async def logout(self, request):
         session = await get_session(request)
-        await check_authorized(request)
         response = aiohttp_jinja2.render_template(
             "logout.html",
             request,
-            context={"username": None, "sidebar": self.sidebar_sections_loggedout},
+            context={
+                "username": None,
+                "sidebar": self.sidebar_sections_loggedout,
+            },
         )
+        await check_authorized(request)
         await forget(request, response)
         session.invalidate()
         return response
 
     async def public_page(self, request):
         await check_permission(request, "public")
-        response = web.Response(text="This page is visible for all registered users")
-        return response
+        return web.Response(
+            text="This page is visible for all registered users"
+        )
 
     async def protected_page(self, request):
         await check_permission(request, "protected")
-        response = web.Response(text="You are on protected page")
-        return response
+        return web.Response(text="You are on protected page")
 
     def configure(self, app):
 
@@ -145,7 +159,8 @@ class LoginHandler:
                 "links": [
                     r["data"]
                     for r in routes
-                    if r["category"] == "User" and "logged_out" in r["requires"]
+                    if r["category"] == "User"
+                    and "logged_out" in r["requires"]
                 ],
             }
         ]
@@ -153,8 +168,10 @@ class LoginHandler:
         router = app.router
         router.add_route("GET", "/users/me", self.me, name="me")
         router.add_route("GET", r"/users/{uid:\d+}", self.user, name="user")
-        router.add_route("GET", "/login", self.loginForm, name="loginForm")
+        router.add_route("GET", "/login", self.login_form, name="loginForm")
         router.add_route("POST", "/login", self.login, name="login")
         router.add_route("GET", "/logout", self.logout, name="logout")
         router.add_route("GET", "/public", self.public_page, name="public")
-        router.add_route("GET", "/protected", self.protected_page, name="protected")
+        router.add_route(
+            "GET", "/protected", self.protected_page, name="protected"
+        )

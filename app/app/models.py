@@ -9,7 +9,9 @@ users = sa.Table(
     sa.Column("id", sa.Integer, nullable=False),
     sa.Column("login", sa.String(256), nullable=False),
     sa.Column("passwd", sa.String(256), nullable=False),
-    sa.Column("is_superuser", sa.Boolean, nullable=False, server_default="FALSE"),
+    sa.Column(
+        "is_superuser", sa.Boolean, nullable=False, server_default="FALSE"
+    ),
     sa.Column("disabled", sa.Boolean, nullable=False, server_default="FALSE"),
     # indices
     sa.PrimaryKeyConstraint("id", name="user_pkey"),
@@ -27,6 +29,9 @@ permissions = sa.Table(
     # indices
     sa.PrimaryKeyConstraint("id", name="permission_pkey"),
     sa.ForeignKeyConstraint(
-        ["user_id"], [users.c.id], name="user_permission_fkey", ondelete="CASCADE"
+        ["user_id"],
+        [users.c.id],
+        name="user_permission_fkey",
+        ondelete="CASCADE",
     ),
 )

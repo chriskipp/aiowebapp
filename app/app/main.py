@@ -1,14 +1,8 @@
-# main.py
-import logging
-import sys
-
+# app.py
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
-import uvloop
 from aiohttp import web
-from aiohttp_security import setup as setup_security
-from aiohttp_session import setup as setup_session
 
 from app._dev.extra_pgsql import RequestPgDebugPanel
 from app._dev.extra_redis import RequestRedisDebugPanel
@@ -20,7 +14,7 @@ from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
 
-def create_app(config=None):
+def create_app(config=None) -> web.Application:
 
     app = web.Application()
     app["config"] = get_config(config)
@@ -35,7 +29,9 @@ def create_app(config=None):
     )
 
     # setup Jinja2 template renderer
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("./app/templates/"))
+    aiohttp_jinja2.setup(
+        app, loader=jinja2.FileSystemLoader("./app/templates/")
+    )
 
     # create db connection on startup, shutdown on exit
     app.on_startup.append(setup_redis)
@@ -58,24 +54,6 @@ def create_app(config=None):
     # setup middlewares
     setup_middlewares(app)
 
-    uvloop.install()
     setup_routes(app)
 
     return app
-
-
-def main(argv):
-    logging.basicConfig(level=logging.DEBUG)
-
-    config = None
-    for i in range(len(argv)):
-        if i in {"-c", "--config"}:
-            config = argv[i + 1]
-
-    app = create_app(config=config)
-
-    web.run_app(app, host=app["config"]["host"], port=app["config"]["port"])
-
-
-if __name__ == "__main__":
-    main(sys.argv)

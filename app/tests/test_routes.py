@@ -1,3 +1,4 @@
+import aiohttp_jinja2
 import pytest
 
 from app.main import create_app
@@ -56,14 +57,40 @@ routes_admin = [
 ]
 
 
-@pytest.mark.parametrize("route,status", routes_nologin)
+async def test_internal_server_error(aiohttp_client):
+    async def internal_server_error(request):
+        return aiohttp_jinja2.render_template(
+            "layout.html", request, context=""
+        )
+
+    app = create_app()
+    app.router.add_get("/error", internal_server_error)
+    client = await aiohttp_client(app)
+
+    res = await client.get("/error")
+    assert res.status == 500
+
+
+async def test_handler_exception(aiohttp_client):
+    async def exception(request):
+        raise Exception
+
+    app = create_app()
+    app.router.add_get("/exception", exception)
+    client = await aiohttp_client(app)
+
+    res = await client.get("/exception")
+    assert res.status == 500
+
+
+@pytest.mark.parametrize(("route", "status"), routes_nologin)
 async def test_route_nologin(aiohttp_client, route, status):
     client = await aiohttp_client(create_app())
     res = await client.get(route)
     assert res.status == status
 
 
-@pytest.mark.parametrize("route,status", routes_admin)
+@pytest.mark.parametrize(("route", "status"), routes_admin)
 async def test_route_admin(aiohttp_client, route, status):
 
     app = create_app()
@@ -80,7 +107,7 @@ async def test_route_admin(aiohttp_client, route, status):
     assert res.status == status
 
 
-@pytest.mark.parametrize("route,status", routes_user)
+@pytest.mark.parametrize(("route", "status"), routes_user)
 async def test_route_user(aiohttp_client, route, status):
 
     app = create_app()
@@ -97,7 +124,7 @@ async def test_route_user(aiohttp_client, route, status):
     assert res.status == status
 
 
-@pytest.mark.parametrize("route,status", routes_moderator)
+@pytest.mark.parametrize(("route", "status"), routes_moderator)
 async def test_route_moderator(aiohttp_client, route, status):
 
     app = create_app()
@@ -112,3 +139,12 @@ async def test_route_moderator(aiohttp_client, route, status):
 
     res = await client.get(route)
     assert res.status == status
+
+
+async def test_method_not_allowed(aiohttp_client):
+
+    app = create_app()
+    client = await aiohttp_client(app)
+
+    res = await client.post("/logout", data={"some": "data"})
+    assert res.status == 405
