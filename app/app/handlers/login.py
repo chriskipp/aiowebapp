@@ -2,12 +2,7 @@ import time
 
 import aiohttp_jinja2
 from aiohttp import web
-from aiohttp_security import (
-    check_authorized,
-    check_permission,
-    forget,
-    remember,
-)
+from aiohttp_security import check_authorized, forget, remember
 from aiohttp_session import new_session
 
 from app.auth import check_credentials
@@ -78,31 +73,14 @@ class LoginHandler(BaseHandler):
             raise web.HTTPUnauthorized()
 
     async def login_form(self, request):
-        #        return aiohttp_jinja2.render_template(
-        #            "login.html",
-        #            request,
-        #            context={
-        #                "username": request["user"],
-        #                "sidebar": await self.get_sidebar(request),
-        #            },
-        #        )
-        if request["user"]:
-            return aiohttp_jinja2.render_template(
-                "login.html",
-                request,
-                context={
-                    "username": request["user"],
-                    "sidebar": self.sidebar_sections_loggedin,
-                },
-            )
-        else:
-            return aiohttp_jinja2.render_template(
-                "login.html",
-                request,
-                context={
-                    "sidebar": self.sidebar_sections_loggedout,
-                },
-            )
+        return aiohttp_jinja2.render_template(
+            "login.html",
+            request,
+            context={
+                "username": request["user"],
+                "sidebar": await self.get_sidebar(request),
+            },
+        )
 
     async def login(self, request):
         await new_session(request)
@@ -134,16 +112,6 @@ class LoginHandler(BaseHandler):
         session.invalidate()
         return response
 
-    async def public_page(self, request):
-        await check_permission(request, "public")
-        return web.Response(
-            text="This page is visible for all registered users"
-        )
-
-    async def protected_page(self, request):
-        await check_permission(request, "protected")
-        return web.Response(text="You are on protected page")
-
     def configure(self, app):
 
         router = app.router
@@ -153,7 +121,3 @@ class LoginHandler(BaseHandler):
         router.add_route("GET", "/login", self.login_form, name="loginForm")
         router.add_route("POST", "/login", self.login, name="login")
         router.add_route("GET", "/logout", self.logout, name="logout")
-        router.add_route("GET", "/public", self.public_page, name="public")
-        router.add_route(
-            "GET", "/protected", self.protected_page, name="protected"
-        )
