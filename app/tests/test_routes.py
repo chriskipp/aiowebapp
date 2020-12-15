@@ -2,7 +2,6 @@ import aiohttp_jinja2
 import pytest
 
 from app.main import create_app
-from app.session import setup_security, setup_session
 
 routes_nologin = [
     ("/", 200),
@@ -93,10 +92,7 @@ async def test_route_nologin(aiohttp_client, route, status):
 @pytest.mark.parametrize(("route", "status"), routes_admin)
 async def test_route_admin(aiohttp_client, route, status):
 
-    app = create_app()
-    await setup_session(app)
-    await setup_security(app)
-    client = await aiohttp_client(app)
+    client = await aiohttp_client(create_app())
 
     res = await client.post(
         "/login", data={"loginField": "admin", "passwordField": "password"}
@@ -110,10 +106,7 @@ async def test_route_admin(aiohttp_client, route, status):
 @pytest.mark.parametrize(("route", "status"), routes_user)
 async def test_route_user(aiohttp_client, route, status):
 
-    app = create_app()
-    await setup_session(app)
-    await setup_security(app)
-    client = await aiohttp_client(app)
+    client = await aiohttp_client(create_app())
 
     res = await client.post(
         "/login", data={"loginField": "user", "passwordField": "password"}
@@ -127,10 +120,7 @@ async def test_route_user(aiohttp_client, route, status):
 @pytest.mark.parametrize(("route", "status"), routes_moderator)
 async def test_route_moderator(aiohttp_client, route, status):
 
-    app = create_app()
-    await setup_session(app)
-    await setup_security(app)
-    client = await aiohttp_client(app)
+    client = await aiohttp_client(create_app())
 
     res = await client.post(
         "/login", data={"loginField": "moderator", "passwordField": "password"}
@@ -143,8 +133,7 @@ async def test_route_moderator(aiohttp_client, route, status):
 
 async def test_method_not_allowed(aiohttp_client):
 
-    app = create_app()
-    client = await aiohttp_client(app)
+    client = await aiohttp_client(create_app())
 
     res = await client.post("/logout", data={"some": "data"})
     assert res.status == 405
