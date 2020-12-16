@@ -2,18 +2,18 @@ host: 0.0.0.0
 port: 7777
 
 postgres:
-  database: test
-  user: test_aioapp
-  password: testaioapppw
+  database: storage
+  user: api
+  password: apipw
   host: localhost
   port: 5432
   minsize: 1
   maxsize: 5
 
 postgres_sa:
-  database: test
-  user: test_aioapp
-  password: testaioapppw
+  database: app
+  user: app
+  password: apppw
   host: localhost
   port: 5432
   minsize: 1

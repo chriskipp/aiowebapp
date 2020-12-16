@@ -4,34 +4,34 @@ FLAGS=
 
 
 flake:
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports tests
+	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app tests
 
 isort:
-	isort app
-	isort tests
-	mypy --ignore-missing-imports app
-	mypy --ignore-missing-imports tests
+	isort app tests
+
+mypy:
+	mypy --ignore-missing-imports app tests
 
 black:
-	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose app
-	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose tests
+	black --line-length 79 --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose app tests
+
+test_w_docker_config:
+	pytest -c config/test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 test:
-	pytest -c config/test.yaml -vvv --disable-warnings tests
-
-test_from_local:
-	docker exec -it aiowebapp_aiowebapp_1 make test
+	docker exec -it aiowebapp_aiowebapp_1 make test_w_docker_config
 
 localtest:
-	pytest -c config/local_test.yaml -vvv --disable-warnings tests
+	pytest -c config/local_test.yaml -vvv --disable-warnings --aiohttp-fast tests
+
+cov_w_docker_config:
+	pytest --cov-config=.coveragerc --cov=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
 
 cov:
-	#pytest --cov=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
+	docker exec -it aiowebapp_aiowebapp_1 make cov_w_docker_config
 
 localcov:
-	pytest --cov=app --cov-report=html:coverage -c config/local_test.yaml -vvv --disable-warnings tests
-
+	pytest --cov-config=.coveragerc --cov=app --cov-report=html:coverage -c config/local_test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 clean:
 	rm -rf `find . -name __pycache__`
@@ -51,22 +51,15 @@ clean:
 	rm -rf htmlcov
 	rm -rf dist
 
-run-server:
-	python3 app/main.py
-
 all:
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports tests
+	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app tests
 
-	isort app
-	isort tests
-	mypy --ignore-missing-imports app
-	mypy --ignore-missing-imports tests
+	isort app tests
+	mypy --ignore-missing-imports app tests
 
-	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose app
-	black --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose tests
+	black --line-length 79 --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose app tests
 
-	pytest --cov=app --cov-report=term -c config/local_test.yaml -vvv --disable-warnings tests
+	make test
 
 .PHONY: flake isort black clean test
 

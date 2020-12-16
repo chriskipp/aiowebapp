@@ -1,30 +1,20 @@
 # routes.py
 import pathlib
 
-import aiohttp_jinja2
+from aiohttp import web
 
-from .handlers.mylogin import LoginHandler
-from .handlers.redis import RedisHandler
+from .handlers.index import IndexHandler
+from .handlers.login import LoginHandler
 
-# from .handlers.login import LoginHandler
-
-
-PROJECT_ROOT = pathlib.Path(__file__).parent
+PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 
 
-def base_handler(request):
-    response = aiohttp_jinja2.render_template("base.html", request, context=None)
-    return response
-
-
-def template_handler(request):
-    response = aiohttp_jinja2.render_template("layout.html", request, context=None)
-    return response
-
-
-def setup_static_routes(app):
+def setup_static_routes(app: web.Application) -> None:
     app.router.add_static(
-        "/static/", path=PROJECT_ROOT / "static", name="static", append_version=True
+        "/static/",
+        path=PROJECT_ROOT / "static",
+        name="static",
+        append_version=True,
     )
 
     app.router.add_static(
@@ -35,19 +25,14 @@ def setup_static_routes(app):
         append_version=False,
     )
 
+def setup_routes(app: web.Application) -> None:
 
-def setup_routes(app):
-    # app.router.add_get("/", index_handler)
-
-    app.router.add_get("/base", base_handler)
-    app.router.add_get("/template", template_handler)
+    # Setup IndexHandler
+    indexhandler = IndexHandler()
+    indexhandler.configure(app)
 
     # Setup LoginHandler
     loginhandler = LoginHandler()
     loginhandler.configure(app)
-
-    # Setup RedisHandler
-    redishandler = RedisHandler()
-    redishandler.configure(app)
 
     setup_static_routes(app)

@@ -76,7 +76,7 @@
       <!-- Login/LogoutButton -->
       {% if username %}
         <div class="mynavitem" style="padding:0px;padding-right:10px;">
-          <a style="color:royalblue;" href="/me" >
+	<a style="color:royalblue;" href="{{ url("me") }}" >
     	<i class="fa fa-user" aria-hidden="true"></i> {{ username }}
           </a>
         </div>

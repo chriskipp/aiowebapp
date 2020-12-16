@@ -58,7 +58,6 @@ user_permissions = {
     "moderator": {"public", "protected"},
     "user": {"public"},
 }
-# user_permissions = itertools.chain(*[[(u,p) for p in user_permissions[u]] for u, p in user_permissions.items()])
 
 
 def combine(seq1, seq2):
@@ -87,7 +86,9 @@ async def test_login_check_credentials(login):
     app = create_app()
     await setup_security(app)
 
-    res = await check_credentials(app["dbsa"], login["user"], login["password"])
+    res = await check_credentials(
+        app["dbsa"], login["user"], login["password"]
+    )
     assert res == login["check_credentials"]
 
 
@@ -102,7 +103,7 @@ async def test_login_authorized_userid(login):
     assert res == login["authorized_userid"]
 
 
-@pytest.mark.parametrize("user,permission", user_permissions)
+@pytest.mark.parametrize(("user", "permission"), user_permissions)
 async def test_login_permit(user, permission):
     app = create_app()
     await setup_security(app)
@@ -132,7 +133,9 @@ async def test_loginhandler_login(aiohttp_client):
     client = await aiohttp_client(app)
 
     for user in users:
-        res = await client.post("/login", data={"login": user, "password": "password"})
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
         assert res.status == 200
         res = await client.get("/identity")
         assert res.status == 200
@@ -147,7 +150,7 @@ async def test_loginhandler_login(aiohttp_client):
 
     for nouser in nousers:
         res = await client.post(
-            "/login", data={"login": nouser, "password": "password"}
+            "/login", data={"loginField": nouser, "passwordField": "password"}
         )
         assert res.status == 401
         res = await client.get("/identity")

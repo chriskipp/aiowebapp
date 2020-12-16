@@ -1,0 +1,2 @@
+[run]
+omit = app/_dev/*, app/__main__.py
