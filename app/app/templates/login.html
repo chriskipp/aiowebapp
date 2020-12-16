@@ -1,0 +1,16 @@
+{% import "lib.html" as lib %}
+{% extends "layout.html" %}
+
+{% block main %}
+  {{ super() }}
+  {{ lib.loginModal() }}
+{% endblock %}
+
+{% block tail_js %}
+  {{ super() }}
+  <script>
+    $(document).ready(function() {
+      $('#loginModal').modal('show')
+    });
+  </script>
+{% endblock %}

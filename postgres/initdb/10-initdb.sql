@@ -1,0 +1,18 @@
+-- Setup app Database
+CREATE USER app WITH PASSWORD 'apppw';
+DROP DATABASE IF EXISTS app;
+CREATE DATABASE app;
+ALTER DATABASE app OWNER TO app;
+GRANT ALL PRIVILEGES ON DATABASE app TO app;
+
+-- Setup api Database
+CREATE USER api WITH PASSWORD 'apipw';
+CREATE DATABASE storage;
+GRANT ALL PRIVILEGES ON DATABASE storage TO api;
+
+-- Setup test Database
+CREATE USER test_aioapp WITH PASSWORD 'testaioapppw';
+DROP DATABASE IF EXISTS test;
+CREATE DATABASE test;
+ALTER DATABASE test OWNER TO test_aioapp;
+GRANT ALL PRIVILEGES ON DATABASE test TO test_aioapp;

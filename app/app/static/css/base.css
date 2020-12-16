@@ -1,0 +1,127 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  line-height: 1.0;
+}
+
+body {
+  font-family: Arial;
+  color: white;
+  background-color: black;
+}
+
+::selection {
+  background-color: cyan;
+  color: #000;
+}
+
+/* all screen */
+#mainframe {
+  display:flex;
+  flex-flow:column;
+  height:100%
+}
+
+/* all screen except navbar*/
+#container {
+  display:flex;
+  flex-flow:row;
+  overflow:auto;
+  height:100%;
+  padding-right:0;
+  margin:0;
+}
+
+/* sidebar */
+#sidebar {
+  max-height:100%;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  padding-left:0;
+  /* if set scroll bars will be visible */
+  /* margin-right:40px; */
+  margin-right: 15px;
+}
+
+#sidebar ul {
+  margin-left: 10px;
+  width: 90%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-inline-start: 10px;
+  box-shadow: inset 0px 0 7px 2px orange;
+  border-radius: 10px;
+  list-style-type:none;
+}
+
+#sidebar li {
+  width: 95%;
+  overflow: hidden;
+  padding: 3px;
+  border-radius: 10px;
+  padding-left: 10px;
+}
+
+#sidebar li:hover {
+  box-shadow: 0 0 7px 2px white;
+}
+
+#sidebar a {
+  color: white;
+  text-decoration: none;
+}
+
+/* main area w/o nav-, sidebar */
+#maincontainer {
+  height: 100%;
+  margin: 0;
+  padding: 10px;
+  background-color: black;
+  border: 0;
+  overflow-y: hidden
+}
+
+/* wrapper container for page content */
+#main {
+  height: 100%;
+  margin: 0;
+  padding: 5px;
+  background-color: black;
+  border: 0;
+  overflow-y: auto
+}
+
+/* scrollbar */
+
+/** width **/
+::-webkit-scrollbar {
+  width: 15px;
+  margin: 0px;
+  overflow:hidden;
+}
+
+/** Track **/
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 7px 2px #16ffd8; 
+  border-radius: 10px;
+}
+	       
+/** Handle **/
+::-webkit-scrollbar-thumb {
+  background: black; 
+  box-shadow: inset 0 0 10px white; 
+  border-radius: 10px;
+}
+
+/** Handle on hover **/
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: inset 0px 0 3px 1px white; 
+}
+
+@-moz-document url-prefix() {
+  #sidebar, .slick-viewport {
+    scrollbar-width: none;
+  }
+}

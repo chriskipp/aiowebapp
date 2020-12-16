@@ -1,0 +1,48 @@
+tr:nth-child(even) {
+  background-color: #274762;
+  color: white;
+}
+
+tr:nth-child(odd) {
+  color: white;
+}
+
+table, tbody {
+  border-radius: 4px;
+}
+
+.table td, .table th {
+  padding: 7px;
+  border: 1px solid white;
+}
+
+.btn, .btn-link {
+  width: 100%;
+  #border: 1px solid white;
+  background-color: transparent;
+  #color: white;
+  font-weight: bold;
+  text-align: left;
+}
+
+.btn:hoover, .btn-link:hoover {
+  text-decoration: underline;
+  color: white;
+}
+
+.card-header {
+  background: linear-gradient(to bottom, rgb(0, 27, 36) 0%, rgb(82, 162, 177) 33%, rgb(0, 94, 138) 67%, rgb(0, 63, 87) 90%, rgb(0, 27, 36) 100%);
+
+  border: 0px solid white;
+  padding: 2px;
+}
+
+.card-body {
+  background-color: black;
+  border: 0px solid white;
+  padding: 0px;
+}
+
+.card {
+  border: 0px solid white;
+}
