@@ -1,0 +1,29 @@
+{% import "lib.html" as lib %}
+{% extends "layout.html" %}
+
+{% block main %}
+  {{ super() }}
+  <h1>{{ status }} {{ status_message }}</h1>
+  <p>{{ message }}</p>
+  {% for item in append %}
+    {% if item == 'loginform' %}
+      {{ lib.loginModal() }}
+    {% elif item == 'exception' %}
+      <p>{{ item['exception'] }}</p>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+
+
+{% block tail_js %}
+  {{ super() }}
+  {% for item in append %}
+    {% if item == 'loginform' %}
+  <script>
+    $(document).ready(function() {
+      $('#loginModal').modal('show')
+    });
+    {% endif %}
+  {% endfor %}
+  </script>
+{% endblock %}
