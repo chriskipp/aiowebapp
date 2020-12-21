@@ -1,5 +1,6 @@
 # main.py
 import pathlib
+
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
@@ -24,11 +25,11 @@ def create_app(config=None) -> web.Application:
 
     # setup aiohttp-debugtoolbar
     aiohttp_debugtoolbar.setup(
-       app,
-       intercept_redirects=False,
-       check_host=False,
-       extra_templates="/usr/src/app/_dev/extra_tpl",
-       extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+        app,
+        intercept_redirects=False,
+        check_host=False,
+        extra_templates="/usr/src/app/_dev/extra_tpl",
+        extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
     )
 
     # setup Jinja2 template renderer
