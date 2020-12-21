@@ -25,6 +25,7 @@ def setup_static_routes(app: web.Application) -> None:
         append_version=False,
     )
 
+
 def setup_routes(app: web.Application) -> None:
 
     # Setup IndexHandler

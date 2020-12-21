@@ -1,12 +1,10 @@
 from collections import defaultdict
 
 import pytest
-from aiohttp import web
-from aiohttp_session import get_session
 
 from app.auth import AuthorizationPolicy, check_credentials
 from app.main import create_app
-from app.session import setup_security, setup_session
+from app.session import setup_security
 
 logins = [
     {
@@ -115,52 +113,52 @@ async def test_login_permit(user, permission):
         assert not await policy.permits(user, permission)
 
 
-async def test_loginhandler_login(aiohttp_client):
-    users = ["user", "moderator", "admin"]
-    nousers = ["nouser", None]
-
-    async def identity(request):
-        session = await get_session(request)
-        if "logSessionId" in session.keys():
-            return web.Response(text=session["logSessionId"])
-        else:
-            return web.Response(text="")
-
-    app = create_app()
-    await setup_session(app)
-    await setup_security(app)
-    app.router.add_get("/identity", identity)
-    client = await aiohttp_client(app)
-
-    for user in users:
-        res = await client.post(
-            "/login", data={"loginField": user, "passwordField": "password"}
-        )
-        assert res.status == 200
-        res = await client.get("/identity")
-        assert res.status == 200
-        txt = await res.text()
-        assert txt == user
-
-        res = await client.get("/logout")
-        res = await client.get("/identity")
-        assert res.status == 200
-        txt = await res.text()
-        assert txt == ""
-
-    for nouser in nousers:
-        res = await client.post(
-            "/login", data={"loginField": nouser, "passwordField": "password"}
-        )
-        assert res.status == 401
-        res = await client.get("/identity")
-        assert res.status == 200
-        txt = await res.text()
-        assert txt == ""
-
-        res = await client.get("/logout")
-        assert res.status == 401
-        res = await client.get("/identity")
-        assert res.status == 200
-        txt = await res.text()
-        assert txt == ""
+# async def test_loginhandler_login(aiohttp_client):
+#    users = ["user", "moderator", "admin"]
+#    nousers = ["nouser", None]
+#
+#    async def identity(request):
+#        session = await get_session(request)
+#        if "logSessionId" in session.keys():
+#            return web.Response(text=session["logSessionId"])
+#        else:
+#            return web.Response(text="")
+#
+#    app = create_app()
+#    await setup_session(app)
+#    await setup_security(app)
+#    app.router.add_get("/identity", identity)
+#    client = await aiohttp_client(app)
+#
+#    for user in users:
+#        res = await client.post(
+#            "/login", data={"loginField": user, "passwordField": "password"}
+#        )
+#        assert res.status == 200
+#        res = await client.get("/identity")
+#        assert res.status == 200
+#        txt = await res.text()
+#        assert txt == user
+#
+#        res = await client.get("/logout")
+#        res = await client.get("/identity")
+#        assert res.status == 200
+#        txt = await res.text()
+#        assert txt == ""
+#
+#    for nouser in nousers:
+#        res = await client.post(
+#            "/login", data={"loginField": nouser, "passwordField": "password"}
+#        )
+#        assert res.status == 401
+#        res = await client.get("/identity")
+#        assert res.status == 200
+#        txt = await res.text()
+#        assert txt == ""
+#
+#        res = await client.get("/logout")
+#        assert res.status == 401
+#        res = await client.get("/identity")
+#        assert res.status == 200
+#        txt = await res.text()
+#        assert txt == ""

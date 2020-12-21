@@ -25,7 +25,7 @@ localtest:
 	pytest -c config/local_test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 cov_w_docker_config:
-	pytest --cov-config=.coveragerc --cov=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
+	pytest --cov-config=.coveragerc --cov=app --cov-report=term -c config/test.yaml -vvv --disable-warnings tests
 
 cov:
 	docker exec -it aiowebapp_aiowebapp_1 make cov_w_docker_config

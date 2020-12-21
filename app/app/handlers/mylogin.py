@@ -112,7 +112,9 @@ class LoginHandler:
 
     async def public_page(self, request):
         await check_permission(request, "public")
-        response = web.Response(text="This page is visible for all registered users")
+        response = web.Response(
+            text="This page is visible for all registered users"
+        )
         return response
 
     async def protected_page(self, request):
@@ -127,7 +129,9 @@ class LoginHandler:
         self.sidebar_sections = [
             {
                 "title": "User",
-                "links": [r["data"] for r in routes if r["category"] == "User"],
+                "links": [
+                    r["data"] for r in routes if r["category"] == "User"
+                ],
             }
         ]
 
@@ -139,4 +143,6 @@ class LoginHandler:
         router.add_route("POST", "/login", self.login, name="login")
         router.add_route("GET", "/logout", self.logout, name="logout")
         router.add_route("GET", "/public", self.public_page, name="public")
-        router.add_route("GET", "/protected", self.protected_page, name="protected")
+        router.add_route(
+            "GET", "/protected", self.protected_page, name="protected"
+        )
