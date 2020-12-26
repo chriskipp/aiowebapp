@@ -2,6 +2,7 @@ import pytest
 
 from app.db import (
     execute_sql,
+    fetch_sql,
     setup_pg,
     setup_pgsa,
     teardown_pg,
@@ -39,8 +40,6 @@ async def test_dbsa_setup_teardown(create_app_with_dbsa):
 async def test_db_setup_teardown(create_app_with_db):
     app = create_app_with_db
     assert "db" in app.keys()
-    await teardown_pg(app)
-    assert app["db"].closed
 
 
 @pytest.mark.asyncio
@@ -55,9 +54,7 @@ async def test_db_create_table(create_app_with_db):
 
     await execute_sql("DROP TABLE IF EXISTS test;", app["db"])
     res = await execute_sql(create_statement, app["db"])
-    assert len(res) == 2
-    assert res[0].decode() == create_statement
-    assert res[1] == "CREATE TABLE"
+    assert res == "CREATE TABLE"
 
 
 @pytest.mark.asyncio
@@ -77,9 +74,7 @@ async def test_db_insert_into(create_app_with_db):
 
     for i in range(len(items)):
         res = await execute_sql(statement.format(str(items[i])), app["db"])
-        assert len(res) == 2
-        assert res[0].decode() == statement.format(str(items[i]))
-        assert res[1] == "INSERT 0 1"
+        assert res == "INSERT 0 1"
 
 
 @pytest.mark.asyncio
@@ -95,8 +90,7 @@ async def test_db_select(create_app_with_db):
     """
     app = create_app_with_db
 
-    res = await execute_sql(statement, app["db"])
-    assert len(res) == 3
+    res = await fetch_sql(statement, app["db"])
     assert res == items
 
 
@@ -119,12 +113,9 @@ async def test_db_update(create_app_with_db):
     app = create_app_with_db
 
     res = await execute_sql(update_statement, app["db"])
-    assert len(res) == 2
-    assert res[0].decode() == update_statement
-    assert res[1] == "UPDATE 1"
+    assert res == "UPDATE 1"
 
-    res = await execute_sql(select_statement, app["db"])
-    assert len(res) == 3
+    res = await fetch_sql(select_statement, app["db"])
     assert res == items
 
 
@@ -145,12 +136,9 @@ async def test_db_delete(create_app_with_db):
     app = create_app_with_db
 
     res = await execute_sql(delete_statement, app["db"])
-    assert len(res) == 2
-    assert res[0].decode() == delete_statement
-    assert res[1] == "DELETE 1"
+    assert res == "DELETE 1"
 
-    res = await execute_sql(select_statement, app["db"])
-    assert len(res) == 2
+    res = await fetch_sql(select_statement, app["db"])
     assert res == items
 
 
@@ -162,9 +150,7 @@ async def test_db_drop_table(create_app_with_db):
     app = create_app_with_db
 
     res = await execute_sql(statement, app["db"])
-    assert len(res) == 2
-    assert res[0].decode() == statement
-    assert res[1] == "DROP TABLE"
+    assert res == "DROP TABLE"
 
 
 @pytest.mark.asyncio
@@ -177,6 +163,4 @@ async def test_db_invalid_query(create_app_with_db):
     app = create_app_with_db
 
     res = await execute_sql(statement, app["db"])
-    assert len(res) == 2
-    assert res[0].decode() == statement
-    assert res[1].__class__ != str
+    assert res.__class__ != str

@@ -1,43 +1,48 @@
-import aiopg
 import aiopg.sa
+import asyncpg
 
 # aiopg
 
 
 async def setup_pg(app):
     conf = app["config"]["postgres"]
-    pool = await aiopg.create_pool(
+    pool = await asyncpg.create_pool(
         database=conf["database"],
         user=conf["user"],
         password=conf["password"],
         host=conf["host"],
         port=conf["port"],
-        minsize=conf["minsize"],
-        maxsize=conf["maxsize"],
+        min_size=conf["minsize"],
+        max_size=conf["maxsize"],
     )
     app["db"] = pool
 
 
 async def teardown_pg(app):
-    app["db"].close()
-    await app["db"].wait_closed()
+    await app["db"].close()
 
 
 async def execute_sql(query, pool):
     async with pool.acquire() as conn:
-        async with conn.cursor() as cur:
+        async with conn.transaction():
             try:
-                await cur.execute(query)
-                if not cur.description:
-                    return cur.query, cur.statusmessage
-                keys = [c.name for c in cur.description]
-                ret = []
-                async for row in cur:
-                    ret.append({k: v for k, v in zip(keys, row)})
+                res = await conn.execute(query)
             except Exception as e:
-                return cur.query, e
+                return e
 
-    return ret
+    return res
+
+
+async def fetch_sql(query, pool):
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            try:
+                res = await conn.fetch(query)
+                res = [dict(r) for r in res]
+            except Exception as e:
+                return e
+
+    return res
 
 
 async def setup_pgsa(app):

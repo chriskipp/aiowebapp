@@ -1,11 +1,11 @@
 # redis.py
+
 import aiohttp_jinja2
-from aiohttp import web
 
-routes = web.RouteTableDef()
+from .base import BaseHandler
 
 
-class RedisHandler:
+class RedisHandler(BaseHandler):
     async def info(self, request):
         pool = request.app["redis"]
         info = await pool.execute("INFO", encoding="utf-8")
@@ -34,4 +34,4 @@ class RedisHandler:
 
     def configure(self, app):
         router = app.router
-        router.add_route("GET", "/redis/info", self.info, name="redisinfo")
+        router.add_route("GET", "/redis", self.info, name="redisinfo")
