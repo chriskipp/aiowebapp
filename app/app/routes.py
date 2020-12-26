@@ -5,6 +5,7 @@ from aiohttp import web
 
 from .handlers.index import IndexHandler
 from .handlers.login import LoginHandler
+from .handlers.redis import RedisHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -35,5 +36,9 @@ def setup_routes(app: web.Application) -> None:
     # Setup LoginHandler
     loginhandler = LoginHandler()
     loginhandler.configure(app)
+
+    # Setup RedisHandler
+    redishandler = RedisHandler()
+    redishandler.configure(app)
 
     setup_static_routes(app)
