@@ -7,6 +7,7 @@ from .base import BaseHandler
 
 class RedisHandler(BaseHandler):
     async def info(self, request):
+
         pool = request.app["redis"]
         info = await pool.execute("INFO", encoding="utf-8")
         sections = info.split("\r\n\r\n")
@@ -28,6 +29,8 @@ class RedisHandler(BaseHandler):
             context={
                 "pageheader": "Redis Live Stats",
                 "sections": parsed_sections,
+                "username": request["user"],
+                "sidebar": self.sidebar_sections_loggedout,
             },
         )
         return response
