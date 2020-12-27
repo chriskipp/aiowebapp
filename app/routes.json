@@ -1,39 +1,51 @@
-{
-    "User": [
+[
         {
-            "data": {
+	    "title":"User",
+	    "color":"red",
+            "data": [
+            {"link": {
                 "href": "/me",
                 "icon": "fa-address-card",
                 "label": "Profile"
-            },
+	    },
             "requires": ["logged_in"]
+        },
+            {"link": {
+            "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
+	    "requires": ["logged_out"]
         }, {
-            "data": {"href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
-            "requires": ["logged_out"]
-        }, {
-            "data": {
+            "link": {
                 "href": "/logout",
                 "icon": "fa-sign-out-alt",
                 "label": "Logout"
-            },
+	    },
             "requires": ["logged_in"]
         }, {
-            "data": {
+            "link": {
                 "href": "/session",
                 "icon": "fa-laptop",
                 "label": "Session"
-            },
+	    },
             "requires": ["logged_in", "logged_out"]
         }
-    ],
-    "Tools": [
-        {
-            "data": {
+    ]}, {
+	    "title":"Tools",
+	    "color":"orange",
+            "data": [
+		{
+            "link": {
                 "href": "/editor",
                 "icon": "fa-file-alt",
                 "label": "Editor"
-            },
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/search",
+                "icon": "fa-search",
+                "label": "Search"
+	    },
             "requires": ["logged_in", "logged_out"]
         }
-    ]
-}
+    ]}
+]

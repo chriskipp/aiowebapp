@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <style>
+  .highlight {
+    background-color: yellow;
+    color: black;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  </style>
+{% endblock %}
+
+{% block head_js %}
+  {{ super() }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.loadtemplate/1.5.10/jquery.loadTemplate.min.js"></script>
+{% endblock %}
+
+{% block main %}
+  <select class="select2-autocomplete"></select>
+  <ul id="result-list" style="padding-left:15px"></ul>
+{% endblock %}
+
+{% block tail_js %}
+  <script type="text/html" id="search-result-template">
+
+    <div class="search-result" style="display:flex;flex-direction:row;">
+  
+      <div data-content-append="score" data-format="roundFloatFormatter" style="max-width:50px;width:10%;color:#444;margin-top:10px;">Score </div>
+
+      <div style="display:flex;flex-direction:column;padding-left:15px;margin-right:30px;">
+        <div class="container-fluid" style="padding-left:0px;">
+          <h5 class="search-result-description"></h5>
+          <div style="display:flex;margin-bottom:0px;padding-bottom:2px;align-items:baseline;font-weight:bold;">
+            <a data-href="docpath" data-content="command" style="margin-right:20px;white-space:no-wrap;text-overflow:epilepsis;overflow:hidden;color:dodgerblue;text-decoration:underline;">
+	    </a>
+            <p data-content="description" style="font-size:15px;color:gold;max-width:70%;"></p>
+          </div>
+        </div>
+
+        <div style="display:flex;margin-left:0px;height:30px;padding-top:2px;color:#aaa;font-family:Monospace;">
+	  <pre style="margin-bottom:5px;" data-content="docpath"></pre>
+        </div>
+      
+        <div class="search-result-body">
+	  <p style="font-size:12px;font-weight:bold;color:forestgreen;text-decoration:underline;text-decoration-color:forestgreen;margin-bottom:5px;" data-content="group">
+	  </p>
+	  <p style="font-size:12px;max-width:80%;" data-content="body"></p>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script>
+    $.addTemplateFormatter({
+      roundFloatFormatter: function(value, template) {
+	var rounded = Math.round(value * 100) / 100
+	return rounded.toFixed(2);
+      }
+    });
+
+    $(document).ready(function() {
+      $('.select2-autocomplete').select2({
+	ajax: {
+	  url: '/autocomplete',
+	  method: 'POST',
+	  data: function(params) {
+	    return {
+		q: params.term
+	    }
+	  },
+	  dataType: 'json'
+	},
+        placeholder: 'Search...',
+	multiple: true,
+	tokenSeparators: ' ',
+	tags: true,
+	width: '80%'
+      });
+    });
+
+    $('.select2-autocomplete').on('change', function(e) {
+      var q = $('.select2-autocomplete').select2('data').map(x => x.text).join(' ');
+
+      if (q.length > 0) {
+	console.log(q);
+        $.ajax({
+          url: '/search',
+	  method: 'POST',
+	  data: {q: q},
+	  dataType: 'json',
+	  success: function(result) {
+      	    $('#result-list').loadTemplate(
+	      $('#search-result-template'),
+	      result['results']
+          )}
+        })
+      } else {
+	return
+      }
+    })
+  </script>
+  {#
+  <script src="{{ url('static', filename='js/initselect2.js') }}"></script>
+  #}
+{% endblock %}
+
