@@ -36,8 +36,8 @@ insertman() {
 
 
 n=1
-#for i in /usr/share/man/man1/* /usr/share/man/man8/*; do
-for i in /usr/share/man/man1/a* ; do
+for i in /usr/share/man/man1/* /usr/share/man/man8/*; do
+#for i in /usr/share/man/man1/a* ; do
 	n=$(printf '%s + 1\n' "${n}" | bc)
 	printf 'insertman "%s" "%s"\n' "${i}" "${n}"
 done | env_parallel -j 30 

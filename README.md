@@ -6,16 +6,10 @@ Various own projects that came about in the form of individual aiohttp based web
 
 ### Using HTTP
 
-The only required Software packages to start this application are docker and docker-compose. After cloning this repository  this repository run the following command to start up the nginx, redis and postgres container as well as initialize the database schema (only if it is postgres first startup):
+The only required Software packages to start this application are docker and docker-compose. After cloning this repository  this repository run the following command to start up the application:
 
 ```
-$ docker-compose up -d postgres redis nginx
-```
-
-When the above services are up and running start the web app itself by running:
-
-```
-$ docker-compose up aiowebapp
+$ docker-compose up
 ```
 
 ### Using HTTPS
@@ -28,15 +22,10 @@ $ ./create_certificate.sh
 
 Once you have your certificate the setup process is similar as described under HTTP except that docker-compose is executed with the option ```--file docker-compose_ssl.yml```:
 
-To initialize and startup the nessesary services:
-```
-$ docker-compose up --file docker-compose_ssl.yml -d postgres redis nginx
-```
-
 To start the web application:
 
 ```
-$ docker-compose --file docker-compose_ssl.yml up aiowebapp
+$ docker-compose --file docker-compose_ssl.yml up
 ```
 
 ## Running Tests

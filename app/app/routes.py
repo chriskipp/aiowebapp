@@ -46,4 +46,6 @@ def setup_routes(app: web.Application) -> None:
     searchhandler = SearchHandler()
     searchhandler.configure(app)
 
+    # app.router.add_get('/identity', identity)
+
     setup_static_routes(app)
