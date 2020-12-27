@@ -27,7 +27,7 @@ class RedisHandler(BaseHandler):
             "table.html",
             request,
             context={
-                "pageheader": "Redis Live Stats",
+                "pageheader": "Redis Stats",
                 "sections": parsed_sections,
                 "username": request["user"],
                 "sidebar": self.sidebar_sections_loggedout,

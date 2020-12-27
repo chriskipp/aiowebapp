@@ -1,2 +1,3 @@
 nginx/ssl
 nginx/dhparam.pem
+app/app/storage/*

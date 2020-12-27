@@ -1,7 +1,7 @@
 # search.py
 import aiohttp_jinja2
 from aiohttp import web
-from redisearch import Client, Query
+from redisearch import Client
 
 from .base import BaseHandler
 
@@ -32,30 +32,38 @@ class SearchHandler(BaseHandler):
     async def search_post(self, request):
         pool = request.app["redis"]
         data = await request.post()
-        query = (
-            Query(data["q"].replace("-", " "))
-            .verbatim()
-            .with_scores()
-            .paging(0, 20)
-            .highlight(tags=['<span class="highlight">', "</span>"])
-            .summarize("body")
+        res = await pool.execute(
+            "FT.SEARCH",
+            "manpages",
+            '"' + data["q"].replace("-", " ") + '"',
+            "WITHSCORES",
+            "VERBATIM",
+            "LIMIT",
+            "0",
+            "10",
+            "HIGHLIGHT",
+            "FIELDS",
+            "1",
+            "body",
+            "TAGS",
+            '''"<span class='highlight'>"''',
+            '"</span>"',
+            "SUMMARIZE",
+            "FIELDS",
+            "1",
+            "body",
+            encoding="utf-8",
         )
-        res = client.search(query)
         results = {
-            "matches": res.total,
+            "total": res[0],
             "results": [
-                {
-                    "score": r.score,
-                    "command": r.command,
-                    "description": r.description,
-                    "group": r.group,
-                    "section": r.section,
-                    "docpath": r.docpath,
-                    "body": r.body,
-                }
-                for r in res.docs
+                {res[r][i]: res[r][i + 1] for i in range(0, len(res[r]), 2)}
+                for r in range(3, len(res), 3)
             ],
         }
+        for i in range(2, len(res), 3):
+            results["results"][int((i - 2) / 3)]["score"] = res[i]
+
         return web.json_response(results)
 
     def configure(self, app):

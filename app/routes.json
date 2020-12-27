@@ -41,6 +41,13 @@
             "requires": ["logged_in", "logged_out"]
         }, {
             "link": {
+                "href": "/redis",
+                "icon": "fa-server",
+                "label": "RedisStats"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
                 "href": "/search",
                 "icon": "fa-search",
                 "label": "Search"
