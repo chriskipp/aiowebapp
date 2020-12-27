@@ -7,10 +7,6 @@ $(document).ready(function() {
     closeOnSelect: false,
     scrollAfterSelect: true ,
     tokenSeparators: ' ',
-    ajax: {
-      url: '/completions',
-      dataType: 'json'
-    }
   })
   .val(null).trigger('change') // Clear Selection
 });
