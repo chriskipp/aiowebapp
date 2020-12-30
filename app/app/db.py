@@ -1,8 +1,6 @@
 import aiopg.sa
 import asyncpg
 
-# aiopg
-
 
 async def setup_pg(app):
     conf = app["config"]["postgres"]
@@ -42,6 +40,7 @@ async def fetch_sql(query, pool):
             except Exception as e:
                 return e
 
+    # return orjson.dumps([dict(d) for d in res])
     return res
 
 

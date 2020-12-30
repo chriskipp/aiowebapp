@@ -29,30 +29,43 @@
             "requires": ["logged_in", "logged_out"]
         }
     ]}, {
-	    "title":"Tools",
+	    "title":"Admin",
 	    "color":"orange",
             "data": [
-		{
-            "link": {
-                "href": "/editor",
-                "icon": "fa-file-alt",
-                "label": "Editor"
-	    },
-            "requires": ["logged_in", "logged_out"]
-        }, {
+	{
             "link": {
                 "href": "/redis",
                 "icon": "fa-server",
                 "label": "RedisStats"
 	    },
             "requires": ["logged_in", "logged_out"]
-        }, {
+    }]}, {
+	    "title":"Tools",
+	    "color":"yellow",
+            "data": [
+	{
             "link": {
-                "href": "/search",
-                "icon": "fa-search",
-                "label": "Search"
+                "href": "/database",
+                "icon": "fa-database",
+                "label": "Database"
 	    },
             "requires": ["logged_in", "logged_out"]
-        }
-    ]}
-]
+        }, {
+            "link": {
+                "href": "/editor",
+                "icon": "fa-file-alt",
+                "label": "Editor"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }]}, {
+	    "title":"Search",
+	    "color":"lime",
+            "data": [
+		    {"link": {
+                "href": "/search",
+                "icon": "fa-search",
+                "label": "Redisearch"
+	    },
+            "requires": ["logged_in", "logged_out"]
+		    }]}
+	]
