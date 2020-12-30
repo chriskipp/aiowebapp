@@ -1,0 +1,167 @@
+{% extends 'layout.html' %}
+
+{% block head_css %}
+    {{ super() }}
+    <!-- SlickGrid -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.grid.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick-default-theme.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.cellmenu.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headerbuttons.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headermenu.css" type="text/css"/>
+    <link rel="stylesheet" href="{{url('static', filename='css/slick.gridmenu.css')}}" type="text/css"/>
+    
+    <!-- jQuery-UI-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" type="text/css"/>
+    <link rel="stylesheet" href="{{url('static', filename='css/slickgrid.css')}}" type="text/css"/>
+    <style type="text/css" media="screen">
+      #editor { 
+        height: 100%;
+        max-width: 90%;
+        width: 90%;
+	flex-grow: 1;
+      }
+
+      #editorcontainer {
+	width: 100%;
+	max-height: 30%;
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+      }
+
+      #gridcontainer {
+	width: 100%;
+	max-height: 70%;
+	flex-grow: 1;
+	border: 0;
+      }
+
+      #gridcontainer-grid {
+	width: 100%;
+	max-height: 100%;
+      }
+
+      #execute_button {
+	border-radius: 10px;
+	border-width: 3px;
+	font-weight: bold;
+	flex-grow: 1;
+      }
+    </style>
+{% endblock %}
+
+{% block head_js %}
+    {{ super() }}
+    <!-- is.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/is_js/0.9.0/is.js"></script>
+
+    <!-- FireBugs-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/lib/firebugx.min.js"></script>
+
+    <!-- jQuery-UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-bootstrap/0.5pre/assets/js/jquery-ui-1.10.0.custom.min.js"></script>
+
+    <!-- jQuery-Event-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/lib/jquery.event.drag-2.3.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/lib/jquery.event.drop-2.3.0.min.js"></script>
+
+    <!-- SlickGrid -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.grid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.dataview.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.editors.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.formatters.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.groupitemmetadataprovider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.remotemodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.remotemodel-yahoo.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/slick.groupitemmetadataprovider.js"></script>
+
+    <!-- SlickGrid-Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.resizer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.autotooltips.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.cellrangeselector.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.cellrangedecorator.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.cellselectionmodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.rowselectionmodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headermenu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headerbuttons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.cellmenu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.draggablegrouping.min.js"></script>
+    <script src="{{url('static', filename='js/slick.gridmenu.js')}}"></script>
+    <script src="{{url('static', filename='js/initSlickGrid.js')}}"></script>
+
+    <!-- ace editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+    <!-- ace extentions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js<Paste>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/snippets/sql.min.js"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid" style="display:flex;flex-direction:column;height:100%;margin:0;padding:0;">
+      <div id="gridcontainer" class="container-fluid"></div>
+      <div id="editorcontainer">
+        <div id="editor"></div>
+        <button id="execute_button" class="button btn btn-outline-warning" onClick="sendQuery()">Execute</button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+    <script>
+      ace.require("ace/ext/language_tools");
+
+      var editor = ace.edit("editor");
+      var slickGrid;
+
+      editor.session.setMode("ace/mode/sql");
+      editor.setKeyboardHandler("ace/keyboard/vim");
+      editor.setTheme("ace/theme/cobalt");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+	enableLiveAutocompletion: true,
+	enableSnippets: true
+      });
+
+      function sendQuery() {
+	var query = editor.getValue()
+
+	// Sending and receiving data in JSON format using POST method
+	//
+	var xhr = new XMLHttpRequest();
+	var url = "/database";
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = function () {
+	  if (xhr.readyState === 4 && xhr.status === 200) {
+	    var json = JSON.parse(xhr.responseText);
+	    console.log(json);
+	    slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=true);
+	  }
+	};
+	var data = JSON.stringify({"query": query});
+	xhr.send(data);
+      };
+
+      var readTextFromFile = function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+        editor.setValue(text, 1);
+        };
+        reader.readAsText(input.files[0]);
+      };
+
+      placeholder = new Array("SELECT *",
+"  FROM information_schema.tables",
+"  WHERE table_schema",
+"    NOT IN ('pg_catalog');");
+      editor.setValue(placeholder.join('\n'))
+    </script>
+{% endblock %}
+

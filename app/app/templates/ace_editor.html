@@ -1,0 +1,298 @@
+{% extends 'layout.html' %}
+
+{% block head_css %}
+    {{ super() }}
+    <style type="text/css" media="screen">
+      #editor { 
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+{% endblock %}
+
+{% block head_js %}
+    {{ super() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+    <!-- ace extentions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-modelist.js"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="col" style="height:100%;margin:0;padding:0;border:0;display:flex;flex-flow:column;background-color:black;">
+    <nav id="toolbar" class="navbar rounded p-1" style="background: linear-gradient(to bottom, rgb(0, 27, 36) 0%, rgb(131, 183, 199) 0%, rgb(82, 162, 177) 33%, rgb(0, 94, 138) 67%, rgb(0, 63, 87) 90%, rgb(0, 27, 36) 100%)">
+      <ul class="navbar-nav nav">
+
+        <form class="form-inline">
+        <li class="nav-item p-0 m-0">
+	<label for="readtxt" class="border m-1 p-1 rounded border-dark" style="color:white;">Open...</label>
+        <input type='file'
+               id ='readtxt'
+               name='Read Text'
+	       class="inputfile",
+	       style="width:0.1px;height:0.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1;",
+               onchange='readTextFromFile(event)'
+        >
+	</li>
+
+        <li class="nav-item p-0 m-0">
+        <select id="modeselect" class="border p-1 m-1 rounded border-dark" style="color:white;background-color:transparent;">
+          <option value="pgSQL">pgSQL</option>
+          <option value="ABAP">ABAP</option>
+          <option value="ABC">ABC</option>
+          <option value="ActionScript">ActionScript</option>
+          <option value="ADA">ADA</option>
+          <option value="Alda">Alda</option>
+          <option value="Apache Conf">Apache Conf</option>
+          <option value="Apex">Apex</option>
+          <option value="AQL">AQL</option>
+          <option value="AsciiDoc">AsciiDoc</option>
+          <option value="ASL">ASL</option>
+          <option value="Assembly x86">Assembly x86</option>
+          <option value="AutoHotkey / AutoIt">AutoHot.. / AutoIt</option>
+          <option value="BatchFile">BatchFile</option>
+          <option value="C and C++">C and C++</option>
+          <option value="C#">C#</option>
+          <option value="C9 Search Results">C9 Search Results</option>
+          <option value="Cirru">Cirru</option>
+          <option value="Clojure">Clojure</option>
+          <option value="Cobol">Cobol</option>
+          <option value="CoffeeScript">CoffeeScript</option>
+          <option value="ColdFusion">ColdFusion</option>
+          <option value="Crystal">Crystal</option>
+          <option value="Csound">Csound</option>
+          <option value="Csound Document">Csound Document</option>
+          <option value="Csound Score">Csound Score</option>
+          <option value="CSS">CSS</option>
+          <option value="Curly">Curly</option>
+          <option value="D">D</option>
+          <option value="Dart">Dart</option>
+          <option value="Diff">Diff</option>
+          <option value="Django">Django</option>
+          <option value="Dockerfile">Dockerfile</option>
+          <option value="Dot">Dot</option>
+          <option value="Drools">Drools</option>
+          <option value="Edifact">Edifact</option>
+          <option value="Eiffel">Eiffel</option>
+          <option value="EJS">EJS</option>
+          <option value="Elixir">Elixir</option>
+          <option value="Elm">Elm</option>
+          <option value="Erlang">Erlang</option>
+          <option value="Forth">Forth</option>
+          <option value="Fortran">Fortran</option>
+          <option value="FreeMarker">FreeMarker</option>
+          <option value="FSharp">FSharp</option>
+          <option value="FSL">FSL</option>
+          <option value="Gcode">Gcode</option>
+          <option value="Gherkin">Gherkin</option>
+          <option value="Gitignore">Gitignore</option>
+          <option value="Glsl">Glsl</option>
+          <option value="Go">Go</option>
+          <option value="Gobstones">Gobstones</option>
+          <option value="GraphQLSchema">GraphQLSchema</option>
+          <option value="Groovy">Groovy</option>
+          <option value="HAML">HAML</option>
+          <option value="Handlebars">Handlebars</option>
+          <option value="Haskell">Haskell</option>
+          <option value="Haskell Cabal">Haskell Cabal</option>
+          <option value="haXe">haXe</option>
+          <option value="Hjson">Hjson</option>
+          <option value="HTML">HTML</option>
+          <option value="HTML (Elixir)">HTML (Elixir)</option>
+          <option value="HTML (Ruby)">HTML (Ruby)</option>
+          <option value="INI">INI</option>
+          <option value="Io">Io</option>
+          <option value="Jack">Jack</option>
+          <option value="Jade">Jade</option>
+          <option value="Java">Java</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="JSON">JSON</option>
+          <option value="JSON5">JSON5</option>
+          <option value="JSONiq">JSONiq</option>
+          <option value="JSP">JSP</option>
+          <option value="JSSM">JSSM</option>
+          <option value="JSX">JSX</option>
+          <option value="Julia">Julia</option>
+          <option value="Kotlin">Kotlin</option>
+          <option value="LaTeX">LaTeX</option>
+          <option value="LESS">LESS</option>
+          <option value="Liquid">Liquid</option>
+          <option value="Lisp">Lisp</option>
+          <option value="LiveScript">LiveScript</option>
+          <option value="LogiQL">LogiQL</option>
+          <option value="LSL">LSL</option>
+          <option value="Lua">Lua</option>
+          <option value="LuaPage">LuaPage</option>
+          <option value="Lucene">Lucene</option>
+          <option value="Makefile">Makefile</option>
+          <option value="Markdown">Markdown</option>
+          <option value="Mask">Mask</option>
+          <option value="MATLAB">MATLAB</option>
+          <option value="Maze">Maze</option>
+          <option value="MediaWiki">MediaWiki</option>
+          <option value="MEL">MEL</option>
+          <option value="MIXAL">MIXAL</option>
+          <option value="MUSHCode">MUSHCode</option>
+          <option value="MySQL">MySQL</option>
+          <option value="Nginx">Nginx</option>
+          <option value="Nim">Nim</option>
+          <option value="Nix">Nix</option>
+          <option value="Nix">Nix</option>
+          <option value="NSIS">NSIS</option>
+          <option value="Nunjucks">Nunjucks</option>
+          <option value="Objective-C">Objective-C</option>
+          <option value="OCaml">OCaml</option>
+          <option value="Pascal">Pascal</option>
+          <option value="Perl">Perl</option>
+          <option value="Perl 6">Perl 6</option>
+          <option value="pgSQL">pgSQL</option>
+          <option value="PHP">PHP</option>
+          <option value="PHP (Blade Template)">PHP (Bl..Template)</option>
+          <option value="Pig">Pig</option>
+          <option value="Plain Text">Plain Text</option>
+          <option value="Powershell">Powershell</option>
+          <option value="Praat">Praat</option>
+          <option value="Prisma">Prisma</option>
+          <option value="Prolog">Prolog</option>
+          <option value="Properties">Properties</option>
+          <option value="Protobuf">Protobuf</option>
+          <option value="Puppet">Puppet</option>
+          <option value="Python">Python</option>
+          <option value="QML">QML</option>
+          <option value="R">R</option>
+          <option value="Razor">Razor</option>
+          <option value="RDoc">RDoc</option>
+          <option value="Red">Red</option>
+          <option value="RHTML">RHTML</option>
+          <option value="RST">RST</option>
+          <option value="Ruby">Ruby</option>
+          <option value="Rust">Rust</option>
+          <option value="SASS">SASS</option>
+          <option value="SCAD">SCAD</option>
+          <option value="Scala">Scala</option>
+          <option value="Scheme">Scheme</option>
+          <option value="SCSS">SCSS</option>
+          <option value="SH">SH</option>
+          <option value="SJS">SJS</option>
+          <option value="Slim">Slim</option>
+          <option value="Smarty">Smarty</option>
+          <option value="snippets">snippets</option>
+          <option value="Soy Template">Soy Template</option>
+          <option value="Space">Space</option>
+          <option value="SQL">SQL</option>
+          <option value="SQLServer">SQLServer</option>
+          <option value="Stylus">Stylus</option>
+          <option value="SVG">SVG</option>
+          <option value="Swift">Swift</option>
+          <option value="Tcl">Tcl</option>
+          <option value="Terraform">Terraform</option>
+          <option value="Tex">Tex</option>
+          <option value="Text">Text</option>
+          <option value="Textile">Textile</option>
+          <option value="Toml">Toml</option>
+          <option value="TSX">TSX</option>
+          <option value="Twig">Twig</option>
+          <option value="Typescript">Typescript</option>
+          <option value="Vala">Vala</option>
+          <option value="VBScript">VBScript</option>
+          <option value="Velocity">Velocity</option>
+          <option value="Verilog">Verilog</option>
+          <option value="VHDL">VHDL</option>
+          <option value="Visualforce">Visualforce</option>
+          <option value="Wollok">Wollok</option>
+          <option value="XML">XML</option>
+          <option value="XQuery">XQuery</option>
+          <option value="YAML">YAML</option>
+          <option value="Zeek">Zeek</option>
+        </select>
+	</li>
+
+        <li class="nav-item">
+        <select id="themeselect" class="border-0 m-1" style="color:white;background-color:transparent;">
+          <option value="ambiance">Ambiance</option>
+          <option value="chaos">Chaos</option>
+          <option value="chrome">Chrome</option>
+          <option value="clouds">Clouds</option>
+          <option value="clouds_midnight">Clouds Midnight</option>
+          <option value="cobalt">Cobalt</option>
+          <option value="crimson_editor">Crimson Editor</option>
+          <option value="dawn">Dawn</option>
+          <option value="dracula">Dracula</option>
+          <option value="dreamweaver">Dreamweaver</option>
+          <option value="eclipse">Eclipse</option>
+          <option value="github">GitHub</option>
+          <option value="gob">Green on Black</option>
+          <option value="gruvbox">Gruvbox</option>
+          <option value="idle_fingers">idle Fingers</option>
+          <option value="iplastic">IPlastic</option>
+          <option value="katzenmilch">KatzenMilch</option>
+          <option value="kr_theme">krTheme</option>
+          <option value="kuroir">Kuroir</option>
+          <option value="merbivore">Merbivore</option>
+          <option value="merbivore_soft">Merbivore Soft</option>
+          <option value="mono_industrial">Mono Industrial</option>
+          <option value="monokai">Monokai</option>
+          <option value="nord_dark">Nord Dark</option>
+          <option value="pastel_on_dark">Pastel on dark</option>
+          <option value="solarized_dark">Solarized Dark</option>
+          <option value="solarized_light">Solarized Light</option>
+          <option value="sqlserver">SQL Server</option>
+          <option value="terminal">Terminal</option>
+          <option value="textmate">TextMate</option>
+          <option value="tomorrow_night_blue">Tomorrow Night Blue</option>
+          <option value="tomorrow_night_bright">Tomorrow Night Bright</option>
+          <option value="tomorrow_night_eighties">Tomorrow Night 80s</option>
+          <option value="tomorrow_night">Tomorrow Night</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="twilight">Twilight</option>
+          <option value="vibrant_ink">Vibrant Ink</option>
+          <option value="xcode">Xcode</option>
+        </select>
+	</li>
+
+      </form>
+    </ul>
+
+    </nav>
+      <div id="editor" style="flex-flow:1;"></div>
+    </div>
+    <script>
+      ace.require("ace/ext/language_tools");
+
+      var editor = ace.edit("editor");
+      editor.session.setMode("ace/mode/sql");
+      editor.setKeyboardHandler("ace/keyboard/vim");
+      editor.setTheme("ace/theme/merbivore");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+	enableSnippets: true,
+	enableLiveAutocompletion: true
+      });
+
+      modeselect = document.getElementById('modeselect')
+      modeselect.addEventListener('change', function(event) { 
+        editor.session.setMode('ace/mode/' + modeselect.options[modeselect.selectedIndex].value);
+        editor.setOptions({
+          enableBasicAutocompletion: true,
+	  enableSnippets: true,
+	  enableLiveAutocompletion: true
+      });
+      });
+
+      themeselect = document.getElementById('themeselect')
+      themeselect.addEventListener('change', function(event) { 
+        editor.setTheme('ace/theme/' + themeselect.options[themeselect.selectedIndex].value);
+        console.log('ace/theme/' + themeselectoptions[themeselect.selectedIndex].value);
+      });
+
+      var readTextFromFile = function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+        editor.setValue(text, 1);
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+{% endblock %}

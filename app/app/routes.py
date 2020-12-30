@@ -3,10 +3,12 @@ import pathlib
 
 from aiohttp import web
 
+from .handlers.database import DatabaseHandler
 from .handlers.index import IndexHandler
 from .handlers.login import LoginHandler
 from .handlers.redis import RedisHandler
 from .handlers.search import SearchHandler
+from .handlers.tools import ToolsHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -46,6 +48,12 @@ def setup_routes(app: web.Application) -> None:
     searchhandler = SearchHandler()
     searchhandler.configure(app)
 
-    # app.router.add_get('/identity', identity)
+    # Setup DatabaseHandler
+    databasehandler = DatabaseHandler()
+    databasehandler.configure(app)
+
+    # Setup ToolsHandler
+    toolshandler = ToolsHandler()
+    toolshandler.configure(app)
 
     setup_static_routes(app)
