@@ -16,6 +16,13 @@ class IndexHandler(BaseHandler):
             },
         )
 
+    async def identity(self, request):
+        session = request["session"]
+        if "logSessionId" in session.keys():
+            return web.Response(text=str(session["logSessionId"]))
+        else:
+            return web.Response(text="")
+
     async def public_page(self, request):
         await check_permission(request, "public")
         return web.Response(
@@ -29,6 +36,7 @@ class IndexHandler(BaseHandler):
     def configure(self, app):
         router = app.router
         router.add_route("GET", "/", self.index, name="index")
+        router.add_route("GET", "/identity", self.identity, name="identity")
         router.add_route("GET", "/public", self.public_page, name="public")
         router.add_route(
             "GET", "/protected", self.protected_page, name="protected"

@@ -21,17 +21,13 @@ test_w_docker_config:
 test:
 	docker exec -it aiowebapp_aiowebapp_1 make test_w_docker_config
 
-localtest:
-	pytest -c config/local_test.yaml -vvv --disable-warnings --aiohttp-fast tests
-
 cov_w_docker_config:
-	pytest --cov-config=.coveragerc --cov=app --cov-report=shell -c config/test.yaml -vvv --disable-warnings tests
+	#pytest --cov-config=.coveragerc --cov=app --cov-report=term -c config/test.yaml -vvv --disable-warnings tests
+	pytest --cov-config=.coveragerc --cov=app --cov-report=html:app/storage/coverage -c config/test.yaml -vvv --disable-warnings tests
 
 cov:
 	docker exec -it aiowebapp_aiowebapp_1 make cov_w_docker_config
 
-localcov:
-	pytest --cov-config=.coveragerc --cov=app --cov-report=html:coverage -c config/local_test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 clean:
 	rm -rf `find . -name __pycache__`

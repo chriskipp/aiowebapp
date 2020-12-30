@@ -3,57 +3,50 @@ import pytest
 
 from app.main import create_app
 
-routes_nologin = [
-    ("/", 200),
-    ("/login", 200),
-    ("/session", 200),
-    ("/me", 401),
-    ("/users/1", 401),
-    ("/public", 401),
-    ("/protected", 401),
-    ("/storage", 200),
-    ("/logout", 401),
-    ("/static/images/favicon.ico", 200),
-    ("/not_defined_route", 404),
-]
+users = ["admin", "user", "moderator", None]
 
-routes_user = [
-    ("/", 200),
-    ("/login", 200),
-    ("/session", 200),
-    ("/me", 200),
-    ("/users/1", 200),
-    ("/public", 200),
-    ("/protected", 403),
-    ("/storage", 200),
-    ("/logout", 200),
-    ("/not_defined_route", 404),
-]
+routes_get = {
+    "/": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/login": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/session": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/me": {"admin": 200, "user": 200, "moderator": 200, None: 401},
+    "/users/1": {"admin": 200, "user": 200, "moderator": 200, None: 401},
+    "/public": {"admin": 200, "user": 200, "moderator": 200, None: 401},
+    "/protected": {"admin": 200, "user": 403, "moderator": 200, None: 401},
+    "/storage": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/search": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/redis": {"admin": 200, "user": 200, "moderator": 200, None: 200},
+    "/logout": {"admin": 200, "user": 200, "moderator": 200, None: 401},
+    "/static/images/favicon.ico": {
+        "admin": 200,
+        "user": 200,
+        "moderator": 200,
+        None: 200,
+    },
+    "/not_defined_route": {
+        "admin": 404,
+        "user": 404,
+        "moderator": 404,
+        None: 404,
+    },
+}
 
-routes_moderator = [
-    ("/", 200),
-    ("/login", 200),
-    ("/session", 200),
-    ("/me", 200),
-    ("/users/1", 200),
-    ("/public", 200),
-    ("/protected", 200),
-    ("/storage", 200),
-    ("/logout", 200),
-    ("/not_defined_route", 404),
-]
-
-routes_admin = [
-    ("/", 200),
-    ("/login", 200),
-    ("/session", 200),
-    ("/me", 200),
-    ("/users/1", 200),
-    ("/public", 200),
-    ("/protected", 200),
-    ("/storage", 200),
-    ("/logout", 200),
-]
+routes_post = {
+    "/autocomplete": {
+        "admin": 200,
+        "user": 200,
+        "moderator": 200,
+        None: 200,
+        "data": {"q": "atool"},
+    },
+    "/search": {
+        "admin": 200,
+        "user": 200,
+        "moderator": 200,
+        None: 200,
+        "data": {"q": "atool"},
+    },
+}
 
 
 async def test_internal_server_error(aiohttp_client):
@@ -82,53 +75,38 @@ async def test_handler_exception(aiohttp_client):
     assert res.status == 500
 
 
-@pytest.mark.parametrize(("route", "status"), routes_nologin)
-async def test_route_nologin(aiohttp_client, route, status):
-    client = await aiohttp_client(create_app())
-    res = await client.get(route)
-    assert res.status == status
+@pytest.mark.parametrize(("route"), routes_get.keys())
+@pytest.mark.parametrize(("user"), users)
+async def test_route_get(aiohttp_client, route, user):
 
+    app = create_app()
+    client = await aiohttp_client(app)
 
-@pytest.mark.parametrize(("route", "status"), routes_admin)
-async def test_route_admin(aiohttp_client, route, status):
-
-    client = await aiohttp_client(create_app())
-
-    res = await client.post(
-        "/login", data={"loginField": "admin", "passwordField": "password"}
-    )
-    assert res.status == 200
+    if user:
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
+        assert res.status == 200
 
     res = await client.get(route)
-    assert res.status == status
+    assert res.status == routes_get[route][user]
 
 
-@pytest.mark.parametrize(("route", "status"), routes_user)
-async def test_route_user(aiohttp_client, route, status):
+@pytest.mark.parametrize(("route"), routes_post.keys())
+@pytest.mark.parametrize(("user"), users)
+async def test_route_post(aiohttp_client, route, user):
 
-    client = await aiohttp_client(create_app())
+    app = create_app()
+    client = await aiohttp_client(app)
 
-    res = await client.post(
-        "/login", data={"loginField": "user", "passwordField": "password"}
-    )
-    assert res.status == 200
+    if user:
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
+        assert res.status == 200
 
-    res = await client.get(route)
-    assert res.status == status
-
-
-@pytest.mark.parametrize(("route", "status"), routes_moderator)
-async def test_route_moderator(aiohttp_client, route, status):
-
-    client = await aiohttp_client(create_app())
-
-    res = await client.post(
-        "/login", data={"loginField": "moderator", "passwordField": "password"}
-    )
-    assert res.status == 200
-
-    res = await client.get(route)
-    assert res.status == status
+    res = await client.post(route, data=routes_post[route]["data"])
+    assert res.status == routes_post[route][user]
 
 
 async def test_method_not_allowed(aiohttp_client):
