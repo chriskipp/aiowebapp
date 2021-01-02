@@ -58,8 +58,19 @@
 	    },
             "requires": ["logged_in", "logged_out"]
         }]}, {
-	    "title":"Search",
+	    "title":"Maps",
 	    "color":"lime",
+            "data": [
+	{
+            "link": {
+                "href": "/map",
+                "icon": "fa-map",
+                "label": "SimpleMap"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }]}, {
+	    "title":"Search",
+	    "color":"cyan",
             "data": [
 		    {"link": {
                 "href": "/search",
