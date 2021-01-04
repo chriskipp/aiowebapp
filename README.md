@@ -2,6 +2,23 @@
 
 Various own projects that came about in the form of individual aiohttp based web applications and are now being compiled here in the form of a docker swarm in a repository as many of the applications complement.
 
+## Features
+
+This repository is mainly ment as a skelleton for a aiohttp based app, including certain features like login or nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of sub applications including a database manager and search engines as examples on how to use this skelleton. Features include:
+
+### Container based features
+- [aiohttp](https://github.com/aio-libs/aiohttp) is used as a asyncronous web server
+- [nginx](http://nginx.org/) as a reverse proxy (including support for https using self-signed certificates)
+- [postgres](https://www.postgresql.org/) as a relational database
+- [redis](https://redis.io/) as in memory database
+
+### Web app features
+- [uvloop](https://github.com/MagicStack/uvloop) to generally speed up the web application
+- [aiohttp-session](https://github.com/aio-libs/aiohttp-session) session and login support
+- [orjson](https://github.com/ijl/orjson) to speed up JSON serialisation
+- [trafaret-config](https://github.com/tailhook/trafaret-config) to safely parse config files
+- [asyncpg.sa](https://github.com/aio-libs/aiopg) as async database adapter to support user login
+
 ## Dependencies and Installation
 
 ### Using HTTP

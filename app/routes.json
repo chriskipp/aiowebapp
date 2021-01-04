@@ -69,8 +69,19 @@
 	    },
             "requires": ["logged_in", "logged_out"]
         }]}, {
-	    "title":"Search",
+	    "title":"Storage",
 	    "color":"cyan",
+            "data": [
+	{
+            "link": {
+                "href": "/storage",
+                "icon": "fa-hdd",
+                "label": "Storage"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }]}, {
+	    "title":"Search",
+	    "color":"blue",
             "data": [
 		    {"link": {
                 "href": "/search",
