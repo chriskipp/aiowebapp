@@ -68,6 +68,14 @@ The above commands will run the web application, the database backend, the redis
 
 **Note:** Since the provided tests also test the functionality of the included search engine and its autocompletion some example index has to be created to guarantee the successful passing of the related tests!
 
+Instead of installing the nessesary programs locally you can also run the docker container provided by the Dockerfile in the scripts directory:
+
+```
+docker build -t aiowebapp_importer scripts && docker run --network=host aiowebapp_importer
+```
+
+Please note, that this container is only ment for providing the example data an is not part of the actual docker swarm used to run the app itself.
+
 ## Running Tests
 
 After successful startup of the web application you might want to run the provided tests to make sure all features are working properly. By default testing is automatically achieved from within the running docker container. You can initiate testing by using the ```Makefile``` in the ```app``` directory:
