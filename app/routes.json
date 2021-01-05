@@ -58,8 +58,37 @@
 	    },
             "requires": ["logged_in", "logged_out"]
         }]}, {
-	    "title":"Search",
+	    "title":"Maps",
 	    "color":"lime",
+            "data": [
+	{
+            "link": {
+                "href": "/map",
+                "icon": "fa-map",
+                "label": "SimpleMap"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/nominatim",
+                "icon": "fa-map",
+                "label": "Nominatim"
+	    },
+            "requires": ["logged_in", "logged_out"]
+	}]}, {
+	    "title":"Storage",
+	    "color":"cyan",
+            "data": [
+	{
+            "link": {
+                "href": "/storage",
+                "icon": "fa-hdd",
+                "label": "Storage"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }]}, {
+	    "title":"Search",
+	    "color":"blue",
             "data": [
 		    {"link": {
                 "href": "/search",
@@ -67,5 +96,5 @@
                 "label": "Redisearch"
 	    },
             "requires": ["logged_in", "logged_out"]
-		    }]}
+	}]}
 	]

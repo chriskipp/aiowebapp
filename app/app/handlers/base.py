@@ -7,7 +7,6 @@ class BaseHandler:
 
         with open("routes.json") as f:
             self.routes = orjson.loads(f.read())
-            print(self.routes)
 
         self.sidebar_sections_loggedin = [
             {
