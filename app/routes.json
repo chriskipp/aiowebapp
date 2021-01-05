@@ -68,7 +68,14 @@
                 "label": "SimpleMap"
 	    },
             "requires": ["logged_in", "logged_out"]
-        }]}, {
+        }, {
+            "link": {
+                "href": "/nominatim",
+                "icon": "fa-map",
+                "label": "Nominatim"
+	    },
+            "requires": ["logged_in", "logged_out"]
+	}]}, {
 	    "title":"Storage",
 	    "color":"cyan",
             "data": [
@@ -89,5 +96,5 @@
                 "label": "Redisearch"
 	    },
             "requires": ["logged_in", "logged_out"]
-		    }]}
+	}]}
 	]
