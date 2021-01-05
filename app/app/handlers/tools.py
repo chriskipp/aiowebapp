@@ -18,8 +18,16 @@ class ToolsHandler(BaseHandler):
             context=await self.get_context(request, {}),
         )
 
+    async def nominatim(self, request):
+        return aiohttp_jinja2.render_template(
+            "nominatim.html",
+            request,
+            context=await self.get_context(request, {}),
+        )
+
     def configure(self, app):
 
         router = app.router
         router.add_route("GET", "/editor", self.editor, name="editor")
         router.add_route("GET", "/map", self.map, name="map")
+        router.add_route("GET", "/nominatim", self.nominatim, name="nominatim")
