@@ -71,7 +71,7 @@
         }, {
             "link": {
                 "href": "/nominatim",
-                "icon": "fa-map",
+                "icon": "fa-map-marked-alt",
                 "label": "Nominatim"
 	    },
             "requires": ["logged_in", "logged_out"]

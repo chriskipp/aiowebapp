@@ -29,6 +29,14 @@
 {% block tail_js %}
     <script src="{{url('static', filename='js/addBaseMaps.js')}}"></script>
     <script>
+      function onEachFeature(feature, layer) {
+	var popupContent = "";
+	if (feature.properties && feature.properties.display_name) {
+	  var popupContent = '<p><b>' + feature.properties.display_name + '</b></p>';
+	};
+	layer.bindPopup(popupContent);
+      };
+
       function searchNominatim() {
         var query = document.getElementById('nominatim_search').value;
 
@@ -41,12 +49,17 @@
           if (xhr.readyState === 4 && xhr.status === 200) {
             var json = JSON.parse(xhr.responseText);
             console.log(json);
-	    L.geoJSON(json).addTo(map);
+	    if (geojson != undefined) {
+	      map.removeLayer(geojson);
+	    }
+	    geojson = L.geoJSON(json, {onEachFeature: onEachFeature}) //.addTo(map);
+	    geojson.addTo(map);
           }
         };
         xhr.send();
       };
 
+      var geojson = undefined;
       document.getElementById("map").style.zIndex = 1;
 
       document.getElementById('nominatim_search').addEventListener('keydown', function (event) {
