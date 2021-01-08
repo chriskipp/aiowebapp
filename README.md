@@ -4,7 +4,7 @@ Batteries included fully asyncronous (aiohttp based) web application. The web se
 
 ## Features
 
-This repository is mainly ment as a skelleton for a aiohttp based app, including certain features like login or nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of sub applications including a database manager and search engines as examples on how to use this skelleton. Features include:
+This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based search engine or a nominatim based search engine for geographic entities as examples on how to use this skelleton. Further features include:
 
 ### Container based features
 - [aiohttp](https://github.com/aio-libs/aiohttp) is used as a asyncronous web server
@@ -13,28 +13,32 @@ This repository is mainly ment as a skelleton for a aiohttp based app, including
 - [redis](https://redis.io/) as in memory database
 - [redisearch](https://github.com/RediSearch/RediSearch) as redis based search engine with autocompletion
 - [redisJSON](https://github.com/RedisJSON/RedisJSON) JSON support for redis
+- Extra importer container (not belonging to the webapp itself) to fill the application's redis and postgres backends with some example data from the web to make the provided example tools work
 
 ### Web app features
-- [uvloop](https://github.com/MagicStack/uvloop) to generally speed up the web application
 - [aiohttp-session](https://github.com/aio-libs/aiohttp-session) session and login support
-- [orjson](https://github.com/ijl/orjson) to speed up JSON serialisation
 - [trafaret-config](https://github.com/tailhook/trafaret-config) to safely parse config files
 - [aiopg.sa](https://github.com/aio-libs/aiopg) as async database adapter to handle user login with SQLAlchemy support
-- [asyncio](https://github.com/MagicStack/asyncpg) ultra fast async database interface to handle raw SQL queries
 - [aiohttp-jinja2](https://github.com/aio-libs/aiohttp-jinja2) templating system
-- local file storage
+- file up- and download to the server
+
+### Featuers to increase speed
+- [uvloop](https://github.com/MagicStack/uvloop) to generally speed up the web application
+- [orjson](https://github.com/ijl/orjson) to speed up JSON serialisation
+- [asyncpg](https://github.com/MagicStack/asyncpg) ultra fast async database interface to handle raw SQL queries
+- [cchardet](https://github.com/PyYoshi/cChardet) and [aiodns](https://github.com/saghul/aiodns) as they are officially recommended to generally speed up aiohttp based applications
 
 ### Web app tools/Example Pages
 - [leaflet Map](https://github.com/Leaflet/Leaflet) interactive Map
 - [ACE Editor](https://ace.c9.io/) high performance code editor with support for over 120 languages
 - [SlickGrid](https://github.com/6pac/SlickGrid) web based grid with build in support for (Multi Column) Sorting, Data Type Detection, Autosize of Columns, (Drag & Drop based) Grouping, ...
-- [Search Engine](https://github.com/RediSearch/RediSearch) with XHR based autocompletion (To generate a example index of locally installed man pages see the scripts section)
+- [Redis based Search Engine](https://github.com/RediSearch/RediSearch) with XHR based autocompletion (To generate a example index of locally installed man pages see the scripts section)
+- [GeoSearch](https://nominatim.org/release-docs/develop/api/Overview) using the Nominatim API as back- and Leaflet's GeoJSON support as frontend
 
 ### Development and Testing
-- almost 100% test coverage using [pytest](https://github.com/pytest-dev/pytest)
+- almost 100% test coverage using [pytest](https://github.com/pytest-dev/pytest) and [pytest-cov](https://github.com/pytest-dev/pytest-cov)
 - [aiohttp-debugtoolbar](https://github.com/aio-libs/aiohttp-debugtoolbar) including two extra pannels to analyse postgres and redis queries
 - automatic linting ([autoflake](https://github.com/myint/autoflake)) and code formatting ([black](https://github.com/psf/black), [isort](https://github.com/PyCQA/isort))
-
 
 ## Running the Application
 
@@ -89,5 +93,3 @@ After successful startup of the web application you might want to run the provid
 ```
 $ make test
 ```
-
-
