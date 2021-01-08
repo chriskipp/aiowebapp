@@ -1,10 +1,10 @@
 # aiowebapp
 
-Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease use as a little (docker-compose based) docker swarm.
+Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease of use as a (docker-compose based) docker swarm.
 
 ## Features
 
-This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based search engine or a nominatim based search engine for geographic entities as examples on how to use this skelleton. Further features include:
+This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based full text search engine or a nominatim based search for geographic entities as examples on how to use this skelleton. Further features include:
 
 ### Container based features
 - [aiohttp](https://github.com/aio-libs/aiohttp) is used as a asyncronous web server
