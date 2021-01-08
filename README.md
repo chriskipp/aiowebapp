@@ -30,6 +30,12 @@ This repository is mainly ment as a skelleton for a aiohttp based app, including
 - [SlickGrid](https://github.com/6pac/SlickGrid) web based grid with build in support for (Multi Column) Sorting, Data Type Detection, Autosize of Columns, (Drag & Drop based) Grouping, ...
 - [Search Engine](https://github.com/RediSearch/RediSearch) with XHR based autocompletion (To generate a example index of locally installed man pages see the scripts section)
 
+### Development and Testing
+- almost 100% test coverage using [pytest](https://github.com/pytest-dev/pytest)
+- [aiohttp-debugtoolbar](https://github.com/aio-libs/aiohttp-debugtoolbar) including two extra pannels to analyse postgres and redis queries
+- automatic linting ([autoflake](https://github.com/myint/autoflake)) and code formatting ([black](https://github.com/psf/black), [isort](https://github.com/PyCQA/isort))
+
+
 ## Running the Application
 
 ### Using HTTP

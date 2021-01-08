@@ -15,14 +15,13 @@
 
 {% block main %}
     {{ super() }}
-    <div id="search" style="height:20%;width:100%;">
-      <form>
-	<label for="nominatim_search">GeoSearch:</label>
-	<input id="nominatim_search" type="text" method="POST"></input>
-	<input type="submit" value="Submit">
-      </form>
-    </div>
-    <div id="map" style="background-color:black;height:80%;width:100%;margin:0;padding:0;border:0;">
+    <div style="display:flex;flex-direction:column;height:100%;">
+      <div id="search" style="height:auto;width:100%;display:flex;">
+	<input id="nominatim_search" class="form-control" type="text" style="flex-grow:1;"></input>
+	<button type="button" class="btn btn-outline-warning" onClick="searchNominatim()" style="width:auto;margin-left:5px;">Search</button>
+      </div>
+      <div id="map" style="background-color:black;width:100%;margin:0;margin-top:10px;padding:0;border:0;flex-grow:1;">
+      </div>
     </div>
 {% endblock %}
 
@@ -30,7 +29,32 @@
 {% block tail_js %}
     <script src="{{url('static', filename='js/addBaseMaps.js')}}"></script>
     <script>
+      function searchNominatim() {
+        var query = document.getElementById('nominatim_search').value;
+
+        // Sending and receiving data in JSON format using POST method
+        var xhr = new XMLHttpRequest();
+        var url = "https://nominatim.openstreetmap.org/search/?format=geojson&addressdetails=1&namedetails=1&extratags=1&accept-language=en&polygon_geojson=1&polygon_threshold=0.1&limit=50&dedup=1&q=" + query;
+        xhr.open("GET", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(json);
+	    L.geoJSON(json).addTo(map);
+          }
+        };
+        xhr.send();
+      };
+
       document.getElementById("map").style.zIndex = 1;
+
+      document.getElementById('nominatim_search').addEventListener('keydown', function (event) {
+        if (event.which == 13) {
+          event.preventDefault();
+	  searchNominatim();
+	}
+      });
     </script>
 {% endblock %}
 
