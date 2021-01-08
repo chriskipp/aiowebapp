@@ -13,7 +13,7 @@ This repository is mainly ment as a skelleton for aiohttp based webapps, includi
 - [redis](https://redis.io/) as in memory database
 - [redisearch](https://github.com/RediSearch/RediSearch) as redis based search engine with autocompletion
 - [redisJSON](https://github.com/RedisJSON/RedisJSON) JSON support for redis
-- Extra importer container (not belonging to the webapp itself) to fill the application's redis and postgres backends with some example data from the web to make the provided example tools work
+- Extra importer container (not belonging to the webapp itself) to fill the application's redis and postgres backends with some example data from the web to make all the provided example tools work out of the box
 
 ### Web app features
 - [aiohttp-session](https://github.com/aio-libs/aiohttp-session) session and login support
