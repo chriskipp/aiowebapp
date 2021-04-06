@@ -9,6 +9,7 @@ from .handlers.login import LoginHandler
 from .handlers.redis import RedisHandler
 from .handlers.search import SearchHandler
 from .handlers.tools import ToolsHandler
+from .handlers.exchanger import DataHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 
@@ -55,5 +56,9 @@ def setup_routes(app: web.Application) -> None:
     # Setup ToolsHandler
     toolshandler = ToolsHandler()
     toolshandler.configure(app)
+
+    # Setup Exchangehandler
+    exchangehandler = DataHandler()
+    exchangehandler.configure(app)
 
     setup_static_routes(app)

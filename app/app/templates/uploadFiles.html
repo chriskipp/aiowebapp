@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+    {{ super() }}
+    <style>
+      input, .custom-file-input {
+        width: 10px;
+      }
+      .custom-file-input::-webkit-file-upload-button {
+        visibility: none;
+      }
+      .custom-file-input::before {
+        content: 'Select some files';
+        display: inline-block;
+        background: linear-gradient(top, #f9f9f9, #e3e3e3);
+        border: 1px solid #999;
+        border-radius: 3px;
+        padding: 5px 8px;
+        outline: none;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        cursor: pointer;
+        text-shadow: 1px 1px #fff;
+        font-weight: 700;
+        font-size: 10pt;
+      }
+      .custom-file-input:hover::before {
+        border-color: black;
+      }
+      .custom-file-input:active::before {
+        background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+      }
+    </style>
+{% endblock %}
+
+{% block main %}
+    {{ super() }}
+    <div class='container-fluid'>
+      <div class="container-fluid">
+      <form action="{{ target_uploadFiles }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+        <div class="form-group" style="display: inline-flex; width: 90%;">
+          <label id="fileUploadLabel" for="fileUpload" style="border: 1px solid white; border-radius: 30px; padding: 10px; width: 100%;">Choose Files...</label>
+	  <input id="fileUpload" name="fileUpload" type="file" class="custom-file-input" multiple="">
+        </div>
+        <button type="submit" class="btn btn-primary" style="border-radius:10px;">Upload</button>
+      </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+  {{ super() }}
+  <script>
+    document.getElementById("fileUpload").onchange = function () {
+      var files = document.getElementById('fileUpload').files;
+      var nfiles = files.length;
+      var sumsize = 0;
+      for (i=0; i<files.length; i++) {
+        sumsize = sumsize + files[i].size;
+      }
+      document.getElementById('fileUploadLabel').innerHTML = '<b>' + String(nfiles) + ' file(s) selected </b>(' + String(sumsize) + ' bytes)';
+    };
+  </script>
+{% endblock %}

@@ -63,6 +63,13 @@
             "data": [
 	{
             "link": {
+                "href": "/upload",
+                "icon": "fa-map",
+                "label": "FileUpload"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
                 "href": "/map",
                 "icon": "fa-map",
                 "label": "SimpleMap"

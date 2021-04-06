@@ -1,4 +1,11 @@
-version: '3'
+version: '3.3'
+
+
+networks:
+  aio:
+    ipam:
+      config:
+        - subnet: "172.18.0.0/24"
 
 services:
   aiowebapp:
@@ -42,7 +49,4 @@ services:
       - ./app/app/storage:/usr/share/nginx/html/storage
     depends_on:
       - aiowebapp
-
-networks:
-  aio:
 
