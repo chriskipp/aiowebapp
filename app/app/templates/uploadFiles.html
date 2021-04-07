@@ -40,7 +40,7 @@
       <form action="{{ target_uploadFiles }}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
         <div class="form-group" style="display: inline-flex; width: 90%;">
           <label id="fileUploadLabel" for="fileUpload" style="border: 1px solid white; border-radius: 30px; padding: 10px; width: 100%;">Choose Files...</label>
-	  <input id="fileUpload" name="fileUpload" type="file" class="custom-file-input" multiple="">
+	  <input id="fileUpload" name="fileUpload" type="file" class="custom-file-input" multiple webkitdirectory />
         </div>
         <button type="submit" class="btn btn-primary" style="border-radius:10px;">Upload</button>
       </form>

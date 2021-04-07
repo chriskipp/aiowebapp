@@ -1,24 +1,22 @@
-import aiohttp_jinja2
-
-from .base import BaseHandler
 
 import pathlib
-
 import aiohttp
 from aiohttp import web
 import aiohttp_jinja2
+
+from .base import BaseHandler
 
 BASE_DIR = pathlib.Path(__file__).parent.parent.parent
 PROJECT_ROOT = BASE_DIR / "app"
 
 class DataHandler(BaseHandler):
     async def fileUploadFormHandler(self, request):
+        context=await self.get_context(request, {})
+        context["target_uploadFiles"] = "/upload"
         response = aiohttp_jinja2.render_template(
             "uploadFiles.html",
             request,
-            context={
-                "target_uploadFiles": "/upload",
-            },
+            context=context
         )
         return response
     
