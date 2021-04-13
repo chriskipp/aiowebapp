@@ -14,9 +14,27 @@ from app.redis import setup_redis, teardown_redis
 from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
+from aiohttp_session import SimpleCookieStorage, session_middleware
 
+#from aiohttp_session.redis_storage import RedisStorage
+#from aiohttp_security import setup as setup_security
+#from aiohttp_security import SessionIdentityPolicy
+#from aiopg.sa import create_engine
+#from aioredis import create_pool
 
 def create_app(config=None) -> web.Application:
+
+#    redis_pool = await create_pool(('redis', 6379))
+#    dbengine = await create_engine(user='app',
+#                                   password='apppw',
+#                                   database='app',
+#                                   host='postgres')
+#    app = web.Application()
+#    setup_session(app, RedisStorage(redis_pool))
+#    setup_security(app,
+#                   SessionIdentityPolicy(),
+#                   DBAuthorizationPolicy(dbengine))
+
 
     app = web.Application()
     app["config"] = get_config(config)

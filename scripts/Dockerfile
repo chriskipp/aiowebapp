@@ -2,7 +2,7 @@ FROM python:3.9.4
 
 WORKDIR /src/importer
 RUN apt-get update && apt-get -y upgrade && apt-get install -y git man-db manpages build-essential zsh redis bc jq
-RUN python3 -m pip install psycopg2 psycopg2-binary
+RUN python3 -m pip install psycopg2 psycopg2-binary html2text
 RUN git clone 'https://github.com/chriskipp/sqlthemall' && cd sqlthemall && python3 setup.py install && cd .. && rm -r ./sqlthemall
 
 ADD . .

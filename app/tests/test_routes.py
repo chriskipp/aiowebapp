@@ -167,3 +167,4 @@ async def test_method_not_allowed(aiohttp_client):
 
     res = await client.post("/logout", data={"some": "data"})
     assert res.status == 405
+

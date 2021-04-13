@@ -10,6 +10,15 @@ postgres:
   minsize: 1
   maxsize: 5
 
+#postgres:
+#  database: microformat
+#  user: microformat
+#  password: micro
+#  host: postgres
+#  port: 5432
+#  minsize: 1
+#  maxsize: 5
+
 postgres_sa:
   database: app
   user: app
