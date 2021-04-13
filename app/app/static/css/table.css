@@ -16,7 +16,7 @@ table, tbody {
   border: 1px solid white;
 }
 
-.btn, .btn-link {
+.btn-link {
   width: 100%;
   border: 1px solid white;
   background-color: transparent;
@@ -25,7 +25,7 @@ table, tbody {
   text-align: left;
 }
 
-.btn:hoover, .btn-link:hoover {
+.btn-link:hoover {
   text-decoration: underline;
   color: white;
 }
