@@ -1,8 +1,10 @@
 import time
 
+from passlib.hash import sha256_crypt
+
 import aiohttp_jinja2
 from aiohttp import web
-from aiohttp_security import check_authorized, forget, remember
+from aiohttp_security import check_authorized, check_permission, forget, remember
 from aiohttp_session import new_session
 
 from app.auth import check_credentials
@@ -112,6 +114,30 @@ class LoginHandler(BaseHandler):
         session.invalidate()
         return response
 
+    async def register_form(self, request):
+        return aiohttp_jinja2.render_template(
+            "register.html",
+            request,
+            context={
+                "username": request["user"],
+                "sidebar": await self.get_sidebar(request),
+            },
+        )
+
+    async def register(self, request):
+        form = await request.post()
+        login = form.get("loginField")
+        password = sha256_crypt.hash(form.get("passwordField"))
+        db_engine = request.app["dbsa"]
+        await check_permission(request, "register")
+        insert = users.insert().values(login=login, passwd=password)
+        async with db_engine.acquire() as conn:
+            try:
+                await conn.execute(insert)
+                return web.Response(text="New User added!")
+            except Exception as e:
+                return web.Response(text=e.args[0])
+
     def configure(self, app):
 
         router = app.router
@@ -120,4 +146,6 @@ class LoginHandler(BaseHandler):
         router.add_route("GET", r"/users/{uid:\d+}", self.user, name="user")
         router.add_route("GET", "/login", self.login_form, name="loginForm")
         router.add_route("POST", "/login", self.login, name="login")
+        router.add_route("GET", "/users/register", self.register_form, name="registerForm")
+        router.add_route("POST", "/users/register", self.register, name="register")
         router.add_route("GET", "/logout", self.logout, name="logout")
