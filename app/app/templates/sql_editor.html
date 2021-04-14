@@ -103,10 +103,12 @@
 
 {% block main %}
     <div class="container-fluid" style="display:flex;flex-direction:column;height:100%;margin:0;padding:0;">
+      <select class="select_table" name="state">
+      </select>
       <div id="gridcontainer" class="container-fluid"></div>
       <div id="editorcontainer">
         <div id="editor"></div>
-        <button id="execute_button" class="button btn btn-outline-warning" onClick="sendQuery()">Execute</button>
+        <button id="execute_button" class="button btn btn-outline-warning" onClick="sendQuery(editor.getValue())">Execute</button>
       </div>
     </div>
 {% endblock %}
@@ -127,8 +129,11 @@
 	enableSnippets: true
       });
 
-      function sendQuery() {
-	var query = editor.getValue()
+      function sendQuery(query) {
+	if ( typeof(query) == undefined) {
+		query = editor.getValue();
+	}
+	console.log(query);
 
 	// Sending and receiving data in JSON format using POST method
 	//
@@ -140,7 +145,37 @@
 	  if (xhr.readyState === 4 && xhr.status === 200) {
 	    var json = JSON.parse(xhr.responseText);
 	    console.log(json);
-	    slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=true);
+	    slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=false);
+	  }
+	};
+	var data = JSON.stringify({"query": query});
+	xhr.send(data);
+      };
+
+
+      function loadTables() {
+        var query = "select ROW_NUMBER () OVER (ORDER BY table_name) as id, table_name as text from information_schema.tables where table_schema not in ('pg_catalog', 'information_schema');";
+	console.log(query);
+
+	// Sending and receiving data in JSON format using POST method
+	//
+	var xhr = new XMLHttpRequest();
+	var url = "/database";
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = function () {
+	  if (xhr.readyState === 4 && xhr.status === 200) {
+	    var json = JSON.parse(xhr.responseText);
+	    console.log(json);
+	    $('.select_table').select2({
+	      data: json,
+          multiple: false,
+          allowClear: true,
+          placeholder: "Select Table...",
+          tags: false,
+          closeOnSelect: true,
+          scrollAfterSelect: false ,
+        });
 	  }
 	};
 	var data = JSON.stringify({"query": query});
@@ -162,6 +197,15 @@
 "  WHERE table_schema",
 "    NOT IN ('pg_catalog');");
       editor.setValue(placeholder.join('\n'))
+
+      $(document).ready(function() {
+	      loadTables();
+      		$(".select_table").on('select2:select', function (e) {
+	      sendQuery("SELECT * FROM " + e.params.data["text"] + ";");
+  	
+      });
+      });
+ 
     </script>
 {% endblock %}
 
