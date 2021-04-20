@@ -9,6 +9,7 @@ networks:
 services:
   aiowebapp:
     build: app
+    container_name: app
     restart: always
     networks:
       - aio
@@ -19,6 +20,7 @@ services:
 
   postgres:
     build: postgres
+    container_name: postgres
     restart: always
     environment:
       - POSTGRES_PASSWORD=password
@@ -51,4 +53,17 @@ services:
       - ./app/app/storage:/usr/share/nginx/html/storage
     depends_on:
       - aiowebapp
+
+  worker:
+    build: ./worker
+    container_name: worker
+    restart: always
+    ports:
+      - "5556:5556"
+    networks:
+      - aio
+    #volumes:
+    #  - ./app/app/storage:/var/storage
+    #depends_on:
+    #  - aiowebapp
 

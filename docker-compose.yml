@@ -50,3 +50,16 @@ services:
     depends_on:
       - aiowebapp
 
+  worker:
+    build: ./worker
+    container_name: worker
+    restart: always
+    ports:
+      - "5556:5556"
+    networks:
+      - aio
+    #volumes:
+    #  - ./app/app/storage:/var/storage
+    #depends_on:
+    #  - aiowebapp
+

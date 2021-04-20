@@ -108,6 +108,7 @@ async def test_route_get(aiohttp_client, route, user):
     client = await aiohttp_client(app)
 
     if user:
+        res = await client.get("/session")
         res = await client.post(
             "/login", data={"loginField": user, "passwordField": "password"}
         )
@@ -125,6 +126,7 @@ async def test_route_post(aiohttp_client, route, user):
     client = await aiohttp_client(app)
 
     if user:
+        res = await client.get("/session")
         res = await client.post(
             "/login", data={"loginField": user, "passwordField": "password"}
         )
@@ -151,6 +153,7 @@ async def test_route_post_file(aiohttp_client, route, user):
     client = await aiohttp_client(app)
 
     if user:
+        res = await client.get("/session")
         res = await client.post(
             "/login", data={"loginField": user, "passwordField": "password"}
         )
@@ -167,4 +170,3 @@ async def test_method_not_allowed(aiohttp_client):
 
     res = await client.post("/logout", data={"some": "data"})
     assert res.status == 405
-

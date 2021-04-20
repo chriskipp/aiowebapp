@@ -1,4 +1,4 @@
-aiohttp[speedups]==3.6.3
+aiohttp[speedups]==3.7.4
 asyncio==3.4.3
 selectors==0.0.14
 cchardet==2.1.7

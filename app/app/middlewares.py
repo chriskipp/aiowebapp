@@ -104,7 +104,9 @@ def create_error_middleware(overrides):
 
 @web.middleware
 async def session_middleware(request, handler):
-    request["session"] = await get_session(request)
+    session = await get_session(request)
+    session["created"] = session.created
+    request["session"] = session
     return await handler(request)
 
 
@@ -128,6 +130,6 @@ async def setup_middlewares(app):
             #            500: handle_500,
         }
     )
+    app.middlewares.append(login_middleware)
     app.middlewares.append(error_middleware)
     app.middlewares.append(session_middleware)
-    app.middlewares.append(login_middleware)

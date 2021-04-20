@@ -29,6 +29,6 @@ async def setup_security(app):
     await setup_pgsa(app)
     securitysetup(
         app,
-        SessionIdentityPolicy(),
+        SessionIdentityPolicy(session_key="logSessionId"),
         AuthorizationPolicy(app["dbsa"]),
     )

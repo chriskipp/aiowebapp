@@ -19,14 +19,14 @@ test_w_docker_config:
 	pytest -c config/test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 test:
-	docker exec -it aiowebapp_aiowebapp_1 make test_w_docker_config
+	docker exec -it app make test_w_docker_config
 
 cov_w_docker_config:
 	#pytest --cov-config=.coveragerc --cov=app --cov-report=term -c config/test.yaml -vvv --disable-warnings tests
 	pytest --cov-config=.coveragerc --cov=app --cov-report=html:app/storage/coverage -c config/test.yaml -vvv --disable-warnings tests
 
 cov:
-	docker exec -it aiowebapp_aiowebapp_1 make cov_w_docker_config
+	docker exec -it app make cov_w_docker_config
 
 
 clean:
