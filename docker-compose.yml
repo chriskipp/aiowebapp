@@ -8,15 +8,15 @@ networks:
         - subnet: "172.18.0.0/24"
 
 services:
-  aiowebapp:
-    build: app
-    restart: always
-    networks:
-      - aio
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./app/app:/usr/src/app
+#  aiowebapp:
+#    build: app
+#    restart: always
+#    networks:
+#      - aio
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./app/app:/usr/src/app
 
   postgres:
     build: postgres
@@ -27,6 +27,8 @@ services:
       - aio
     ports:
       - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
 
   redis:
     build: redis
@@ -35,6 +37,8 @@ services:
       - aio
     ports:
       - "6379:6379"
+    volumes:
+      - ./data:/data
 
   nginx:
     build: ./nginx
@@ -44,9 +48,9 @@ services:
       - 5557:5557
     networks:
       - aio
-    volumes:
-      - ./app/app/static:/usr/share/nginx/html/static
-      - ./app/app/storage:/usr/share/nginx/html/storage
-    depends_on:
-      - aiowebapp
+#    volumes:
+#      - ./app/app/static:/usr/share/nginx/html/static
+#      - ./app/app/storage:/usr/share/nginx/html/storage
+#    depends_on:
+#      - aiowebapp
 
