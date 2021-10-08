@@ -5,7 +5,7 @@ cchardet==2.1.7
 uvloop==0.14.0
 aiodns==2.0.0
 orjson==3.4.3
-PyYAML==5.3.1
+PyYAML==5.4.1
 trafaret-config==2.0.2
 aiopg==1.1.0
 aiopg[sa]==1.1.0
