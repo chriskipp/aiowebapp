@@ -86,7 +86,15 @@
                 "label": "Storage"
 	    },
             "requires": ["logged_in", "logged_out"]
-        }]}, {
+        }, {
+            "link": {
+                "href": "/upload",
+                "icon": "fa-upload",
+                "label": "FileUpload"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }
+	]}, {
 	    "title":"Search",
 	    "color":"blue",
             "data": [

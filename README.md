@@ -1,10 +1,10 @@
 # aiowebapp
 
-Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease use as a little (docker-compose based) docker swarm.
+Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease of use as a (docker-compose based) docker swarm.
 
 ## Features
 
-This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based search engine or a nominatim based search engine for geographic entities as examples on how to use this skelleton. Further features include:
+This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based full text search engine or a nominatim based search for geographic entities as examples on how to use this skelleton. Further features include:
 
 ### Container based features
 - [aiohttp](https://github.com/aio-libs/aiohttp) is used as a asyncronous web server
@@ -13,7 +13,7 @@ This repository is mainly ment as a skelleton for aiohttp based webapps, includi
 - [redis](https://redis.io/) as in memory database
 - [redisearch](https://github.com/RediSearch/RediSearch) as redis based search engine with autocompletion
 - [redisJSON](https://github.com/RedisJSON/RedisJSON) JSON support for redis
-- Extra importer container (not belonging to the webapp itself) to fill the application's redis and postgres backends with some example data from the web to make the provided example tools work
+- Extra importer container (not belonging to the webapp itself) to fill the application's redis and postgres backends with some example data from the web to make all the provided example tools work out of the box
 
 ### Web app features
 - [aiohttp-session](https://github.com/aio-libs/aiohttp-session) session and login support

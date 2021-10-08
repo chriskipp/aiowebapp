@@ -124,7 +124,7 @@ async def setup_middlewares(app):
             401: handle_401,
             403: handle_403,
             404: handle_404,
-            405: handle_405,
+            405: handle_405
             #            500: handle_500,
         }
     )

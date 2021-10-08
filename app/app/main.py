@@ -27,9 +27,11 @@ def create_app(config=None) -> web.Application:
     aiohttp_debugtoolbar.setup(
         app,
         intercept_redirects=False,
-        check_host=False,
+        check_host=True,
+        hosts=['172.18.0.0/24'],
         extra_templates="/usr/src/app/_dev/extra_tpl",
         extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+        exclude_prefixes=['/upload']
     )
 
     # setup Jinja2 template renderer
