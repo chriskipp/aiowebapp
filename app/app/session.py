@@ -13,7 +13,7 @@ from app.db import setup_pgsa
 async def setup_session(app):
     conf = app["config"]["redis"]
     redis_address = "redis://" + conf["host"] + ":" + str(conf["port"])
-    redis_pool = await aioredis.create_redis_pool(redis_address)
+    redis_pool = await aioredis.from_url(redis_address)
     app["session_pool"] = redis_pool
     storage = RedisStorage(redis_pool)
 

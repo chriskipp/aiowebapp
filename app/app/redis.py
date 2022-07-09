@@ -7,8 +7,8 @@ import orjson
 async def setup_redis(app):
     conf = app["config"]["redis"]
     adress = "redis://" + conf["host"] + ":" + str(conf["port"])
-    pool = await aioredis.create_redis_pool(
-        adress, minsize=conf["minsize"], maxsize=conf["maxsize"]
+    pool = await aioredis.from_url(
+        adress
     )
     app["redis"] = pool
 
