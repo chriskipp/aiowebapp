@@ -1,4 +1,7 @@
 nginx/ssl
 nginx/dhparam.pem
+nginx/log
 app/app/storage/*
+app/forces/*
 **/__pycache__
+data/*
