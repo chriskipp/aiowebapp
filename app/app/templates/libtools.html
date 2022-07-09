@@ -1,0 +1,30 @@
+{% macro chart(css=None, html=None, js=None) -%}
+  {% if not css %}
+    <link rel="stylesheet" href="static/css/mycharts.css" type="text/css" />
+  {% else %}
+    <style>
+      {{ css }}
+    </style>
+  {% endif %}
+
+  {% if not html %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <div id="chartcontainer" style="height: 100%"></div>
+  {% else %}
+    {{ html }}
+  {% endif %}
+
+  <script>
+    {% if not js %}
+      Highcharts.chart('chartcontainer', {
+        chart: {
+          type: 'line',
+          backgroundColor: 'transparent',
+          zoomType: 'xy'
+        }
+      });
+    {% else %}
+      {{ js }}
+    {% endif %}
+  </script>
+{%- endmacro -%} 

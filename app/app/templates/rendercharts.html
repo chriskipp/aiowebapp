@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+    {{ super() }}
+{% endblock %}
+
+{% block main %}
+    {{ super() }}
+    <div class='container-fluid'>
+      <div class="container-fluid">
+      <form action="/renderchart" method="post" accept-charset="utf-8">
+        <div class="form-group" style="display: inline-flex; width: 90%;">
+          <label id="chartLabel" for="chart" style="border: 1px solid white; border-radius: 30px; padding: 10px; width: 100%;">Choose Chart...</label>
+	  <select id="chart" name="chart" type="select">
+  	    {% for c in charts %}
+  	      <option>{{ c }}</option>
+  	    {% endfor %}
+	  </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="border-radius:10px;">Upload</button>
+      </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block tail_js %}
+  {{ super() }}
+{% endblock %}

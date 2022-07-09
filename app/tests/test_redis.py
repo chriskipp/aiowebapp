@@ -4,16 +4,9 @@ import orjson
 import pytest
 
 from app.main import create_app
-from app.redis import (
-    del_redis_json,
-    del_redis_key,
-    get_redis_json,
-    get_redis_key,
-    set_redis_json,
-    set_redis_key,
-    setup_redis,
-    teardown_redis,
-)
+from app.redis import (del_redis_json, del_redis_key, get_redis_json,
+                       get_redis_key, set_redis_json, set_redis_key,
+                       setup_redis, teardown_redis)
 
 redis_keys = [
     ("test", "test"),

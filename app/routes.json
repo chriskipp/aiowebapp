@@ -11,6 +11,13 @@
             "requires": ["logged_in"]
         },
             {"link": {
+                "href": "/users/register",
+                "icon": "fa-user-plus",
+                "label": "Register"
+	    },
+            "requires": ["logged_in"]
+        },
+            {"link": {
             "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
 	    "requires": ["logged_out"]
         }, {

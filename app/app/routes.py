@@ -4,12 +4,12 @@ import pathlib
 from aiohttp import web
 
 from .handlers.database import DatabaseHandler
+from .handlers.exchanger import DataHandler
 from .handlers.index import IndexHandler
 from .handlers.login import LoginHandler
 from .handlers.redis import RedisHandler
 from .handlers.search import SearchHandler
 from .handlers.tools import ToolsHandler
-from .handlers.exchanger import DataHandler
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(__file__).parent
 

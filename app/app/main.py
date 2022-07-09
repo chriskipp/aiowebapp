@@ -15,8 +15,25 @@ from app.routes import setup_routes
 from app.session import setup_security, setup_session, teardown_session
 from app.settings import get_config
 
+# from aiohttp_session.redis_storage import RedisStorage
+# from aiohttp_security import setup as setup_security
+# from aiohttp_security import SessionIdentityPolicy
+# from aiopg.sa import create_engine
+# from aioredis import create_pool
+
 
 def create_app(config=None) -> web.Application:
+
+    #    redis_pool = await create_pool(('redis', 6379))
+    #    dbengine = await create_engine(user='app',
+    #                                   password='apppw',
+    #                                   database='app',
+    #                                   host='postgres')
+    #    app = web.Application()
+    #    setup_session(app, RedisStorage(redis_pool))
+    #    setup_security(app,
+    #                   SessionIdentityPolicy(),
+    #                   DBAuthorizationPolicy(dbengine))
 
     app = web.Application()
     app["config"] = get_config(config)
@@ -28,10 +45,10 @@ def create_app(config=None) -> web.Application:
         app,
         intercept_redirects=False,
         check_host=True,
-        hosts=['172.18.0.0/24'],
+        hosts=["172.18.0.0/24"],
         extra_templates="/usr/src/app/_dev/extra_tpl",
         extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
-        exclude_prefixes=['/upload']
+        exclude_prefixes=["/upload"],
     )
 
     # setup Jinja2 template renderer

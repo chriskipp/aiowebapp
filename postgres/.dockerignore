@@ -1,0 +1,5 @@
+dump
+#conf
+etc_postgres-common
+#initdb
+pgdata

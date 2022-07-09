@@ -1,7 +1,10 @@
-FROM nginx:1.19.4
+FROM nginx:1.21.3-alpine
 
-RUN rm /etc/nginx/nginx.conf
-COPY nginx.conf /etc/nginx/
+COPY nginx /etc/nginx
+RUN ln -s /etc/nginx/sites-availible/default /etc/nginx/sites-enabled/default
+RUN ln -s /usr/lib/nginx/modules /etc/nginx/modules
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY app.conf /etc/nginx/conf.d/
+#RUN rm /etc/nginx/conf.d/default.conf
+#RUN rm /etc/nginx/sites-availible/
+COPY app.conf /etc/nginx/conf.d/app.conf
+
