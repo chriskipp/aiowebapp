@@ -9,6 +9,7 @@ RUN python3 -m pip --no-cache-dir install -U pip && python3 -m pip --no-cache-di
 RUN python3 -m pip --no-cache-dir install -r requirements-dev.txt
 RUN sed -i -e '28s/(?m)//' -e "28s/r'/r'(\?m)/"  ../local/lib/python3.9/site-packages/aiohttp_debugtoolbar/tbtools/tbtools.py
 RUN sed -i '53s/, loop.*)/)/' /usr/local/lib/python3.9/site-packages/aiohttp/web_server.py
+RUN sed -i '/.decode("utf-8")/d' /usr/local/lib/python3.9/site-packages/aiohttp_session/redis_storage.py
 
 ADD . /usr/src/
 

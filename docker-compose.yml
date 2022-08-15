@@ -1,11 +1,10 @@
 version: '3.3'
 
-
 networks:
   aio:
     ipam:
       config:
-        - subnet: "172.18.0.0/24"
+        - subnet: 10.18.0.0/24
 
 services:
   aiowebapp:
@@ -14,7 +13,7 @@ services:
     networks:
       - aio
     ports:
-      - "5559:8080"
+      - "8080:8080"
     volumes:
       - ./app/app:/usr/src/app
 
@@ -22,11 +21,18 @@ services:
     build: postgres
     restart: always
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+      - PGDATA=/var/lib/postgresql/data/pgdata
     networks:
       - aio
     ports:
       - "5432:5432"
+    volumes:
+      - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
+      - ./postgres/etc_postgres:/etc/postgres
+      - ./postgres/etc_postgres-common:/etc/postges-common
 
   redis:
     build: redis
@@ -35,14 +41,18 @@ services:
       - aio
     ports:
       - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+
 
   nginx:
-    build: ./nginx
-    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     restart: always
     ports:
-      - 5557:5557
       - 80:80
+      - 443:443
     networks:
       - aio
     volumes:
