@@ -6,9 +6,9 @@ ALTER DATABASE app OWNER TO app;
 GRANT ALL PRIVILEGES ON DATABASE app TO app;
 
 -- Setup api Database
-CREATE USER api WITH PASSWORD 'apipw';
-CREATE DATABASE storage;
-GRANT ALL PRIVILEGES ON DATABASE storage TO api;
+CREATE USER crawler WITH PASSWORD 'crawler';
+CREATE DATABASE crawler;
+GRANT ALL PRIVILEGES ON DATABASE crawler TO crawler;
 
 -- Setup test Database
 CREATE USER test_aioapp WITH PASSWORD 'testaioapppw';

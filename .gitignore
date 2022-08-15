@@ -5,3 +5,4 @@ app/app/storage/*
 app/forces/*
 **/__pycache__
 data/*
+postgres/ssl/*

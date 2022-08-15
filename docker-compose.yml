@@ -16,9 +16,15 @@ services:
       - "8080:8080"
     volumes:
       - ./app/app:/usr/src/app
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
-    build: postgres
+    container_name: postgres
+    build:
+      context: postgres
+      dockerfile: Dockerfile
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -31,8 +37,18 @@ services:
       - "5432:5432"
     volumes:
       - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
-      - ./postgres/etc_postgres:/etc/postgres
-      - ./postgres/etc_postgres-common:/etc/postges-common
+      - ./data/postgres/dump:/dump
+      - ./postgres/conf:/etc/postgres
+#      - ./postgres/server.crt:/var/lib/postgresql/server.crt
+#      - ./postgres/server.key:/var/lib/postgresql/server.key
+
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: postgres -c config_file=/etc/postgres/postgresql.conf
 
   redis:
     build: redis
