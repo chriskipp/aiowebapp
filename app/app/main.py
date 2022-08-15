@@ -7,7 +7,7 @@ import jinja2
 from aiohttp import web
 
 from app._dev.extra_pgsql import RequestPgDebugPanel
-from app._dev.extra_redis import RequestRedisDebugPanel
+#from app._dev.extra_redis import RequestRedisDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.middlewares import setup_middlewares
 from app.redis import setup_redis, teardown_redis
@@ -47,7 +47,7 @@ def create_app(config=None) -> web.Application:
         check_host=True,
         hosts=["172.18.0.0/24"],
         extra_templates="/usr/src/app/_dev/extra_tpl",
-        extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+        #extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
         exclude_prefixes=["/upload"],
     )
 

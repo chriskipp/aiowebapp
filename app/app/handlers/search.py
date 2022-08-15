@@ -18,7 +18,7 @@ class SearchHandler(BaseHandler):
     async def autocomplete(self, request):
         pool = request.app["redis"]
         data = await request.post()
-        res = await pool.execute(
+        res = await pool.execute_command(
             "FT.SUGGET",
             "cmp_manpages",
             data["q"],
@@ -32,7 +32,7 @@ class SearchHandler(BaseHandler):
     async def search_post(self, request):
         pool = request.app["redis"]
         data = await request.post()
-        res = await pool.execute(
+        res = await pool.execute_command(
             "FT.SEARCH",
             "manpages",
             '"' + data["q"].replace("-", " ") + '"',

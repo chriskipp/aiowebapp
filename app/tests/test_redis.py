@@ -79,6 +79,6 @@ async def test_get_set_del_json(create_app_with_redis, key, value):
 async def test_redis_modules(create_app_with_redis, module):
     app = create_app_with_redis
 
-    modules = await app["redis"].execute("MODULE", "LIST")
+    modules = await app["redis"].execute_command("MODULE LIST")
     modules = {m[1].decode() for m in modules}
     assert module in modules

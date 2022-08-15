@@ -8,5 +8,5 @@ RUN git clone 'https://github.com/chriskipp/sqlthemall' && cd sqlthemall && pyth
 ADD . .
 RUN ./install_parallel.sh
 RUN env_parallel --install
-#CMD ./create_man_index.sh; ./import_corona_stats.py; ./import_js_libraries.sh; ./import_rest_countries.sh; ./import_pypi_pkgs.sh
-CMD ./create_man_index.sh
+CMD ./create_man_index.sh || : ; ./import_corona_stats.py || : ; ./import_js_libraries.sh || : ; ./import_rest_countries.sh || : ; ./import_pypi_pkgs.sh | :
+#CMD ./create_man_index.sh

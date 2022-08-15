@@ -9,7 +9,7 @@ class RedisHandler(BaseHandler):
     async def info(self, request):
 
         pool = request.app["redis"]
-        info = await pool.execute("INFO", encoding="utf-8")
+        info = await pool.execute_command("INFO")
         sections = info.split("\r\n\r\n")
         parsed_sections = []
         for section in sections:

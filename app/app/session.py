@@ -13,7 +13,9 @@ from app.db import setup_pgsa
 async def setup_session(app):
     conf = app["config"]["redis"]
     redis_address = "redis://" + conf["host"] + ":" + str(conf["port"])
-    redis_pool = await aioredis.from_url(redis_address)
+    redis_pool = aioredis.from_url(
+            redis_address, encoding="utf-8", decode_responses=True
+    )
     app["session_pool"] = redis_pool
     storage = RedisStorage(redis_pool)
 
@@ -22,7 +24,6 @@ async def setup_session(app):
 
 async def teardown_session(app):
     app["session_pool"].close()
-    await app["session_pool"].wait_closed()
 
 
 async def setup_security(app):
