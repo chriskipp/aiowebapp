@@ -36,7 +36,7 @@
             "requires": ["logged_in", "logged_out"]
         }
     ]}, {
-	    "title":"Admin",
+	    "title":"Monitor",
 	    "color":"orange",
             "data": [
 	{
@@ -46,7 +46,16 @@
                 "label": "RedisStats"
 	    },
             "requires": ["logged_in", "logged_out"]
-    }]}, {
+    },
+	{
+            "link": {
+                "href": "/charts",
+                "icon": "fa-server",
+                "label": "LineChart"
+	    },
+            "requires": ["logged_in", "logged_out"]
+    }
+            ]}, {
 	    "title":"Tools",
 	    "color":"yellow",
             "data": [

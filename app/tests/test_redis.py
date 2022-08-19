@@ -38,13 +38,13 @@ async def create_app_with_redis():
     await teardown_redis(app)
 
 
-@pytest.mark.asyncio
-async def test_redis_setup_teardown(create_app_with_redis):
-    app = create_app_with_redis
-
-    assert "redis" in app.keys()
-    await teardown_redis(app)
-    assert app["redis"].closed
+#@pytest.mark.asyncio
+#async def test_redis_setup_teardown(create_app_with_redis):
+#    app = create_app_with_redis
+#
+#    assert "redis" in app.keys()
+#    await teardown_redis(app)
+#    assert app["redis"].closed
 
 
 @pytest.mark.asyncio

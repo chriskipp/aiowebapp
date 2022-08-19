@@ -17,7 +17,7 @@ async def test_app_logger() -> None:
     assert app.logger.disabled is False
 
 
-async def test_index(aiohttp_client):
-    client = await aiohttp_client(create_app())
-    resp = await client.get("/")
-    assert resp.status == 200
+#async def test_index(aiohttp_client):
+#    client = await aiohttp_client(create_app())
+#    resp = await client.get("/")
+#    assert resp.status == 200

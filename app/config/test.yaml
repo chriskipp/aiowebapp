@@ -20,7 +20,7 @@ postgres_sa:
   maxsize: 5
 
 redis:
-  host: redis
+  host: localhost
   port: 6379
   minsize: 1
   maxsize: 5
