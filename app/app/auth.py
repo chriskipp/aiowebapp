@@ -15,7 +15,7 @@ class AuthorizationPolicy(AbstractAuthorizationPolicy):
                 models.users.c.login == identity,
                 sa.not_(models.users.c.disabled),
             )
-            query = models.users.count().where(where)
+            query = models.users.select().where(where)
             ret = await conn.scalar(query)
             if ret:
                 return identity

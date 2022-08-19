@@ -1,7 +1,7 @@
 #===========================
 # postgres:14.4-alpine3.16
 #===========================
-FROM postgres:14.4-alpine3.16
+FROM postgres:14.5-alpine3.16
 
 ENV PG_VERSION=14
 ENV POSTGRES_USER=postgres
@@ -48,7 +48,8 @@ RUN printf '%s\n' "Installing bloom" \
     && cd - \
     && rm -rf postgres \
     && printf '%s\n' "Removing build dependencies" \
-    && apk del make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison
+    && apk del make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
+    && apk add postgis
 
 EXPOSE 5432
 

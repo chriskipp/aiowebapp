@@ -1,5 +1,4 @@
 import aiohttp_jinja2
-import pytest
 
 from app.main import create_app
 

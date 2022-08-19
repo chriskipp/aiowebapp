@@ -6,7 +6,6 @@ import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 
-from app._dev.extra_pgsql import RequestPgDebugPanel
 #from app._dev.extra_redis import RequestRedisDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.middlewares import setup_middlewares

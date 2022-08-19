@@ -1,6 +1,7 @@
 import aiopg.sa
 import asyncpg
 
+
 async def set_initial_search_path(conn):
     res = await conn.execute("SET search_path TO public,cron,urls")
 

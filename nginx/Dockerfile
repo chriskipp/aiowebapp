@@ -1,12 +1,7 @@
 FROM nginx:1.21.3-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/conf.d /etc/nginx/conf.d
-COPY nginx/sites-availible /etc/nginx/sites-availible
-COPY nginx/sites-enabled /etc/nginx/sites-enabled
-#COPY nginx /etc/nginx
-#RUN ln -s /etc/nginx/sites-availible/default /etc/nginx/sites-enabled/default
+COPY nginx/* /etc/nginx/
 RUN ln -s /usr/lib/nginx/modules /etc/nginx/modules
 
 
@@ -14,5 +9,5 @@ COPY snippets /etc/nginx/snippets
 COPY ssl /etc/ssl
 COPY dhparam.pem /etc/nginx/
 
-COPY sapp.conf /etc/nginx/conf.d/app.conf
+COPY app.conf /etc/nginx/conf.d/app.conf
 
