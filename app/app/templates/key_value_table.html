@@ -1,49 +1,5 @@
 {% extends "layout.html" %}
 
-{% macro key_value_table(rows, tableheader=[], heading=None) -%}
-  {% if heading %}
-    <h3>{{ heading }}</h3>
-  {% endif %}
-  <div class="container-fluid table-responsive">
-    <table class="table table-striped" style="width:100%;">
-      {% if tableheader %}
-        <thead>
-          <tr>
-          {% for headerfield in tableheader %}
-            <th>{{ headerfield }}</th>
-          {% endfor %}
-          </tr>
-        </thead>
-      {% endif %}
-      <tbody>
-      {% for key in rows %}
-        <tr>
-            <td style="font-weight:bold;">{{ key }}</td>
-            <td>
-	      {{ rows[key] }}
-	    </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-{%- endmacro %}
-
-{% block head_css %}
-  {{ super() }}
-  <link rel="stylesheet" href="{{url('static', filename='css/table.css')}}" type="text/css" />
-  <style>
-    thead {
-      background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, rgb(100, 100, 100) 10%, rgb(55, 55, 55) 20%, rgb(11, 11, 11) 90%, rgb(0, 0, 0) 100%);
-      border: 0;
-    }
-
-    .table td {
-      border: 0;
-    }
-  </style>
-{% endblock %}
-
 {% block main %}
-  {{ key_value_table(rows=rows, heading=heading) }}  
+  {{ lib.key_value_table(rows=rows, heading=heading) }}
 {% endblock %}

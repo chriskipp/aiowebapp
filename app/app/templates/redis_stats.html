@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{url('static', filename='css/table.css')}}" type="text/css" />
+{% endblock %}
+
+{% block main %}
+  <h4>{{ pageheader }}</h4>
+  <div id='accordion'>
+    {% for section in sections %}
+      {{ lib.key_value_table(section) }}
+    {% endfor %}
+  </div>
+{% endblock %}

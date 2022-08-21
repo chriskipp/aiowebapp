@@ -3,26 +3,10 @@
 
 {% block head_css %}
   {{ super() }}
-
-  <!-- select2 -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-
-  <!-- select2-bootstrap4-theme -->
-  <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet" />
-
-  <!-- My Stylesheets -->	    
-  <link rel="stylesheet" href="{{url('static', filename='css/base.css')}}" type="text/css" />
-  <link rel="stylesheet" href="{{url('static', filename='css/navbar.css')}}" type="text/css" />
-  <link rel="stylesheet" href="{{url('static', filename='css/tabs.css')}}" type="text/css" />
-  <link rel="stylesheet" href="{{url('static', filename='css/modal.css')}}" type="text/css" />
-
-  <!-- My select2 -->	    
-  <link rel="stylesheet" href="{{url('static', filename='css/select2.css')}}" type="text/css" />
 {% endblock %}
 
 {% block head_js %}
   {{ super() }}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.full.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -34,31 +18,31 @@
     {% endblock %}
 
     <div id="container" class="container-fluid">
-  
+
       <!-- sidebar -->
       {% block sidebar %}
         <div id="sidebar_collapse" class="row" style="width:250px">
           <div id="sidebar" class="container" class="container-fluid"> 
-  	    {% for section in sidebar %}
-  	      {{ lib.sidebar_section(section['title'], links=section['links'], color=section['color']) }}
-  	    {% endfor %}
+            {% for section in sidebar %}
+              {{ lib.sidebar_section(section['title'], links=section['links'], color=section['color']) }}
+            {% endfor %}
 
             <ul style="box-shadow:inset 0px 0 7px 2px blueviolet">
               <li><p>Hier könnte ihre Werbung stehen ;-)</p></li>
             </ul>
-         </div>
-       </div>
-     {% endblock %}
-       
-     <div id="maincontainer" class="container-fluid">
-       <div id="main" class="container-fluid">
+          </div>
+        </div>
+      {% endblock %}
 
-	 {% block main %}
-	 {% endblock %}
+      <div id="maincontainer" class="container-fluid">
+        <div id="main" class="container-fluid">
 
-       </div>
-     </div>
-   </div>
+          {% block main %}
+          {% endblock %}
+
+        </div>
+      </div>
+    </div>
   </div>
 
   {{ lib.loginModal() }}
@@ -66,28 +50,10 @@
   {{ lib.login_error_toast() }}
 
 
-  <script>
-    function collapseSidebar() {
-      $('#sidebar_collapse').toggle();
-      if (typeof SlickGrid.gridObjects.resizer != undefined) {
-	SlickGrid.gridObjects.resizer.resizeGrid();
-      }
-      if (typeof map != undefined) {
-	var m = map.invalidateSize();
-      }
-    }
-
-    function getVal() {
-    	return (this.value)
-    }
-
-    $('#loginModal').on('shown.bs.modal', function () {
-      $('#loginField').trigger('focus')
-    })
-  </script>
 {% endblock %}
 
 {% block tail_js %}
-  <!-- init select2 -->	    
-  <script src="{{url('static', filename='js/initselect2.js')}}"></script>
+  {{ super() }}
+  <!-- UI functions -->
+  <script src="{{url('static', filename='js/ui.js')}}"></script>
 {% endblock %}
