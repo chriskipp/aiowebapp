@@ -52,7 +52,7 @@ RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certifi
   && make all && make install \
   && cd - && rm -rf postgres \
   && printf '%s\n' "Removing build dependencies" \
-  && apk del buildutils #make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison
+  && apk del buildutils
 
 EXPOSE 5432
 
