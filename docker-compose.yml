@@ -23,9 +23,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail -s http://localhost:8080/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 2s
+      retries: 15
 
   postgres:
     container_name: postgres
@@ -49,9 +49,9 @@ services:
       - ./postgres/conf:/etc/postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 2s
+      retries: 15
     command: postgres -c config_file=/etc/postgres/postgresql.conf
 
   redis:
@@ -65,9 +65,9 @@ services:
       - ./data/redis:/data
     healthcheck:
       test: ["CMD-SHELL", "redis-cli PING"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 2s
+      retries: 15
 
 
   nginx:
