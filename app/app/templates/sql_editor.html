@@ -97,7 +97,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
     <!-- ace extentions -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js<Paste>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/snippets/sql.min.js"></script>
 {% endblock %}
 
@@ -114,6 +114,7 @@
 {% endblock %}
 
 {% block tail_js %}
+  {{ super() }}
   <script>
     ace.require("ace/ext/language_tools");
 

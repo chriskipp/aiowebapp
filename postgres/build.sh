@@ -18,4 +18,3 @@ openssl req -x509 -in server.req -text -key server.key -out server.crt
 # set postgres (alpine) user as owner of the server.key and permissions to 600
 #sudo chown 0:70 server.key
 #sudo chmod 640 server.key
-

@@ -18,39 +18,41 @@ COPY ssl/* /var/lib/postgresql/
 RUN chown 0:70 /var/lib/postgresql/server.key
 
 # Install pguri, pg_similarity, pg_cron, hypopg, psql-http
-RUN apk add make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
+RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
+  && printf '%s\n' "Installing uriparser" \
   && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.6/uriparser-0.9.6.tar.gz' \
   | tar -xzf - && mkdir uriparser-0.9.6/build && cd uriparser-0.9.6/build \
   && cmake -DCMAKE_BUILD_TYPE=Release -DURIPARSER_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=/usr -DURIPARSER_BUILD_TESTS=OFF .. \
   && make && make install && cd - && rm -rf uriparser-0.9.6 \
+  && printf '%s\n' "Installing pguri" \
   && git clone https://github.com/petere/pguri && cd pguri \
   && make && make install && cd - && rm -rf pguri \
+  && printf '%s\n' "Installing pg_similaryti" \
   && git clone https://github.com/eulerto/pg_similarity.git  \
   && cd pg_similarity && make && make install \
   && cd - && rm -rf pg_similarity \
+  && printf '%s\n' "Installing pg_hypopg" \
   && git clone https://github.com/HypoPG/hypopg  \
   && cd hypopg && make && make install \
   && cd - && rm -rf hypopg \
+  && printf '%s\n' "Installing pg_cron" \
   && git clone https://github.com/citusdata/pg_cron.git \
   && cd pg_cron && make && make install \
   && cd - && rm -rf pg_cron \
+  && printf '%s\n' "Installing pgsql-http" \
   && apk add libcurl \
   && git clone https://github.com/pramsey/pgsql-http \
   && cd pgsql-http && make && make install \
-  && cd - && rm -rf pgsql-http
-
-RUN printf '%s\n' "Installing bloom" \
-    && git clone https://github.com/postgres/postgres \
-    && cd postgres \
-    && ./configure --without-readline --without-zlib \
-    && cd contrib/bloom \
-    && make all \
-    && make install \
-    && cd - \
-    && rm -rf postgres \
-    && printf '%s\n' "Removing build dependencies" \
-    && apk del make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
-    && apk add postgis
+  && cd - && rm -rf pgsql-http \
+  && printf '%s\n' "Installing bloom" \
+  && git clone https://github.com/postgres/postgres \
+  && cd postgres \
+  && ./configure --without-readline --without-zlib \
+  && cd contrib/bloom \
+  && make all && make install \
+  && cd - && rm -rf postgres \
+  && printf '%s\n' "Removing build dependencies" \
+  && apk del buildutils #make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison
 
 EXPOSE 5432
 

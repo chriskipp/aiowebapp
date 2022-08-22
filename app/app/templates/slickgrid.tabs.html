@@ -1,4 +1,4 @@
-{% extends "tabs.html" %}
+{% extends "layout.html" %}
 
 {% block head_css %}
     {{ super() }}
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headerbuttons.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headermenu.css" type="text/css"/>
     <link rel="stylesheet" href="{{url('static', filename='css/slick.gridmenu.css')}}" type="text/css"/>
-    
+
     <!-- jQuery-UI-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" type="text/css"/>
@@ -62,30 +62,38 @@
     <script src="{{ url('static', filename='js/initSlickGrid.js') }}"></script>
 {% endblock %}
 
-{% block tab %}
+{% block main %}
     {{ super() }}
-    <div class="container-fluid tab-content">
-      <div id="gridContainer" style="height:100%;width:100%;padding:10px;">
+        <!--
+    <div class="container-fluid tab-content" style="margin:0;">
+        -->
+        <div id="gridContainer" style="height:100%;width:100%;padding:0px;margin:0;">
+        <!--
         <div class="grid-header" style="width:100%"></div>
         <div id="myGrid" style="height:100%;width:calc(97% - 15px);border:0;margin:0;padding:0;"></div>
+        -->
+        <div id="myGrid" style="height:100%;width:100%;border:0;margin:0;padding:0;"></div>
       </div>
+        <!--
     </div>
+        -->
 {% endblock %}
 
 {% block tail_js %}
     {{ super() }}
     <script src="{{ url('static', filename='js/initSlickGrid.js') }}"></script>
     <script>
-	var SlickGrid;
-	var xhr = new XMLHttpRequest();
+    var SlickGrid;
+    var xhr = new XMLHttpRequest();
         xhr.open('GET', "{{ xhruri }}");
         xhr.onreadystatechange = function () {
           if(xhr.readyState === XMLHttpRequest.DONE) {
             var status = xhr.status;
             if (status === 0 || (status >= 200 && status < 400)) {
               var j = JSON.parse(xhr.responseText);
-              SlickGrid = initSlickGrid(j, 'home');
-	      $('.ui-droppable').addClass('slick-drop-zone');
+              //SlickGrid = initSlickGrid(j, 'myGrid');
+              SlickGrid = initSlickGrid(j, 'myGrid', draggableGrouping=false);
+              $('.ui-droppable').addClass('slick-drop-zone');
             } else {
               console.log('Error:', xhr.status, xhr.responseText);
             }
@@ -93,10 +101,10 @@
         }
         xhr.send()
 
-	$(document).ready(
-	  function() {
-	    $('.ui-droppable').addClass('slick-drop-zone');
-	  }
-	);
+    $(document).ready(
+      function() {
+        $('.ui-droppable').addClass('slick-drop-zone');
+      }
+    );
     </script>
 {% endblock %}
