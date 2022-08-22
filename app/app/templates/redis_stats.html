@@ -8,8 +8,6 @@
 {% block main %}
   <h4>{{ pageheader }}</h4>
   <div id='accordion'>
-    {% for section in sections %}
-      {{ lib.key_value_table(section) }}
-    {% endfor %}
+      {{ lib.key_value_table(sections) }}
   </div>
 {% endblock %}

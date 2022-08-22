@@ -12,13 +12,13 @@ CREATE EXTENSION uri;
 -- pg_similarity
 CREATE EXTENSION pg_similarity;
 
--- hpypg
+-- hypopg
 CREATE EXTENSION hypopg;
 
 -- http
 CREATE EXTENSION http;
 CREATE EXTENSION postgis;
-CREATE EXTENSION pgRouting;
+--CREATE EXTENSION pgRouting;
 --CREATE EXTENSION postgis_topology;
 CREATE EXTENSION fuzzystrmatch;
 --CREATE EXTENSION postgis_tiger_geocoder;

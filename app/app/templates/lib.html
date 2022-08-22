@@ -166,6 +166,22 @@
   </div>
 {%- endmacro %}
 
+<!-- successModal -->
+{% macro successModal() -%}
+  <div class="modal fade modal-success" id="successModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-success">
+        <div class="modal-header modal-header-success">
+          <h4 id="successModalText" class="modal-title"></h4>
+        </div>
+        <div class="modal-footer modal-footer-success">
+          <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
+
 <!-- logoutModal -->
 {% macro logoutModal() -%}
   <div class="modal fade modal-success" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">

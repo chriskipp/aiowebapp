@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block head_css %}
+  {{ super() }}
+  <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
+  <style>
+    #map {
+      zIndex: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block head_js %}
+  {{ super() }}
+  <!-- ace editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+  <!-- ace extentions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-modelist.js"></script>
+
+  <!-- leaflet -->
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+{% endblock %}
+
+
+{% block tail_js %}
+  <script src="{{url('static', filename='js/addBaseMaps.js')}}"></script>
+{% endblock %}

@@ -1,31 +1,66 @@
 {% extends "layout.html" %}
 
-{% block main %}
+{% macro gen_tabs(tabsdata) %}
 <div style="height:100%;" role="tabpanel">
-  <!-- Nav tabs -->
-  <div class="nav nav-tabs" id="myTab" role="tablist">
-    <a class="nav-item nav-link active" data-toggle="tab" href="#home" role="tab">Home</a>
-    <a class="nav-item nav-link" data-toggle="tab" href="#profile" role="tab">Profile</a>
-    <a class="nav-item nav-link" data-toggle="tab" href="#messages" role="tab">Messages</a>
-    <a class="nav-item nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
+  <div style="display:flex;flex-direction:row;">
+    <!-- Nav tabs -->
+    <div class="nav nav-tabs" id="tabList" role="tablist" style="flex-grow:1;">
+      {% for tabdata in tabsdata %}
+        <a class="nav-item nav-link tabLink" data-toggle="tab" href="#{{ tabdata["name"] }}" role="tab">{{ tabdata["name"] }}</a>
+      {% endfor %}
+    </div>
+
+    <button class="btn-primary action-btn" id="addTab">+</button>
   </div>
 
   <!-- Tab panes -->
-  <div class="tab-content">
-    <div class="tab-pane active" id="home" role="tabpanel">...</div>
-    <div class="tab-pane" id="profile" role="tabpanel">.....</div>
-    <div class="tab-pane" id="messages" role="tabpanel">...</div>
-    <div class="tab-pane" id="settings" role="tabpanel">...</div>
+  <div class="tab-content" id="tabPanels">
+    {% for tabdata in tabsdata %}
+      <div class="tab-pane tabPanel" id="{{ tabdata["name"]  }}" role="tabpanel" style="height:100%;width:100%;">
+        {{ tabdata["content"] }}
+      </div>
+    {% endfor %}
   </div>
 </div>
-{% endblock %} 
+{% endmacro %}
+
+{% block main %}
+  {{ gen_tabs(tabsdata) }}
+{% endblock %}
 
 {% block tail_js %}
   {{ super() }}
   <script>
-    $('#myTab a').on('click', function (event) {
+    $('#tablist a').on('click', function (event) {
       event.preventDefault()
       $(this).tab('show')
     })
+
+    function createElementFromHTML(htmlString) {
+      var div = document.createElement('div');
+      div.innerHTML = htmlString.trim();
+
+      // Change this to div.childNodes to support multiple top-level nodes.
+      return div.firstChild;
+    }
+
+    function addTab(tabId=null, paneHtml=null) {
+
+      //if (tabId === null) {
+      tabId = 'tab_' + String(document.getElementById('tabList').children.length + 1);
+      //}
+      console.log(tabId);
+
+      var linkhtml = '<a class="nav-item nav-link tabLink" data-toggle="tab" href="#' + String(tabId) + '" role="tab">' + tabId + '</a>';
+      if (paneHtml === null) {
+        paneHtml = '<div class="tab-pane tabPanel" id="' + String(tabId) + '" role="tabpanel"></div>';
+      }
+      document.getElementById('tabList').appendChild(createElementFromHTML(linkhtml));
+      document.getElementById('tabPanels').appendChild(createElementFromHTML(paneHtml));
+      $(document.getElementById('tabList').lastChild).tab('show');
+
+    }
+
+    document.getElementById('addTab').addEventListener('click', addTab);
   </script>
 {% endblock %} 

@@ -1,7 +1,32 @@
 import aiohttp_jinja2
 
 from .base import BaseHandler
+from jinja2 import Template
+import markupsafe
 
+template = Template('''
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+  <!-- ace extentions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-modelist.js"></script>
+  <div id="{{ elementId }}_editor" style="flex-flow:1;height:100%;width:100%;"></div>
+  <script>
+    function initEditor(elementId) {
+      ace.require("ace/ext/language_tools");
+      var editor = ace.edit(elementId);
+      editor.session.setMode("ace/mode/sql");
+      editor.setKeyboardHandler("ace/keyboard/vim");
+      editor.setTheme("ace/theme/merbivore");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+    }
+    //$(document.getElementById("tabList").children[0]).tab("show");
+    initEditor("{{ elementId }}_editor");
+  </script>
+''')
 
 class ToolsHandler(BaseHandler):
     async def editor(self, request):
@@ -25,18 +50,21 @@ class ToolsHandler(BaseHandler):
             context=await self.get_context(request, {}),
         )
 
-    async def plot(self, request):
+    async def slickgrid_tabs(self, request):
         return aiohttp_jinja2.render_template(
-            "line_plot.html",
+            "slickgrid.tabs.html",
             request,
-            context=await self.get_context(request, {}),
+            context=await self.get_context(request, {"xhruri": "https://localhost/storage/uploads/onlinetischreservierung.json"}),
         )
 
     async def tabs(self, request):
+        tabsdata = [
+            {"name": "editor", "content": markupsafe.Markup(template.render(elementId="editor"))}
+        ]
         return aiohttp_jinja2.render_template(
             "tabs.html",
             request,
-            context=await self.get_context(request, {}),
+            context=await self.get_context(request, {"tabsdata": tabsdata}),
         )
 
     async def chart(self, request):
@@ -46,20 +74,6 @@ class ToolsHandler(BaseHandler):
             context=await self.get_context(request, {}),
         )
 
-    async def charts(self, request):
-        context = {}
-        with open("forces/demo.html") as f:
-            context["html"] = f.read()
-        with open("forces/demo.css") as f:
-            context["css"] = f.read()
-        with open("forces/demo.js") as f:
-            context["js"] = f.read()
-        return aiohttp_jinja2.render_template(
-            "charts.html",
-            request,
-            context=await self.get_context(request, context),
-        )
-
     def configure(self, app):
 
         router = app.router
@@ -67,5 +81,5 @@ class ToolsHandler(BaseHandler):
         router.add_route("GET", "/map", self.map, name="map")
         router.add_route("GET", "/nominatim", self.nominatim, name="nominatim")
         router.add_route("GET", "/tabs", self.tabs, name="tabs")
+        router.add_route("GET", "/slickgrid_tabs", self.slickgrid_tabs, name="slickgrid_tabs")
         router.add_route("GET", "/chart", self.chart, name="charts")
-        router.add_route("GET", "/charts", self.chart, name="chart")

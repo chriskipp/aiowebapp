@@ -68,6 +68,20 @@
             "requires": ["logged_in", "logged_out"]
         }, {
             "link": {
+                "href": "/tabs",
+                "icon": "fa-database",
+                "label": "Tabs"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/slickgrid_tabs",
+                "icon": "fa-database",
+                "label": "SlickgridTabs"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
                 "href": "/editor",
                 "icon": "fa-file-alt",
                 "label": "Editor"

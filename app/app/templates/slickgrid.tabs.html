@@ -59,6 +59,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellmenu.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.draggablegrouping.js"></script>
     <script src="{{ url('static', filename='js/slick.gridmenu.js') }}"></script>
+    <script src="{{ url('static', filename='js/initSlickGrid.js') }}"></script>
 {% endblock %}
 
 {% block tab %}
@@ -83,7 +84,7 @@
             var status = xhr.status;
             if (status === 0 || (status >= 200 && status < 400)) {
               var j = JSON.parse(xhr.responseText);
-              SlickGrid = initSlickGrid(j, 'myGrid');
+              SlickGrid = initSlickGrid(j, 'home');
 	      $('.ui-droppable').addClass('slick-drop-zone');
             } else {
               console.log('Error:', xhr.status, xhr.responseText);

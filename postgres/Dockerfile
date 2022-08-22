@@ -1,7 +1,8 @@
 #===========================
 # postgres:14.4-alpine3.16
 #===========================
-FROM postgres:14.5-alpine3.16
+#FROM postgres:14.5-alpine3.16
+FROM postgis/postgis:14-3.2-alpine
 
 ENV PG_VERSION=14
 ENV POSTGRES_USER=postgres
