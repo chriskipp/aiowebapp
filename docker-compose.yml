@@ -23,12 +23,11 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail -s http://localhost:8080/ || exit 1"]
-      interval: 3s
-      timeout: 2s
-      retries: 15
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   postgres:
-    container_name: postgres
     build:
       context: postgres
       dockerfile: Dockerfile
@@ -49,9 +48,9 @@ services:
       - ./postgres/conf:/etc/postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 2s
-      retries: 15
+      interval: 10s
+      timeout: 5s
+      retries: 5
     command: postgres -c config_file=/etc/postgres/postgresql.conf
 
   redis:
@@ -65,9 +64,9 @@ services:
       - ./data/redis:/data
     healthcheck:
       test: ["CMD-SHELL", "redis-cli PING"]
-      interval: 3s
-      timeout: 2s
-      retries: 15
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 
   nginx:
@@ -85,5 +84,31 @@ services:
       - ./app/app/storage:/usr/share/nginx/html/storage
       - ./data/nginx/log:/var/log/nginx
     depends_on:
-      - app
-#        condition: service_healthy
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  scheduler:
+    build: scheduler
+    restart: unless-stopped
+    networks:
+      -  aio
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./data/scheduler/jobstore:/src/scheduler/data
+      - ./data/scheduler/scripts:/src/scheduler/scripts
+      - ./data/postgres/dump:/var/postgres
+
+  sqlite:
+    build: sqlite
+    restart: unless-stopped
+    networks:
+      - aio
+    volumes:
+      - ./data/sqlite:/var/sqlite
+

@@ -4,3 +4,4 @@ app/app/storage/*
 **/__pycache__
 data/*
 postgres/ssl/*
+**/.pgpass
