@@ -7,7 +7,8 @@ ADD requirements-dev.txt /usr/src/
 
 RUN apk add --update --virtual=buildutils make ca-certificates g++ gcc
 RUN apk add --update curl
-RUN python3 -m pip --no-cache-dir install -U pip && python3 -m pip --no-cache-dir install -r requirements.txt
+RUN python3 -m pip --no-cache-dir install -U pip \
+  && python3 -m pip --no-cache-dir install -r requirements.txt
 RUN python3 -m pip --no-cache-dir install -r requirements-dev.txt
 RUN apk del buildutils
 

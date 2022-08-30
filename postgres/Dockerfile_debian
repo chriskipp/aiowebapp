@@ -1,18 +1,18 @@
 #######################################################################
 # postgres:15beta2
 #######################################################################
-FROM postgres:14.4
-#FROM postgres:15beta2-bullseye
+FROM postgres:14.4-bullseye
+#FROM postgres:15beta3-bullseye
 
 ENV PG_VERSION=14
 ENV POSTGRES_PASSWORD=password
 ENV POSTGRES_INITDB_ARGS="--auth-host=scram-sha-256"
 ENV PGDATA=/var/lib/postgresql/data/pgdata
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND=noninteractive
 
 # extensions
 RUN apt-get update \
-    && apt-get install --yes \
+    && apt-get install --no-install-recommends --yes \
         postgresql-${PG_VERSION}-hypopg \
         postgresql-${PG_VERSION}-similarity \
         postgresql-${PG_VERSION}-cron \
@@ -23,48 +23,67 @@ RUN apt-get update \
 #        postgresql-plpython3-${PG_VERSION} \
 #        postgresql-${PG_VERSION}-pgq3 \
 
-# uripg
 RUN apt-get update \
-    && apt-get install --no-install-recommends --yes \
-        libgtest-dev cmake curl ca-certificates build-essential postgresql-server-dev-${PG_VERSION} git pkg-config libbison-dev flex bison libcurl4-gnutls-dev \
-    && printf '%s\n' "Installing uriparser" \
-    && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.6/uriparser-0.9.6.tar.gz' | tar -xzf - \
-    && cd uriparser-0.9.6 \
-    && mkdir build \
-    && cd build \
-    && cmake -DCMAKE_BUILD_TYPE=Release -DURIPARSER_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=/usr .. \
-    && make \
-    && make install \
-    && cd - \
-    && rm -rf uriparser-0.9.6 \
-    && printf '%s\n' "Installing pguri" \
-    && git clone https://github.com/petere/pguri \
-    && cd pguri \
-    && make \
-    && make install \
-    && cd - \
-    && rm -rf pguri \
-    && git clone https://github.com/pramsey/pgsql-http \
-    && cd pgsql-http && make && make install \
-    && cd - && rm -rf pgsql-http
-
-WORKDIR /postgres
-RUN : \
-    && printf '%s\n' "Installing bloom" \
-    && git clone https://github.com/postgres/postgres
-RUN : \
-    && cd postgres \
-    && ./configure --without-readline --without-zlib \
-    && cd contrib/bloom \
-    && make all \
-    && make install \
-    && cd - \
-    && rm -rf postgres \
-    && printf '%s\n' "Removing build dependencies" \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge --yes \
-        libgtest-dev cmake curl ca-certificates build-essential postgresql-server-dev-${PG_VERSION} git pkg-config libbison-dev flex bison \
-    && apt-get autoremove --yes \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get install --no-install-recommends --yes \
+    cmake \
+    curl \
+    ca-certificates \
+    build-essential \
+    postgresql-server-dev-${PG_VERSION} \
+    git \
+    pkg-config \
+    libbison-dev \
+    flex \
+    bison \
+    libcurl4-gnutls-dev \
+  && printf '%s\n' "Installing uriparser" \
+  && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.6/uriparser-0.9.6.tar.gz' \
+    | tar -xzf - \
+  && cd uriparser-0.9.6 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_BUILD_TYPE=Release -DURIPARSER_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=/usr -DURIPARSER_BUILD_TESTS=OFF .. \
+  && make \
+  && make install \
+  && cd - \
+  && rm -rf uriparser-0.9.6 \
+  && printf '%s\n' "Installing pguri" \
+  && git clone https://github.com/petere/pguri \
+  && cd pguri && make && make install \
+  && cd - && rm -rf pguri \
+  && git clone https://github.com/pramsey/pgsql-http \
+  && cd pgsql-http && make && make install \
+  && cd - && rm -rf pgsql-http \
+  && printf '%s\n' "Installing bloom" \
+  && git clone https://github.com/postgres/postgres \
+  && cd postgres \
+  && ./configure --without-readline --without-zlib \
+  && cd contrib/bloom \
+  && make all && make install \
+  && cd - && rm -rf postgres \
+  && printf '%s\n' "Installing pgsql-http" \
+  && git clone https://github.com/pramsey/pgsql-http \
+  && cd pgsql-http && make && make install \
+  && cd - && rm -rf pgsql-http \
+  && printf '%s\n' "Removing build dependencies" \
+  && apt-get purge --yes \
+    libgtest-dev \
+    cmake \
+    ca-certificates \
+    build-essential \
+    postgresql-server-dev-${PG_VERSION} \
+    git \
+    pkg-config \
+    libbison-dev \
+    flex \
+    bison \
+ && apt-get autoremove --yes \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY ./initdb /docker-entrypoint-initdb.d
+COPY ssl /var/lib/postgresql/ssl
+RUN chown postgres:postgres /var/lib/postgresql/ssl/server.key \
+  && chmod 0600 /var/lib/postgresql/ssl/server.key
+
+EXPOSE 5432
+

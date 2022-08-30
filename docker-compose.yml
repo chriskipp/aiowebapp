@@ -30,8 +30,9 @@ services:
   postgres:
     build:
       context: postgres
-      dockerfile: Dockerfile
-      #dockerfile: Dockerfile_debian
+      #dockerfile: Dockerfile
+      dockerfile: Dockerfile_debian
+    shm_size: 2gb
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres

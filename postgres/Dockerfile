@@ -12,11 +12,6 @@ ENV POSTGRES_INITDB_ARGS="--auth-local=scram-sha-256 --auth-host=scram-sha-256"
 ENV PGDATA=/var/lib/postgresql/data/pgdata
 ENV PGCONFIG=/etc/postgres/postgresql.conf
 
-COPY ./conf/postgresql.conf /etc/postgres/postgresql.conf
-COPY ./initdb /docker-entrypoint-initdb.d
-COPY ssl/* /var/lib/postgresql/
-RUN chown 0:70 /var/lib/postgresql/server.key
-
 # Install pguri, pg_similarity, pg_cron, hypopg, psql-http
 RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
   && printf '%s\n' "Installing uriparser" \
@@ -54,11 +49,11 @@ RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certifi
   && printf '%s\n' "Removing build dependencies" \
   && apk del buildutils
 
-EXPOSE 5432
+COPY ./conf/postgresql.conf /etc/postgres/postgresql.conf
+COPY ./initdb /docker-entrypoint-initdb.d
+COPY ssl /var/lib/postgresql/ssl
+RUN chown 0:70 /var/lib/postgresql/ssl/server.key \
+  && chmod 0640 /var/lib/postgresql/ssl/server.key
 
-#CMD postgres \
-#  -c config_file=/etc/postgres/postgresql.conf
-#  -c ssl=on \
-#  -c ssl_cert_file=/var/lib/postgresql/server.crt \
-#  -c ssl_key_file=/var/lib/postgresql/server.key \
+EXPOSE 5432
 
