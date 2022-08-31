@@ -77,8 +77,40 @@ RUN apt-get update \
     libbison-dev \
     flex \
     bison \
- && apt-get autoremove --yes \
- && rm -rf /var/lib/apt/lists/*
+  && apt-get autoremove --yes \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends --yes \
+    curl \
+    ca-certificates \
+    build-essential \
+    postgresql-server-dev-${PG_VERSION} \
+    git \
+    pkg-config \
+    libcurl4-gnutls-dev \
+    automake autoconf libtool \
+  && git clone https://github.com/openvenues/libpostal \
+  && cd libpostal \
+  && ./bootstrap.sh \
+  && ./configure \
+  && make && make install \
+  && cd - && rm -rf libpostal \
+  && git clone https://github.com/pramsey/pgsql-postal \
+  && cd pgsql-postal \
+  && make && make install \
+  && cd - && rm -rf pgsql-postal \
+  && apt-get purge --yes \
+    curl \
+    ca-certificates \
+    build-essential \
+    postgresql-server-dev-${PG_VERSION} \
+    git \
+    pkg-config \
+    libcurl4-gnutls-dev \
+    automake autoconf libtool \
+  && apt-get autoremove --yes \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY ./initdb /docker-entrypoint-initdb.d
 COPY ssl /var/lib/postgresql/ssl

@@ -13,7 +13,21 @@ ENV PGDATA=/var/lib/postgresql/data/pgdata
 ENV PGCONFIG=/etc/postgres/postgresql.conf
 
 # Install pguri, pg_similarity, pg_cron, hypopg, psql-http
-RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certificates cmake g++ git curl-dev perl-dev flex bison \
+RUN apk add --upgrade --virtual=buildutils \
+    autoconf \
+    automake \
+    bison \
+    cmake \
+    curl \
+    curl-dev \
+    ca-certificates \
+    flex \
+    git \
+    g++ \
+    libtool \
+    make \
+    perl-dev \
+    postgresql14-dev \
   && printf '%s\n' "Installing uriparser" \
   && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.6/uriparser-0.9.6.tar.gz' \
   | tar -xzf - && mkdir uriparser-0.9.6/build && cd uriparser-0.9.6/build \
@@ -46,8 +60,20 @@ RUN apk add --upgrade --virtual=buildutils make postgresql14-dev curl ca-certifi
   && cd contrib/bloom \
   && make all && make install \
   && cd - && rm -rf postgres \
+  && printf '%s\n' "Installing libpostal" \
+  && git clone https://github.com/openvenues/libpostal \
+  && cd libpostal \
+  && ./bootstrap.sh && ./configure \
+  && make && make install \
+  && cd - && rm -rf libpostal \
+  && printf '%s\n' "Installing pgsql-postal" \
+  && git clone https://github.com/pramsey/pgsql-postal \
+  && cd pgsql-postal \
+  && make && make install \
+  && cd - && rm -rf pgsql-postal \
   && printf '%s\n' "Removing build dependencies" \
-  && apk del buildutils
+  && apk del --purge buildutils \
+  && rm -rf /root/.cache /tmp/*
 
 COPY ./conf/postgresql.conf /etc/postgres/postgresql.conf
 COPY ./initdb /docker-entrypoint-initdb.d
