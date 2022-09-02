@@ -7,8 +7,11 @@ networks:
         - subnet: 10.18.0.0/24
 
 services:
+
   app:
-    build: app
+    build:
+      context: app
+      dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - aio
@@ -69,7 +72,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   nginx:
     build:
       context: ./nginx
@@ -104,6 +106,11 @@ services:
       - ./data/scheduler/jobstore:/src/scheduler/data
       - ./data/scheduler/scripts:/src/scheduler/scripts
       - ./data/postgres/dump:/var/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:7777/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   sqlite:
     build: sqlite
@@ -112,4 +119,22 @@ services:
       - aio
     volumes:
       - ./data/sqlite:/var/sqlite
+
+  sanic:
+    build:
+      context: sanic
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - aio
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/sqlite:/var/sqlite
+      - ./data/nginx/static:/src/static
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 

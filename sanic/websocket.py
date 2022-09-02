@@ -9,7 +9,6 @@ app = Sanic("Example")
 
 app.static("index.html", "websocket.html")
 
-
 @app.route("/")
 def index(request):
     return redirect("index.html")
