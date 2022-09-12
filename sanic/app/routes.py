@@ -45,7 +45,7 @@ def setup_routes(app):
         SELECT word
           FROM spell
           WHERE word MATCH ?
-          LIMIT(10);
+            AND TOP=10;
         """
         q = request.json["q"]
         async with app.ctx.db.execute(query_completion, (q,)) as cursor:

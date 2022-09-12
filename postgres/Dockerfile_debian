@@ -94,7 +94,8 @@ RUN apt-get update \
   && cd libpostal \
   && ./bootstrap.sh \
   && ./configure \
-  && make && make install \
+  && ( make || make || : ) \
+  && make install \
   && cd - && rm -rf libpostal \
   && git clone https://github.com/pramsey/pgsql-postal \
   && cd pgsql-postal \

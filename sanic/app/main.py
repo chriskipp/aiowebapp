@@ -26,10 +26,12 @@ session = InMemorySessionInterface(cookie_name=app.name, prefix=app.name)
 
 def setup_database():
 
-    @app.listener('after_server_start')
+    import aiosqlite
+
+    @app.listener("after_server_start")
     async def connect_to_db(*args, **kwargs):
         #app.ctx.db = await aiosqlite.connect('/var/sqlite/index.sqlite')
-        app.ctx.db = await aiosqlite.connect('/var/sqlite/tmpfs/index.sqlite')
+        app.ctx.db = await aiosqlite.connect('/var/sqlite/index.sqlite')
         await app.ctx.db.enable_load_extension(True)
         await app.ctx.db.load_extension('/var/sqlite/spellfix')
 

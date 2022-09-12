@@ -64,7 +64,7 @@ RUN apk add --upgrade --virtual=buildutils \
   && git clone https://github.com/openvenues/libpostal \
   && cd libpostal \
   && ./bootstrap.sh && ./configure \
-  && make && make install \
+  && ( make || make || : ) && make install \
   && cd - && rm -rf libpostal \
   && printf '%s\n' "Installing pgsql-postal" \
   && git clone https://github.com/pramsey/pgsql-postal \
