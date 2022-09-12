@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
-from app.main import init
+from app.main import create_app
 
-init()
+
+def run_app():
+    app = create_app()
+    app.run(
+        host=app.config["HOST"],
+        port=app.config["PORT"],
+        workers=app.config["WORKERS"],
+        debug=app.config["DEBUG"],
+        access_log=app.config["ACCESS_LOG"],
+    )
+
+
+if __name__ == "__main__":
+    run_app()

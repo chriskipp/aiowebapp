@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from sanic.response import json
 from sanic.log import logger
+from sanic.response import json
+
 
 def setup_routes(app):
-
     @app.get("/aurls")
     async def urls_list(request):
         query = """
