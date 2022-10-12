@@ -56,3 +56,15 @@ services:
 #    depends_on:
 #      - aiowebapp
 
+  scrapy:
+    build:
+      context: ./scrapy
+      dockerfile: Dockerfile
+    container_name: scrapy
+    restart: always
+    networks:
+      - aio
+    depends_on:
+      - postgres
+      - nginx
+      - redis

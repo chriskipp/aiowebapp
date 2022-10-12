@@ -1,24 +1,28 @@
 version: '3.3'
 
-
 networks:
   aio:
     ipam:
       config:
-        - subnet: "172.18.0.0/24"
+        - subnet: "172.18.3.0/24"
 
 services:
-#  aiowebapp:
-#    build: app
-#    restart: always
-#    networks:
-#      - aio
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./app/app:/usr/src/app
+
+  tor-privoxy:
+    container_name: tor-privoxy
+    build: tor-privoxy
+    restart: always
+    environment:
+      - IP_CHANGE_SECONDS=300
+    networks:
+      - aio
+    ports:
+      - "9050:9050" # Tor proxy
+      - "9051:9051" # Tor control port
+      - "8888:8888" # Privoxy
 
   postgres:
+    container_name: postgres
     build: postgres
     restart: always
     environment:
@@ -28,29 +32,71 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./postgres/pgdata:/var/lib/postgresql/data
 
-  redis:
-    build: redis
-    restart: always
-    networks:
-      - aio
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data:/data
-
-  nginx:
-    build: ./nginx
-    container_name: nginx
-    restart: always
-    ports:
-      - 5557:5557
-    networks:
-      - aio
+#  redis:
+#    container_name: redis
+#    build: redis
+#    restart: always
+#    networks:
+#      - aio
+#    ports:
+#      - "6379:6379"
 #    volumes:
-#      - ./app/app/static:/usr/share/nginx/html/static
-#      - ./app/app/storage:/usr/share/nginx/html/storage
+#      - ./redis/data:/data
+#
+#  rethinkdb:
+#    container_name: rethinkdb
+#    build: rethinkdb
+#    restart: always
+#    networks:
+#      - aio
+#    ports:
+#      - "8080:8080"
+#      - "28015:28015"
+#    volumes:
+#     - ./rethinkdb/data:/data
+#
+#  scrapy:
+#    container_name: scrapy
+#    build: scrapy
+#    restart: always
+#    environment:
+#      - HTTP_PROXY=multitor:16379
+#      - HTTPS_PROXY=multitor:16379
+#    ports:
+#      - "6800:6800"
+#    networks:
+#      - aio
+#    volumes:
+#      - ./scrapy:/usr/src/app
 #    depends_on:
-#      - aiowebapp
-
+#      - postgres
+#      - redis
+#
+##  splash:
+##    container_name: splash
+##    build: splash
+##    restart: always
+##    ports:
+##      - "8050:8050"
+##    networks:
+##      - aio
+##    volumes:
+##      - ./splash/proxy-profiles:/etc/splash/proxy-profiles
+##      - ./splash/js-profiles:/etc/splash/js-profiles
+##      - ./splash/filters:/etc/splash/filters
+##      - ./splash/lua_modules:/etc/splash/lua_modules
+#
+  multitor:
+    container_name: multitor 
+    build: multitor
+    restart: always
+    environment:
+      - TOR_INSTANCES=20
+    ports:
+      - "16379:16379"
+    networks:
+      - aio
+#
+#
