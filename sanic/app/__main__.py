@@ -3,8 +3,7 @@
 from app.main import create_app
 
 
-def run_app():
-    app = create_app()
+def run_app(app):
     app.run(
         host=app.config["HOST"],
         port=app.config["PORT"],
@@ -15,4 +14,5 @@ def run_app():
 
 
 if __name__ == "__main__":
-    run_app()
+    app = create_app()
+    run_app(app)

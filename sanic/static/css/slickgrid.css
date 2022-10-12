@@ -1,0 +1,228 @@
+.slick-header-column.ui-state-default {
+    background: linear-gradient(to bottom, #002400 0%,#83c783 0%,#52b152 33%,#008a00 67%,#005700 99%,#002400 100%);
+    color: white;  
+    text-shadow: none;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 20px;
+    line-height: 20px;    
+}
+
+.slick-header, .slick-header-columns {
+    background: black;	
+}
+
+.slick-header {
+  height: 60px;
+  top: 4px;
+}
+
+.slick-header-columns {
+    border-bottom: 4px solid silver;
+}
+
+.slick-row.ui-widget-content {
+  background: none;
+  background-color: #111111;
+  color: #cccccc;
+  border-bottom: none;
+  border-right: 1px dotted green;
+  font-size: 14px;
+}
+
+.slick-cell {
+  border-color: green;	
+  border-left: 1px dotted green;	
+  border-right: 1px solid transparent;
+  border-bottom: 1px dotted green;	
+  border-top: 1px solid transparent;
+}
+
+ .slick-row.odd {
+  background-color: #111111;
+}
+
+.slick-row.even {
+  background-color: #222222;
+}	
+
+.slick-cell.selected {
+  background-color: seagreen;
+  border-right: 1px dotted white;	
+  border-bottom: 1px dotted white;	
+}
+
+.slick-cell.active {
+  background-color: seagreen;
+  color: white;
+  border: 1px solid white;	
+}
+
+/* headerMenu */
+.slick-header-menu {
+  border: 1px solid white;
+  background: #111111;
+  border-radius: 10px;
+  padding: 2px;
+  box-shadow: -5px 5px 3px silver;
+  z-index: 20;
+}
+
+.slick-header-menubutton {
+  background-image: url('/static/images/sort-down.svg');
+  background-size: 13px 10px;
+  right: 5px;
+}
+
+.slick-header-menuitem {
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+
+.slick-header-menuitem:hover {
+  border-color: silver;
+  background: #222222;
+}
+
+.slick-header-menuitem-disabled {
+  border-color: transparent !important;
+  background: inherit !important;
+}
+
+.slick-gridmenu-button {
+  background: linear-gradient(to bottom, #002400 0%,#83c783 0%,#52b152 33%,#008a00 67%,#005700 99%,#002400 100%);
+  margin: 0px;
+  padding: 4px;
+  font-weight: bold;
+  height: 31.6px;
+  top: 29px;
+  width: 20px;
+  line-height: 20px;    
+  border-top: 1px solid silver;
+  border-bottom: 3px solid silver;
+}
+
+.slick-gridmenu {
+  background-color: black;
+  border: 1px solid white;
+  display: block;
+  position: absolute;
+  right: 10px;
+  border-right: 0;
+  margin-right: 3px;
+  box-shadow: -5px 5px 3px silver;
+}
+
+.slick-gridmenu-item:hover {
+  background-color: #111111;
+}
+
+.slick-dropped-grouping {
+  color: #ffffff;
+  background: linear-gradient(to bottom, rgb(0, 27, 36) 0%, rgb(131, 183, 199) 0%, rgb(82, 162, 177) 33%, rgb(0, 94, 138) 67%, rgb(0, 63, 87) 90%, rgb(0, 27, 36) 100%);
+  border: 1px solid white;
+  border-radius: 5px;
+  height: 100%;
+  max-width: 100px;
+  width: 100px;
+  margin: 5px;
+  padding: 0px;
+  display: flex;
+  font-size: 10px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+}
+
+.slick-dropped-grouping > *:first-child {
+  color: #ffffff;
+  overflow: hidden;
+  max-height: 100%;
+  order: 0;
+  flex: 1 0.9 auto;
+  align-self: center;
+  margin: 5px;
+}
+
+.slick-groupby-remove {
+  order: 1;
+  max-height: 100%;
+  flex: 0 .1 15px;
+  align-self: center;
+  background-image: url('/static/images/times-circle.svg');
+  background-repeat: no-repeat;
+  margin: 5px;
+}
+
+.slick-drop-zone {
+  border: 1px solid #008a00;
+  height: 25px;
+  width: 100% !important;
+  margin: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 15px;
+  padding-right: 3px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: center;
+}
+
+.slick-drop-zone:hoover {
+  border: 1px solid #008a00;
+  border-radius: 15px;
+}
+ 
+.slick-preheader-panel {
+  font-size: 10px;
+  background-color: #111111;
+  color: #ffffff;
+  height: 35px;
+  max-height: 25px;
+  padding-right: 0px;
+  padding-left: 0px;
+  padding-top: 0px;
+  margin: 0;
+  border: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: visible !important;
+  border-radius: 15px;
+}
+
+.slick-preheader-panel .ui-droppable {
+  display: flex;
+}
+
+.slick-preheader-panel:hover span {
+  color: #008a00;
+}
+
+.slick-preheader-panel:hover .slick-drop-zone {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 15px;
+  overflow: visible;
+}
+
+.slick-preheader-panel:hover {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 15px;
+}
+
+.slick-pane-header {
+  height: 60px;
+}
+
+#main {
+  overflow-y: hidden !important;
+  height: 100% !important;
+}

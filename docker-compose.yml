@@ -47,7 +47,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
+      - ./data/pgdata:/var/lib/postgresql/data/pgdata
       - ./data/postgres/dump:/dump
       - ./postgres/conf:/etc/postgres
     healthcheck:
@@ -95,46 +95,64 @@ services:
       timeout: 5s
       retries: 3
 
-  scheduler:
-    build: scheduler
-    restart: unless-stopped
-    networks:
-      -  aio
-    ports:
-      - "7777:7777"
-    volumes:
-      - ./data/scheduler/jobstore:/src/scheduler/data
-      - ./data/scheduler/scripts:/src/scheduler/scripts
-      - ./data/postgres/dump:/var/postgres
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail -s http://localhost:7777/ || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-  sqlite:
-    build: sqlite
-    restart: unless-stopped
-    networks:
-      - aio
-    volumes:
-      - ./data/sqlite:/var/sqlite
-
-  sanic:
+  tor:
     build:
-      context: sanic
+      context: ./tor
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - aio
-    ports:
-      - "8000:8000"
     volumes:
-      - ./data/sqlite:/var/sqlite
-      - ./data/nginx/static:/src/static
+      - ./app/app/static:/var/lib/tor/hidden_service/
+    depends_on:
+      app:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
-      interval: 30s
+      test: ["CMD", "nginx", "status"]
+      interval: 10s
       timeout: 5s
       retries: 3
+
+#  scheduler:
+#    build: scheduler
+#    restart: unless-stopped
+#    networks:
+#      -  aio
+#    ports:
+#      - "7777:7777"
+#    volumes:
+#      - ./data/scheduler/jobstore:/src/scheduler/data
+#      - ./data/scheduler/scripts:/src/scheduler/scripts
+#      - ./data/postgres/dump:/var/postgres
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl --fail -s http://localhost:7777/ || exit 1"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
+#
+#  sqlite:
+#    build: sqlite
+#    restart: unless-stopped
+#    networks:
+#      - aio
+#    volumes:
+#      - ./data/sqlite:/var/sqlite
+#
+#  sanic:
+#    build:
+#      context: sanic
+#      dockerfile: Dockerfile
+#    restart: unless-stopped
+#    networks:
+#      - aio
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - ./data/sqlite:/var/sqlite
+#      - ./data/nginx/static:/src/static
+#    healthcheck:
+#      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 3
 

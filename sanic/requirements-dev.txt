@@ -10,3 +10,6 @@ black==22.8.0
 isort==5.10.1
 pyfmt-svtter==0.1.0
 mypy==0.971
+types-PyYAML==6.0.11
+types-toml==0.10.8
+types-ujson==5.5.0

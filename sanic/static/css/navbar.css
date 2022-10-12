@@ -1,0 +1,46 @@
+/* borderdiv */
+.borderdiv {
+  width: 100%;
+  min-height: 51px;
+  max-height: 51px;
+  background: linear-gradient(to right, #ff0000, #ff5800, #ff8300, #ffa700, #ffc800, #ebdc1c, #d4ee3b, #b9ff5d, #86ff8e, #4fffbb, #00ffe2, #00ffff); 
+}
+
+/* mynavbar */
+.mynavbar {
+  overflow: hidden;
+  background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, rgb(100, 100, 100) 10%, rgb(55, 55, 55) 20%, rgb(11, 11, 11) 90%, rgb(0, 0, 0) 100%);
+  /*
+  Blue Gradient Background
+  background: linear-gradient(to bottom, rgb(0, 27, 36) 0%, rgb(131, 183, 199) 0%, rgb(82, 162, 177) 33%, rgb(0, 94, 138) 67%, rgb(0, 63, 87) 90%, rgb(0, 27, 36) 100%);
+  */
+  min-height: 46px;
+  max-height: 46px;
+  display:flex;
+  flex-flow:row;
+  width:100%;
+  padding:0;
+}
+
+/* Links inside the navbar */
+.mynavlink {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.mynavitem {
+  font-size: 16px; 
+  border: none;
+  outline: none;
+  font: bold;
+  padding: 14px 16px;
+  flex-grow:0;
+}
+
+.mynavspacer {
+  flex-grow:1;
+}
