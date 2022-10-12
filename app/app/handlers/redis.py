@@ -6,29 +6,19 @@ from .base import BaseHandler
 
 
 class RedisHandler(BaseHandler):
+
     async def info(self, request):
 
         pool = request.app["redis"]
-        info = await pool.execute("INFO", encoding="utf-8")
-        sections = info.split("\r\n\r\n")
-        parsed_sections = []
-        for section in sections:
-            title = section.splitlines()[0][2:]
-            rows = [
-                [
-                    row.split(":")[0].replace("_", " ").title(),
-                    row.split(":")[1],
-                ]
-                for row in section.splitlines()[1:]
-            ]
-            parsed_sections.append({"title": title, "rows": rows})
+        info = await pool.execute_command("INFO")
+        parsed_sections = [{"title": 'blub', "rows": [[str(k), str(v)] for k, v in info.items()]}]
 
         response = aiohttp_jinja2.render_template(
-            "table.html",
+            "redis_stats.html",
             request,
             context={
                 "pageheader": "Redis Stats",
-                "sections": parsed_sections,
+                "sections": info,
                 "username": request["user"],
                 "sidebar": self.sidebar_sections_loggedout,
             },

@@ -1,0 +1,8 @@
+{% macro websocket (wspath) %}
+  <script>
+    var ws = new WebSocket('ws://' + document.domain + ':' + location.port + {{ wspath }},);
+    ws.onmessage = function (event) {
+      var content = document.createTextNode('Received: ' + event.data);
+    };
+  </script>
+{% endmacro %}

@@ -1,0 +1,25 @@
+FROM python:3.10.5-alpine3.16
+
+WORKDIR /src
+
+COPY requirements.txt requirements.txt
+COPY requirements-dev.txt requirements-dev.txt
+
+RUN apk add \
+  --update \
+  --virtual=buildutils \
+  make \
+  ca-certificates\
+  g++ \
+  gcc \
+  && python3 -m pip --no-cache-dir install -U pip \
+  && python3 -m pip --no-cache-dir install -r requirements.txt \
+  && python3 -m pip --no-cache-dir install -r requirements-dev.txt \
+  && rm requirements.txt requirements-dev.txt \
+  && apk del buildutils \
+  && apk add make
+
+COPY . .
+
+CMD ["python3", "-m", "app"]
+#CMD ["python3", "-m", "pip", "list"]

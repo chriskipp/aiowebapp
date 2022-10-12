@@ -1,0 +1,11 @@
+#Jinja2==3.1.2
+sanic==22.6.2
+sanic-ext==22.6.3
+#sanic-jinja2==2022.1.13
+#sanic-session==0.8.0
+ujson==5.4.0
+uvloop==0.16.0
+#secure==0.3.0
+asyncpg==0.26.0
+#aiosqlite==0.17.0
+toml==0.10.2

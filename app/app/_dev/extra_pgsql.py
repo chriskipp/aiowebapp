@@ -3,7 +3,7 @@ import inspect
 import time
 
 from aiohttp_debugtoolbar.panels.base import DebugPanel
-from aiopg.cursor import Cursor
+from aiopg import Cursor
 
 __all__ = ["RequestPgDebugPanel"]
 

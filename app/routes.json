@@ -11,6 +11,13 @@
             "requires": ["logged_in"]
         },
             {"link": {
+                "href": "/users/register",
+                "icon": "fa-user-plus",
+                "label": "Register"
+	    },
+            "requires": ["logged_in"]
+        },
+            {"link": {
             "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
 	    "requires": ["logged_out"]
         }, {
@@ -29,7 +36,7 @@
             "requires": ["logged_in", "logged_out"]
         }
     ]}, {
-	    "title":"Admin",
+	    "title":"Monitor",
 	    "color":"orange",
             "data": [
 	{
@@ -39,7 +46,16 @@
                 "label": "RedisStats"
 	    },
             "requires": ["logged_in", "logged_out"]
-    }]}, {
+    },
+	{
+            "link": {
+                "href": "/chart",
+                "icon": "fa-chart-line",
+                "label": "LineChart"
+	    },
+            "requires": ["logged_in", "logged_out"]
+    }
+            ]}, {
 	    "title":"Tools",
 	    "color":"yellow",
             "data": [
@@ -48,6 +64,20 @@
                 "href": "/database",
                 "icon": "fa-database",
                 "label": "Database"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/tabs",
+                "icon": "fa-braille",
+                "label": "Tabs"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/slickgrid_tabs",
+                "icon": "fa-table",
+                "label": "SlickgridTabs"
 	    },
             "requires": ["logged_in", "logged_out"]
         }, {

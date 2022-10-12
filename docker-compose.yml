@@ -4,6 +4,7 @@ networks:
   aio:
     ipam:
       config:
+<<<<<<< HEAD
         - subnet: "172.18.3.0/24"
 
 services:
@@ -25,13 +26,52 @@ services:
     container_name: postgres
     build: postgres
     restart: always
+=======
+        - subnet: 10.18.0.0/24
+
+services:
+
+  app:
+    build:
+      context: app
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - aio
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app/app:/usr/src/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    build:
+      context: postgres
+      dockerfile: Dockerfile
+      #dockerfile: Dockerfile_debian
+    shm_size: 2gb
+    restart: unless-stopped
+>>>>>>> e6a0092b0d38bc0c4999309f8b801c6a748f80bc
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+      - PGDATA=/var/lib/postgresql/data/pgdata
     networks:
       - aio
     ports:
       - "5432:5432"
     volumes:
+<<<<<<< HEAD
       - ./postgres/pgdata:/var/lib/postgresql/data
 
 #  redis:
@@ -100,3 +140,96 @@ services:
       - aio
 #
 #
+=======
+      - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
+      - ./data/postgres/dump:/dump
+      - ./postgres/conf:/etc/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: postgres -c config_file=/etc/postgres/postgresql.conf
+
+  redis:
+    build: redis
+    restart: unless-stopped
+    networks:
+      - aio
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - aio
+    volumes:
+      - ./app/app/static:/usr/share/nginx/html/static
+      - ./app/app/storage:/usr/share/nginx/html/storage
+      - ./data/nginx/log:/var/log/nginx
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  scheduler:
+    build: scheduler
+    restart: unless-stopped
+    networks:
+      -  aio
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./data/scheduler/jobstore:/src/scheduler/data
+      - ./data/scheduler/scripts:/src/scheduler/scripts
+      - ./data/postgres/dump:/var/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:7777/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  sqlite:
+    build: sqlite
+    restart: unless-stopped
+    networks:
+      - aio
+    volumes:
+      - ./data/sqlite:/var/sqlite
+
+  sanic:
+    build:
+      context: sanic
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - aio
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/sqlite:/var/sqlite
+      - ./data/nginx/static:/src/static
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+>>>>>>> e6a0092b0d38bc0c4999309f8b801c6a748f80bc

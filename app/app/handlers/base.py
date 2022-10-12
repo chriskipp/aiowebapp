@@ -2,6 +2,7 @@ import orjson
 
 
 class BaseHandler:
+
     def __init__(self):
         sidebar_sections = ["User", "Tools"]
 

@@ -2,6 +2,10 @@ import aiopg.sa
 import asyncpg
 
 
+async def set_initial_search_path(conn):
+    res = await conn.execute("SET search_path TO public,cron,urls")
+
+
 async def setup_pg(app):
     conf = app["config"]["postgres"]
     pool = await asyncpg.create_pool(
@@ -12,6 +16,7 @@ async def setup_pg(app):
         port=conf["port"],
         min_size=conf["minsize"],
         max_size=conf["maxsize"],
+        init=set_initial_search_path,
     )
     app["db"] = pool
 

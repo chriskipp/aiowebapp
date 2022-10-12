@@ -1,0 +1,18 @@
+# Sample configurations can be found at https://github.com/torproject/tor/tree/master/src/config.
+
+SocksPort 0.0.0.0:9050
+
+ControlPort 0.0.0.0:9051
+#
+# Write credentials to a file.
+#
+CookieAuthentication 1
+
+Log notice syslog
+#
+# Change 'syslog' to 'stdout' to see more logging in the terminal.
+
+# Are the exit nodes restricted to specific location?
+#
+# ExitNodes {US}
+# StrictNodes 1

@@ -1,9 +1,0 @@
-FROM nginx:1.19.4
-
-RUN rm /etc/nginx/conf.d/default.conf
-COPY sapp.conf /etc/nginx/conf.d/
-
-COPY snippets /etc/nginx/snippets
-COPY ssl /etc/ssl
-COPY dhparam.pem /etc/nginx/
-

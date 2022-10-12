@@ -20,34 +20,34 @@
         height: 100%;
         max-width: 90%;
         width: 90%;
-	flex-grow: 1;
+        flex-grow: 1;
       }
 
       #editorcontainer {
-	width: 100%;
-	max-height: 30%;
-	display: flex;
-	flex-direction: row;
-	flex-grow: 1;
+        width: 100%;
+        max-height: 30%;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
       }
 
       #gridcontainer {
-	width: 100%;
-	max-height: 70%;
-	flex-grow: 1;
-	border: 0;
+        width: 100%;
+        max-height: 70%;
+        flex-grow: 1;
+        border: 0;
       }
 
       #gridcontainer-grid {
-	width: 100%;
-	max-height: 100%;
+        width: 100%;
+        max-height: 100%;
       }
 
       #execute_button {
-	border-radius: 10px;
-	border-width: 3px;
-	font-weight: bold;
-	flex-grow: 1;
+        border-radius: 10px;
+        border-width: 3px;
+        font-weight: bold;
+        flex-grow: 1;
       }
     </style>
 {% endblock %}
@@ -97,71 +97,123 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
     <!-- ace extentions -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js<Paste>"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/snippets/sql.min.js"></script>
 {% endblock %}
 
 {% block main %}
     <div class="container-fluid" style="display:flex;flex-direction:column;height:100%;margin:0;padding:0;">
+      <select class="select_table" name="state">
+      </select>
       <div id="gridcontainer" class="container-fluid"></div>
       <div id="editorcontainer">
         <div id="editor"></div>
-        <button id="execute_button" class="button btn btn-outline-warning" onClick="sendQuery()">Execute</button>
+        <button id="execute_button" class="button btn btn-outline-warning" onClick="sendQuery(editor.getValue())">Execute</button>
       </div>
     </div>
 {% endblock %}
 
 {% block tail_js %}
-    <script>
-      ace.require("ace/ext/language_tools");
+  {{ super() }}
+  <script>
+    ace.require("ace/ext/language_tools");
 
-      var editor = ace.edit("editor");
-      var slickGrid;
+    var editor = ace.edit("editor");
+    var slickGrid;
 
-      editor.session.setMode("ace/mode/sql");
-      editor.setKeyboardHandler("ace/keyboard/vim");
-      editor.setTheme("ace/theme/cobalt");
-      editor.setOptions({
-        enableBasicAutocompletion: true,
-	enableLiveAutocompletion: true,
-	enableSnippets: true
+    editor.session.setMode("ace/mode/sql");
+    editor.setKeyboardHandler("ace/keyboard/vim");
+    editor.setTheme("ace/theme/cobalt");
+    editor.setOptions({
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true,
+      enableSnippets: true
+    });
+
+    function sendQuery(query) {
+      if ( typeof(query) == undefined) {
+        query = editor.getValue();
+      }
+      console.log(query);
+
+      // Sending and receiving data in JSON format using POST method
+      //
+      var xhr = new XMLHttpRequest();
+      var url = "/database";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          console.log(json);
+          slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=false);
+        }
+      };
+      var data = JSON.stringify({"query": query});
+      xhr.send(data);
+    };
+
+
+    function loadTables() {
+      var query = new Array(
+        "SELECT",
+        "  ROW_NUMBER () OVER (ORDER BY table_schema, table_name) as id,",
+        "  table_schema || '.' || table_name AS text",
+        "FROM information_schema.tables",
+        "WHERE table_schema",
+        "  NOT IN ('pg_catalog', 'information_schema');"
+      ).join('\n')
+      console.log(query);
+
+      // Sending and receiving data in JSON format using POST method
+      //
+      var xhr = new XMLHttpRequest();
+      var url = "/database";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          console.log(json);
+          $('.select_table').select2({
+            data: json,
+            multiple: false,
+            allowClear: true,
+            placeholder: "Select Table...",
+            tags: false,
+            closeOnSelect: true,
+            scrollAfterSelect: false ,
+          });
+        }
+      };
+      var data = JSON.stringify({"query": query});
+      xhr.send(data);
+    };
+
+    var readTextFromFile = function(event) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function(){
+        var text = reader.result;
+      editor.setValue(text, 1);
+      };
+      reader.readAsText(input.files[0]);
+    };
+
+    placeholder = new Array(
+      "SELECT *",
+      "  FROM information_schema.tables",
+      "  WHERE table_schema",
+      "    NOT IN ('pg_catalog');"
+    ).join('\n');
+    editor.setValue(placeholder);
+
+    $(document).ready(function() {
+      loadTables();
+      $(".select_table").on('select2:select', function (e) {
+        sendQuery("SELECT * FROM " + e.params.data["text"] + ";");
       });
-
-      function sendQuery() {
-	var query = editor.getValue()
-
-	// Sending and receiving data in JSON format using POST method
-	//
-	var xhr = new XMLHttpRequest();
-	var url = "/database";
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.onreadystatechange = function () {
-	  if (xhr.readyState === 4 && xhr.status === 200) {
-	    var json = JSON.parse(xhr.responseText);
-	    console.log(json);
-	    slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=true);
-	  }
-	};
-	var data = JSON.stringify({"query": query});
-	xhr.send(data);
-      };
-
-      var readTextFromFile = function(event) {
-        var input = event.target;
-        var reader = new FileReader();
-        reader.onload = function(){
-          var text = reader.result;
-        editor.setValue(text, 1);
-        };
-        reader.readAsText(input.files[0]);
-      };
-
-      placeholder = new Array("SELECT *",
-"  FROM information_schema.tables",
-"  WHERE table_schema",
-"    NOT IN ('pg_catalog');");
-      editor.setValue(placeholder.join('\n'))
+    });
     </script>
 {% endblock %}
 

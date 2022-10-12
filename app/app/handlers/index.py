@@ -6,6 +6,7 @@ from .base import BaseHandler
 
 
 class IndexHandler(BaseHandler):
+
     async def index(self, request):
         return aiohttp_jinja2.render_template(
             "layout.html",

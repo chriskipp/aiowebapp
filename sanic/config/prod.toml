@@ -1,0 +1,7 @@
+
+HOST = '0.0.0.0'
+PORT = 8000
+WORKERS = 4
+DEBUG = false
+ACCESS_LOG = false
+AUTO_RELOAD = false

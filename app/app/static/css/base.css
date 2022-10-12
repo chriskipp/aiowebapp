@@ -125,3 +125,9 @@ body {
     scrollbar-width: none;
   }
 }
+
+.action-btn {
+  background-color: transparent;
+  border-radius: 10px;
+  margin: 5px;
+}

@@ -1,0 +1,24 @@
+{% macro editor(elementId) -%}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+  <!-- ace extentions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-modelist.js"></script>
+  <div id="{{ elementId }}" style="flex-flow:1;"></div>
+  <script>
+    function initEditor({{ elementId }}) {
+      ace.require("ace/ext/language_tools");
+      var editor = ace.edit({{ elementId }});
+      editor.session.setMode("ace/mode/sql");
+      editor.setKeyboardHandler("ace/keyboard/vim");
+      editor.setTheme("ace/theme/merbivore");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+    }
+    initEditor({{ elementId }});
+  <script>
+{%- endmacro %}
+
+

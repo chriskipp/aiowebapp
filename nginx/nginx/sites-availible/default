@@ -1,0 +1,15 @@
+# Redirect all HTTP to HTTPS with no-WWW
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+  server_name ~^(?:www\.)?(.*)$;
+  return 301 $scheme://$1$request_uri;
+}
+
+# Redirect WWW to no-WWW
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name ~^www\.(.*)$;
+  return 301 $scheme://$1$request_uri;
+}

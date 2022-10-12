@@ -1,29 +1,47 @@
 {% extends "layout.html" %}
 
 {% block head_css %}
-    {{ super() }}
-    <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
+  {{ super() }}
+  <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
+  <link href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css" rel="stylesheet" />
 {% endblock %}
 
 {% block head_js %}
-    {{ super() }}
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
 {% endblock %}
 
 
 {% block main %}
-    {{ super() }}
-    <div id="map" style="background-color:black;height:100%;width:100%;margin:0;padding:0;border:0;">
-    </div>
+  {{ super() }}
+  <div id="map" style="background-color:black;height:100%;width:100%;margin:0;padding:0;border:0;">
+  </div>
 {% endblock %}
 
 
 {% block tail_js %}
-    <script src="{{url('static', filename='js/addBaseMaps.js')}}"></script>
-    <script>
-      document.getElementById("map").style.zIndex = 1;
-    </script>
+  {{ super() }}
+  <script src="{{url('static', filename='js/addBaseMaps.js')}}"></script>
+  <script>
+    document.getElementById("map").style.zIndex = 1;
+  </script>
+  <!-- Make sure you put this AFtER leaflet.js, when using with leaflet -->
+  <script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
+  <script>
+    // you want to get it of the window global
+    const provider = new GeoSearch.OpenStreetMapProvider();
+
+    // Either get GeoSearch from the window global, or import from `leaflet-geosearch`
+    // import * as GeoSearch from 'leaflet-geosearch';
+    map.setView([51.505, -0.09], 13);
+    // L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    const search = new GeoSearch.GeoSearchControl({
+      provider: new GeoSearch.OpenStreetMapProvider(),
+    });
+    map.addControl(search);
+  </script>
+
 {% endblock %}
 

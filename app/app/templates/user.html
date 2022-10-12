@@ -1,108 +1,37 @@
-{% import "lib.html" as lib %}
 {% extends "layout.html" %}
-
-{% macro create_form(data) %}
-   <div class="md-form container column">
-  {% for k, v in data.items() %}
-    <div class="form-row">
-      <label for="{{ k }}">{{ k }}:</label>
-      {% if v is integer %}
-        <input class="form-control" type="number" id="{{ k }}" name="{{ k }}" value="{{ v }}">
-      {% elif v is string %}
-        <input class="form-control" type="text"  id="{{ k }}" name="{{ k }}" value="{{ v }}"> 
-      {% elif v is boolean %}
-        <input class="form-control" type="checkbox" id="{{ k }}" name="{{ k }}" value="{{ v }}">
-    {% endif %}
-   </div>
-   {% endfor %}
-   </div>
-{% endmacro %}
-
-{% macro key_value_table(rows, tableheader=['Key', 'Value'], heading=None) -%}
-  {% if heading %}
-    <h3>{{ heading }}</h3>
-  {% endif %}
-  <div class="container-fluid table-responsive">
-    <table class="table table-striped" style="width:100%;">
-      <thead>
-        <tr>
-  	{% for headerfield in tableheader %}
-  	  <th>{{ headerfield }}</th>
-  	{% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-      {% for key in rows %}
-        <tr>
-            <td style="font-weight:bold;">{{ key }}</td>
-            <td>
-	      {{ rows[key] }}
-	    </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-{%- endmacro %}
 
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{url('static', filename='css/table.css')}}" type="text/css" />
-  <style>
-    thead {
-      background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, rgb(100, 100, 100) 10%, rgb(55, 55, 55) 20%, rgb(11, 11, 11) 90%, rgb(0, 0, 0) 100%);
-      border: 0;
-    }
-
-    .table td {
-      border: 0;
-    }
-
-    .editbtn {
-      border-radius: 3px;
-    }
-
-.form-control {
-  background-color: #111;
-  color: white;
-  border: 1px solid royalblue;
-  border-radius: 10px;
-  text-align: end;
-  margin: 5px;
-  font-weight: bold;
-}
-
-.form-control:focus {
-  background-color: #111;
-  color: white;
-  border: 2px solid royalblue;
-}
-
-.form-row {
-  flex-wrap: nowrap;
-  align-items: center;
-}
-  </style>
 {% endblock %}
 
 {% block main %}
   <div style="display:flex;">
-    <h2><i class="fa fa-user" aria-hidden="true"></i> {{ rows['login'] }}</h2>
-    <button class="editbtn btn-outline-white text-white bg-dark" data-toggle="modal" data-target="#editModal">
-	    <i class="fas fa-pencil-alt"></i>
+    <h2>
+      <i class="fa fa-user" aria-hidden="true"></i>
+      {{ rows['login'] }}
+    </h2>
+    <button
+        class="btn btn-outline-warning action-btn"
+        data-toggle="modal"
+        data-target="#editModal"
+    >
+      <i class="fas fa-pencil-alt"></i>
     </button>
   </div>
-  {{ key_value_table(rows=rows) }}  
+
+  {{ lib.key_value_table(rows=rows) }}
+
   <div id="editModal" class="modal fade">
     <div class="modal-dialog modal-edit">
       <div class="modal-content">
         <form action="/post" method="post">
-          <div class="modal-header">        
+          <div class="modal-header">
             <h4 class="modal-title">Login</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           </div>
-          <div class="modal-body">        
-            {{ create_form(data=data) }}  
+          <div class="modal-body">
+            {{ lib.create_form(data=data) }}
           </div>
           <div class="modal-footer justify-content-between">
             <button class="btn btn-primary" type="submit">Save changes</button>

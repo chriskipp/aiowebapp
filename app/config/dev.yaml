@@ -2,9 +2,9 @@ host: 0.0.0.0
 port: 8080
 
 postgres:
-  database: storage
-  user: api
-  password: apipw
+  database: crawler
+  user: crawler
+  password: crawler
   host: postgres
   port: 5432
   minsize: 1
