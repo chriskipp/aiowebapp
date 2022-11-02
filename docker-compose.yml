@@ -95,24 +95,6 @@ services:
       timeout: 5s
       retries: 3
 
-  tor:
-    build:
-      context: ./tor
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    networks:
-      - aio
-    volumes:
-      - ./app/app/static:/var/lib/tor/hidden_service/
-    depends_on:
-      app:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "nginx", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
 #  scheduler:
 #    build: scheduler
 #    restart: unless-stopped
@@ -138,21 +120,22 @@ services:
 #    volumes:
 #      - ./data/sqlite:/var/sqlite
 #
-#  sanic:
-#    build:
-#      context: sanic
-#      dockerfile: Dockerfile
-#    restart: unless-stopped
-#    networks:
-#      - aio
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - ./data/sqlite:/var/sqlite
-#      - ./data/nginx/static:/src/static
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 3
+  sanic:
+    build:
+      context: sanic
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - aio
+    ports:
+      - 8000:8000
+    volumes:
+    #  - ./data/nginx/static:/src/app/static
+      - ./data/sanic/sqlite:/var/sqlite
+      - ./data/sanic/uploads:/src/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:8000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 

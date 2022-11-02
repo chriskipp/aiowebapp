@@ -1,9 +1,0 @@
-
-HOST = '0.0.0.0'
-PORT = 8000
-WORKERS = 4
-DEBUG = true
-ACCESS_LOG = true
-AUTO_RELOAD = true
-AUTO_OPTINS = true
-HTTP_AUTO_TRACE = true

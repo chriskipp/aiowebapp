@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pytest
-from sanic.exceptions import SanicException
 from sanic.response import json
 from sanic_ext import serializer
 
@@ -23,7 +22,7 @@ http_methods = [
 
 @pytest.fixture
 def app():
-    from app.server import app
+    #from app.server import app
 
     #try:
     #    app = create_app()

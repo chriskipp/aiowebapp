@@ -9,3 +9,4 @@ asyncpg==0.26.0
 aiosqlite==0.17.0
 toml==0.10.2
 werkzeug==2.2.2
+sanic-jwt-extended

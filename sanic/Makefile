@@ -3,35 +3,49 @@
 FLAGS=
 
 
+black: clean
+	black --line-length 79 --safe .
+
 flake:
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app tests
+	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports .
 
 isort:
-	isort app tests
+	isort .
 
 mypy:
-	mypy --ignore-missing-imports app tests
+	mypy --install-types .
+	mypy --ignore-missing-imports .
 
-black:
-	black --line-length 79 --safe --exclude '*.html' --exclude '__pycache__' --verbose app tests
+lint: black flake isort mypy
 
-test:
-	python3 -m pytest -vvv tests
+#.PHONY: flake isort black clean clean_up  #test
 
-test_docker:
-	docker build --tag=sanic_test --file=Dockerfile_dev . \
-	&& docker run sanic_test make test
+.PHONY: test
 
-cov:
-	[ -d cov ] || mkdir cov
-	python3 -m pytest --cov-config=./config/coveragerc --cov=app --cov-report=html:cov -vvv tests
+test: _virtualenv
+	sh -c '. _virtualenv/bin/activate; py.test -vvv tests'
 
-cov_docker:
-	docker build --tag=sanic_test --file=Dockerfile_dev . \
-	&& docker run sanic_test make cov
+.PHONY: test-all
+
+test-all: _virtualenv
+	tox
+
+#.PHONY: upload
+
+#upload: test-all build-dist
+#	_virtualenv/bin/twine upload dist/*
+#	make clean
+
+.PHONY: build-dist
+
+build-dist: clean
+	_virtualenv/bin/pyproject-build
+
+.PHONY: clean
 
 clean:
 	rm -rf `find . -name __pycache__`
+	rm -rf `find . -type d -name '*.egg-info' `
 	rm -f `find . -type f -name '*.py[co]' `
 	rm -f `find . -type f -name '*~' `
 	rm -f `find . -type f -name '.*~' `
@@ -39,23 +53,38 @@ clean:
 	rm -f `find . -type f -name '#*#' `
 	rm -f `find . -type f -name '*.orig' `
 	rm -f `find . -type f -name '*.rej' `
-	rm -rf `find . -type d -name '.mypy_cache' `
-	rm -rf `find . -type d -name '.pytest_cache' `
-	rm -rf .benchmarks
+	rm -rf _virtualenv
+	rm -rf _requirements.txt
+	rm -rf _requirements-dev.txt
 	rm -rf .coverage
-	rm -rf .cov
 	rm -rf coverage
-	rm -rf cov
 	rm -rf build
 	rm -rf htmlcov
 	rm -rf dist
+	rm -rf .mypy_cache
+	rm -rf .pytest_cache
+	rm -rf .tox
+	rm -f test.sqlite
 
-all:
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app tests
-	isort app tests
-	mypy --ignore-missing-imports app tests
-	black --line-length 79 --safe --force-exclude 'app/static' --exclude '*.html' --exclude '__pycache__' --verbose app tests
-	make test
+.PHONY: bootstrap
 
-.PHONY: flake isort black clean test
+bootstrap: _virtualenv
+	_virtualenv/bin/pip install -e .
+ifneq ($(wildcard requirements-dev.txt),)
+	_virtualenv/bin/pip install -r requirements.txt
+	_virtualenv/bin/pip install -r requirements-dev.txt
+endif
+	make clean
+
+_virtualenv:
+	python3 -m venv _virtualenv
+	_virtualenv/bin/pip install --upgrade pip
+	_virtualenv/bin/pip install --upgrade setuptools
+	_virtualenv/bin/pip install --upgrade wheel
+	_virtualenv/bin/pip install --upgrade build twine
+
+update_req: _virtualenv
+	sh -c '. _virtualenv/bin/activate; REQILE="requirements-dev.txt"; cat "${REQILE}" | xargs --max-args=1 --delimiter='\n' python3 -m pip install -U; _cat "${REQILE}" | sed -e 's/[<>=]\+.*//' -e 's/^/^/' -e 's/$/[=]/g' > "_${REQILE}"; _python3 -m pip list --format=freeze | grep -f "_${REQILE}" > "${REQILE}"'
+	sh -c '. _virtualenv/bin/activate; REQILE="requirements.txt"; cat "${REQILE}" | xargs --max-args=1 --delimiter='\n' python3 -m pip install -U; _cat "${REQILE}" | sed -e 's/[<>=]\+.*//' -e 's/^/^/' -e 's/$/[=]/g' > "_${REQILE}"; _python3 -m pip list --format=freeze | grep -f "_${REQILE}" > "${REQILE}"'
+
 
