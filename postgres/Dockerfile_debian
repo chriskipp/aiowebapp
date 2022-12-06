@@ -18,10 +18,10 @@ RUN apt-get update \
         postgresql-${PG_VERSION}-cron \
         postgresql-${PG_VERSION}-postgis-3 \
         postgresql-${PG_VERSION}-postgis-3-scripts \
-        postgresql-${PG_VERSION}-pgrouting \
-    && rm -rf /var/lib/apt/lists/*
+        postgresql-${PG_VERSION}-pgrouting 
 #        postgresql-plpython3-${PG_VERSION} \
 #        postgresql-${PG_VERSION}-pgq3 \
+#  && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
   && apt-get install --no-install-recommends --yes \
@@ -77,8 +77,8 @@ RUN apt-get update \
     libbison-dev \
     flex \
     bison \
-  && apt-get autoremove --yes \
-  && rm -rf /var/lib/apt/lists/*
+  && apt-get autoremove --yes 
+#  && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
   && apt-get install --no-install-recommends --yes \

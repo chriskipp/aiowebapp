@@ -16,12 +16,10 @@ RUN apk add \
   && rm requirements.txt \
   && apk del buildutils
 
-RUN python3 -m pip install sanic_jinja2 sanic_session sanic_dropzone
 RUN sed -i -e 's/app\.extensions/app.ctx.extensions/g' -e 's/app, ex/app.ctx, ex/g' /usr/local/lib/python3.10/site-packages/sanic_dropzone/*.py
 COPY . .
 
 WORKDIR /src/app
 
-#CMD ["sanic", "--factory", "--fast", "--dev", "--access-logs", "main:create_app", "--host=0.0.0.0"]
 CMD ["sanic", "--fast", "--dev", "--access-logs", "server:app", "--host=0.0.0.0"]
 #CMD ["python3", "-m", "pip", "list"]

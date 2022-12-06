@@ -28,7 +28,7 @@ app.config.update(
     SECRET_KEY="dev key",  # the secret key used to generate CSRF token
     UPLOADED_PATH=os.path.join(basedir, "uploads"),
     UPLOAD_DIR=os.path.join(basedir, "uploads"),
-    # Flask-Dropzone config:
+    # Sanic-Dropzone config:
     DROPZONE_ALLOWED_FILE_TYPE="image",
     DROPZONE_MAX_FILE_SIZE=3,
     DROPZONE_MAX_FILES=4096,

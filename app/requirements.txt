@@ -1,5 +1,6 @@
 aiohttp[speedups]==3.8.1
 aiohttp_security[session]==0.4.0
+aiohttp_session[secure]==2.12.0
 aiodns==3.0.0
 aiohttp-jinja2==1.5
 markupsafe==2.1.1
