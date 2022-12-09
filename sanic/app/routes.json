@@ -1,0 +1,138 @@
+[
+        {
+	    "title":"User",
+	    "color":"red",
+        "links": [
+            {"link": {
+                "href": "/me",
+                "icon": "fa-address-card",
+                "label": "Profile"
+	    },
+            "requires": ["logged_in"]
+        },
+            {"link": {
+                "href": "/users/register",
+                "icon": "fa-user-plus",
+                "label": "Register"
+	    },
+            "requires": ["logged_in"]
+        },
+            {"link": {
+            "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
+	    "requires": ["logged_out"]
+        }, {
+            "link": {
+                "href": "/logout",
+                "icon": "fa-sign-out-alt",
+                "label": "Logout"
+	    },
+            "requires": ["logged_in"]
+        }, {
+            "link": {
+                "href": "/session",
+                "icon": "fa-laptop",
+                "label": "Session"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }
+    ]}, {
+	    "title":"Monitor",
+	    "color":"orange",
+        "links": [
+	{
+            "link": {
+                "href": "/redis",
+                "icon": "fa-server",
+                "label": "RedisStats"
+	    },
+            "requires": ["logged_in", "logged_out"]
+    },
+	{
+            "link": {
+                "href": "/chart",
+                "icon": "fa-chart-line",
+                "label": "LineChart"
+	    },
+            "requires": ["logged_in", "logged_out"]
+    }
+            ]}, {
+	    "title":"Tools",
+	    "color":"yellow",
+        "links": [
+	{
+            "link": {
+                "href": "/database",
+                "icon": "fa-database",
+                "label": "Database"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/tabs",
+                "icon": "fa-braille",
+                "label": "Tabs"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/slickgrid_tabs",
+                "icon": "fa-table",
+                "label": "SlickgridTabs"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/editor",
+                "icon": "fa-file-alt",
+                "label": "Editor"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }]}, {
+	    "title":"Maps",
+	    "color":"lime",
+        "links": [
+	{
+            "link": {
+                "href": "/map",
+                "icon": "fa-map",
+                "label": "SimpleMap"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/nominatim",
+                "icon": "fa-map-marked-alt",
+                "label": "Nominatim"
+	    },
+            "requires": ["logged_in", "logged_out"]
+	}]}, {
+	    "title":"Storage",
+	    "color":"cyan",
+        "links": [
+	{
+            "link": {
+                "href": "/storage",
+                "icon": "fa-hdd",
+                "label": "Storage"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }, {
+            "link": {
+                "href": "/upload",
+                "icon": "fa-upload",
+                "label": "FileUpload"
+	    },
+            "requires": ["logged_in", "logged_out"]
+        }
+	]}, {
+	    "title":"Search",
+	    "color":"blue",
+        "links": [
+		    {"link": {
+                "href": "/search",
+                "icon": "fa-search",
+                "label": "Redisearch"
+	    },
+            "requires": ["logged_in", "logged_out"]
+	}]}
+	]

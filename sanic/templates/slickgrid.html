@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+    {{ super() }}
+    <!-- SlickGrid -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.grid.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick-default-theme.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellmenu.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headerbuttons.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headermenu.css" type="text/css"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/slick.gridmenu.css')}}" type="text/css"/>
+
+    <!-- jQuery-UI-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" type="text/css"/>
+    <!--
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/jqueryui.css') }}" type="text/css"/>
+    -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/slickgrid.css') }}" type="text/css"/>
+{% endblock %}
+
+{% block head_js %}
+    {{ super() }}
+    <!-- is.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/is_js/0.9.0/is.js"></script>
+
+    <!-- FireBugs-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/lib/firebugx.min.js"></script>
+
+    <!-- jQuery-UI-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-bootstrap/0.5pre/assets/js/jquery-ui-1.10.0.custom.min.js"></script>
+
+    <!-- jQuery-Event-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/lib/jquery.event.drag-2.3.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/lib/jquery.event.drop-2.3.0.min.js"></script>
+
+    <!-- SlickGrid -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.grid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.dataview.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.editors.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.formatters.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.groupitemmetadataprovider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.remotemodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.remotemodel-yahoo.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/slick.groupitemmetadataprovider.js"></script>
+
+    <!-- SlickGrid-Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.resizer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.autotooltips.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellrangeselector.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellrangedecorator.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellselectionmodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.rowselectionmodel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headermenu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.headerbuttons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.cellmenu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.24/plugins/slick.draggablegrouping.js"></script>
+    <script src="{{ url_for('static', filename='js/slick.gridmenu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/initSlickGrid.js') }}"></script>
+{% endblock %}
+
+{% block main %}
+    {{ super() }}
+        <!--
+    <div class="container-fluid tab-content" style="margin:0;">
+        -->
+        <div id="gridContainer" style="height:100%;width:100%;padding:0px;margin:0;">
+        <!--
+        <div class="grid-header" style="width:100%"></div>
+        <div id="myGrid" style="height:100%;width:calc(97% - 15px);border:0;margin:0;padding:0;"></div>
+        -->
+        <div id="myGrid" style="height:100%;width:100%;border:0;margin:0;padding:0;"></div>
+      </div>
+        <!--
+    </div>
+        -->
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/initSlickGrid.js') }}"></script>
+    <script>
+    var SlickGrid;
+    var xhr = new XMLHttpRequest();
+        xhr.open('GET', "{{ xhruri }}");
+        xhr.onreadystatechange = function () {
+          if(xhr.readyState === XMLHttpRequest.DONE) {
+            var status = xhr.status;
+            if (status === 0 || (status >= 200 && status < 400)) {
+              var j = JSON.parse(xhr.responseText);
+              //SlickGrid = initSlickGrid(j, 'myGrid');
+              SlickGrid = initSlickGrid(j, 'myGrid', draggableGrouping=false);
+              $('.ui-droppable').addClass('slick-drop-zone');
+            } else {
+              console.log('Error:', xhr.status, xhr.responseText);
+            }
+          }
+        }
+        xhr.send()
+
+    $(document).ready(
+      function() {
+        $('.ui-droppable').addClass('slick-drop-zone');
+      }
+    );
+    </script>
+{% endblock %}

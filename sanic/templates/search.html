@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+  {{ super() }}
+{% endblock %}
+
+{% block head_js %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.loadtemplate/1.5.10/jquery.loadTemplate.min.js"></script>
+{% endblock %}
+
+{% block main %}
+  <select class="select2-autocomplete"></select>
+  <ul id="result-list"></ul>
+{% endblock %}
+
+{% block tail_js %}
+  {{ super() }}
+  <script type="text/html" id="search-result-template">
+    <div class="search-result">
+      <h2 class="search-result-title">
+        <a data-href="docpath" data-content="title"></a>
+      </h2>
+      <p data-content="docpath"></p>
+      <div class="search-result-snip">
+        <p data-content="snippet"></p>
+      </div>
+    </div>
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('.select2-autocomplete').select2({
+        ajax: {
+          url: '/completion',
+          method: 'POST',
+          data: function(params) {
+            return {
+              q: params.term
+            }
+          },
+          dataType: 'json'
+        },
+        placeholder: 'Search...',
+        multiple: true,
+        tokenSeparators: ' ',
+        width: '80%'
+      });
+    });
+
+    $('.select2-autocomplete').on('change', function(e) {
+      var q = $('.select2-autocomplete').select2('data').map(x => x.text).join(' ');
+      console.log(q);
+
+      if (q.length > 0) {
+        $.post(
+          "/search",
+          {"q": q},
+          function(data, status) {
+            console.log(status);
+            $('#result-list').loadTemplate(
+              $('#search-result-template'),
+              data
+            )},
+          'json')
+        } else {
+        return
+      }
+    })
+  </script>
+{% endblock %}

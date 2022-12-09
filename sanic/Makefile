@@ -4,23 +4,31 @@ FLAGS=
 
 
 black: clean
-	black --line-length 79 --safe .
+	black --line-length 79 --safe app
 
 flake:
-	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports .
+	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app
 
 isort:
-	isort .
+	isort --verbose --profile black app
 
 mypy:
-	mypy --install-types .
-	mypy --ignore-missing-imports .
+	mypy --install-types --non-interactive --ignore-missing-imports --exclude setup.py app
 
-lint: black flake isort mypy
+pdocstr:
+	pydocstringformatter --linewrap-full-docstring --write  --max-line-length 79 app
+
+pylint:
+	pylint app
+
+lint: black flake isort mypy pdocstr pylint
 
 #.PHONY: flake isort black clean clean_up  #test
 
 .PHONY: test
+
+bandit:
+	bandit -r app
 
 test: _virtualenv
 	sh -c '. _virtualenv/bin/activate; py.test -vvv tests'
@@ -65,6 +73,8 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf .tox
 	rm -f test.sqlite
+	rm -f .pyre_configuration
+	rm -rf .pyre
 
 .PHONY: bootstrap
 
@@ -88,3 +98,5 @@ update_req: _virtualenv
 	sh -c '. _virtualenv/bin/activate; REQILE="requirements.txt"; cat "${REQILE}" | xargs --max-args=1 --delimiter='\n' python3 -m pip install -U; _cat "${REQILE}" | sed -e 's/[<>=]\+.*//' -e 's/^/^/' -e 's/$/[=]/g' > "_${REQILE}"; _python3 -m pip list --format=freeze | grep -f "_${REQILE}" > "${REQILE}"'
 
 
+docker:
+	docker build -t scrapy . && docker run --network=host scrapy

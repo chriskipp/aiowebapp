@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 
-#from sanic_ext import render
+"""This module defines the index handler."""
 
-async def index(request):
-    request.app.ctx.jinja.session(request)["user"] = "session user"
-    request.app.ctx.jinja.flash(request, "success message", "success")
-    request.app.ctx.jinja.flash(request, "info message", "info")
-    request.app.ctx.jinja.flash(request, "warning message", "warning")
-    request.app.ctx.jinja.flash(request, "error message", "error")
-    return request.app.ctx.jinja.render("index.html", request, greetings="blub")
 
+async def index(request):  # pylint: disable=W0612
+    """
+    Route definition for /.
+
+    Attributes:
+      request (request): Reqest to handle.
+    """
+    return request.app.ctx.jinja.render(
+            "index.html",
+            request,
+            sidebar=request.app.ctx.sidebar
+    )

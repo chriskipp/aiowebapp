@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
+  <link href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css" rel="stylesheet" />
+{% endblock %}
+
+{% block head_js %}
+  {{ super() }}
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+  <script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script>
+{% endblock %}
+
+{% block main %}
+  {{ super() }}
+  <div style="display:flex;flex-direction:column;height:100%;">
+    <div id="search" style="height:auto;width:100%;display:flex;">
+    <input id="nominatim_search" class="form-control" type="text" style="flex-grow:1;"></input>
+    <button type="button" class="btn btn-outline-warning" onClick="searchNominatim()" style="width:auto;margin-left:5px;">Search</button>
+    </div>
+    <div id="map" style="background-color:black;width:100%;margin:0;margin-top:10px;padding:0;border:0;flex-grow:1;">
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block tail_js %}
+  {{ super() }}
+  <script src="{{url_for('static', filename='js/addBaseMaps.js')}}"></script>
+  <script>
+    function onEachFeature(feature, layer) {
+      var popupContent = "";
+      if (feature.properties && feature.properties.display_name) {
+        var popupContent = '<p><b>' + feature.properties.display_name + '</b></p>';
+      };
+      layer.bindPopup(popupContent);
+    };
+
+    function searchNominatim() {
+      var query = document.getElementById('nominatim_search').value;
+
+      // Sending and receiving data in JSON format using POST method
+      var xhr = new XMLHttpRequest();
+      var url = "https://nominatim.openstreetmap.org/search/?format=geojson&addressdetails=1&namedetails=1&extratags=1&accept-language=en&polygon_geojson=1&polygon_threshold=0.1&limit=50&dedup=1&q=" + query;
+      xhr.open("GET", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          console.log(json);
+        if (geojson != undefined) {
+          map.removeLayer(geojson);
+        }
+        geojson = L.geoJSON(json, {onEachFeature: onEachFeature}) //.addTo(map);
+        geojson.addTo(map);
+        }
+      };
+      xhr.send();
+    };
+
+    var geojson = undefined;
+    document.getElementById("map").style.zIndex = 1;
+
+    document.getElementById('nominatim_search').addEventListener('keydown', function (event) {
+      if (event.which == 13) {
+        event.preventDefault();
+        searchNominatim();
+      }
+    });
+  </script>
+{% endblock %}

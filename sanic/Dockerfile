@@ -17,7 +17,9 @@ RUN apk add \
   && apk del buildutils
 
 RUN sed -i -e 's/app\.extensions/app.ctx.extensions/g' -e 's/app, ex/app.ctx, ex/g' /usr/local/lib/python3.10/site-packages/sanic_dropzone/*.py
-COPY . .
+COPY app /src/app
+COPY static /src/app/static
+COPY templates /src/app/templates
 
 WORKDIR /src/app
 

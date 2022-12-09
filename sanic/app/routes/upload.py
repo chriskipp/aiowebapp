@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module defines the upload handler."""
+
 import os
 
 import aiofiles
@@ -9,27 +11,56 @@ from sanic.response import redirect
 from werkzeug.utils import secure_filename
 
 
-async def write_file(path, body):
+async def write_file(path: str, body: bytes):  # pylint: disable=W0612
+    """
+    Asyncronycly writes a file to a given path.
+
+    Attribures:
+      path (str): Path to write file to.
+      body (bytes): File body to write.
+    """
     async with aiofiles.open(path, "wb") as f:
         await f.write(body)
-    f.close()
+    await f.close()
 
 
-def valid_file_size(file_body, max_size=10485760):
+def valid_file_size(file_body: bytes, max_size: int = 10485760) -> bool:
+    """
+    Checks if the given file_body is below max_size.
+
+    Attribures:
+      file_body (bytes): File body to check.
+      max_size (int): Maximum allowed size in bytes.
+    """
     if len(file_body) < max_size:
         return True
     return False
 
 
-def valid_file_type(file_name, file_type):
+def valid_file_type(file_name: str, file_type: str) -> bool:
+    """
+    Checks if the given file_name and file_type match certain criteria.
+
+    Attribures:
+      file_name (str): File name to check.
+      file_type (str): File type to check.
+    """
     file_name_type = file_name.split(".")[-1]
-    # if file_name_type == "pdf" and file_type == "application/pdf":
-    if file_type.split("/")[0] == "image":
+    if file_name_type == "pdf" and file_type == "application/pdf":
+        # if file_type.split("/")[0] == "image":
         return True
-    return False
+    return True
 
 
-async def upload(request):
+async def upload(request):  # pylint: disable=W0612
+    """
+    Definition for upload handler.
+
+    This handler allows to upload files to the server.
+
+    Attributes:
+      request (request): Reqest to handle.
+    """
     if request.method == "POST":
         # Create upload folder if doesn't exist
         if not os.path.exists(request.app.config.UPLOAD_DIR):
@@ -49,23 +80,21 @@ async def upload(request):
         if not valid_file_type(upload_file.name, upload_file.type):
             logger.error("Invalid file type")
             return redirect("/?error=invalid_file_type")
-        elif not valid_file_size(upload_file.body):
+        if not valid_file_size(upload_file.body):
             logger.error("Invalid file size")
             return redirect("/?error=invalid_file_size")
-        else:
-            file_path = f"{request.app.config.UPLOADED_PATH}/{filename}"
-            await write_file(file_path, upload_file.body)
-            logger.info(
-                json.dumps(
-                    {
-                        "name": upload_file.name,
-                        "type": upload_file.type,
-                        "size": len(upload_file.body),
-                    }
-                )
+        file_path = f"{request.app.config.UPLOADED_PATH}/{filename}"
+        await write_file(file_path, upload_file.body)
+        logger.info(
+            json.dumps(
+                {
+                    "name": upload_file.name,
+                    "type": upload_file.type,
+                    "size": len(upload_file.body),
+                }
             )
-            return redirect("/?error=none")
-    # return render('dropzone.html', request, dropzone=request.app.ctx.extensions['dropzone'])
+        )
+        return redirect("/?error=none")
     return request.app.ctx.jinja.render(
         "dropzone.html", request, dropzone=request.app.ctx.dropzone
     )
