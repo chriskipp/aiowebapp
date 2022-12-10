@@ -6,11 +6,11 @@ FLAGS=
 black: clean
 	black --line-length 79 --safe app
 
-flake:
+autoflake:
 	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app
 
 isort:
-	isort --verbose --profile black app
+	isort --thirdparty werkzeug app
 
 mypy:
 	mypy --install-types --non-interactive --ignore-missing-imports --exclude setup.py app
@@ -18,10 +18,13 @@ mypy:
 pdocstr:
 	pydocstringformatter --linewrap-full-docstring --write  --max-line-length 79 app
 
-pylint:
-	pylint app
+flake:
+	flake8 --statistics --show-source --requirements-file requirements.txt app
 
-lint: black flake isort mypy pdocstr pylint
+pylint:
+	pylint --rcfile .pylintrc app
+
+lint: black autoflake isort mypy pdocstr pylint
 
 #.PHONY: flake isort black clean clean_up  #test
 
@@ -62,6 +65,7 @@ clean:
 	rm -f `find . -type f -name '*.orig' `
 	rm -f `find . -type f -name '*.rej' `
 	rm -rf _virtualenv
+	rm -rf _dasboard
 	rm -rf _requirements.txt
 	rm -rf _requirements-dev.txt
 	rm -rf .coverage
@@ -99,4 +103,4 @@ update_req: _virtualenv
 
 
 docker:
-	docker build -t scrapy . && docker run --network=host scrapy
+	docker build -t sanic . && docker run --network=host sanic

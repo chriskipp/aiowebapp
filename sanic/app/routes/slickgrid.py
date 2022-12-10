@@ -11,10 +11,9 @@ async def slickgrid(request):  # pylint: disable=W0612
       request (request): Reqest to handle.
     """
     return request.app.ctx.jinja.render(
-            "slickgrid.html",
-            request,
-            sidebar=request.app.ctx.sidebar
+        "slickgrid.html", request, sidebar=request.app.ctx.sidebar
     )
+
 
 async def sql_editor(request):  # pylint: disable=W0612
     """
@@ -24,7 +23,5 @@ async def sql_editor(request):  # pylint: disable=W0612
       request (request): Reqest to handle.
     """
     return request.app.ctx.jinja.render(
-            "sql_editor.html",
-            request,
-            sidebar=request.app.ctx.sidebar
+        "sql_editor.html", request, sidebar=request.app.ctx.sidebar
     )

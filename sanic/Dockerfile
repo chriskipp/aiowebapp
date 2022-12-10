@@ -20,8 +20,10 @@ RUN sed -i -e 's/app\.extensions/app.ctx.extensions/g' -e 's/app, ex/app.ctx, ex
 COPY app /src/app
 COPY static /src/app/static
 COPY templates /src/app/templates
+COPY config/docker_config.toml /src/app/config/config.toml
 
 WORKDIR /src/app
 
-CMD ["sanic", "--fast", "--dev", "--access-logs", "server:app", "--host=0.0.0.0"]
+#CMD ["sanic", "--fast", "--dev", "--access-logs", "server:app", "--host=0.0.0.0"]
+CMD ["sanic", "--fast", "server:app", "--host=0.0.0.0"]
 #CMD ["python3", "-m", "pip", "list"]

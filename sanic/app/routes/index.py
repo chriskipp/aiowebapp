@@ -11,7 +11,5 @@ async def index(request):  # pylint: disable=W0612
       request (request): Reqest to handle.
     """
     return request.app.ctx.jinja.render(
-            "index.html",
-            request,
-            sidebar=request.app.ctx.sidebar
+        "index.html", request, sidebar=request.app.ctx.sidebar
     )

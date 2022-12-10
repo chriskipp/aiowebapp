@@ -61,9 +61,9 @@
         "links": [
 	{
             "link": {
-                "href": "/database",
+                "href": "/postgres",
                 "icon": "fa-database",
-                "label": "Database"
+                "label": "Postgres"
 	    },
             "requires": ["logged_in", "logged_out"]
         }, {
@@ -75,7 +75,7 @@
             "requires": ["logged_in", "logged_out"]
         }, {
             "link": {
-                "href": "/slickgrid_tabs",
+                "href": "/slickgrid",
                 "icon": "fa-table",
                 "label": "SlickgridTabs"
 	    },

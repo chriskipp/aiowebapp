@@ -1,0 +1,28 @@
+# Sanic configuration
+HOST = "0.0.0.0"
+PORT = 8000
+DEBUG = true
+WORKERS = 4
+
+SECRET_KEY = "dev key"  # the secret key used to generate CSRF token
+FORWARDED_SECRET = "YOUR SECRET"
+UPLOADED_PATH = "./uploads"
+UPLOAD_DIR = "./uploads"
+
+# Sanic-Dropzone config:
+DROPZONE_ALLOWED_FILE_TYPE = "image"
+DROPZONE_MAX_FILE_SIZE = 3
+DROPZONE_MAX_FILES = 4096
+
+# Redis config:
+REDIS = "redis://localhost:6379/0"
+
+# Postgres config:
+["POSTGRES"]
+USER = "postgres"
+PASSWORD = "password"
+HOST = "localhost"
+PORT = 5432
+DATABASE = "postgres"
+MINSIZE = 3
+MAXSIZE = 30

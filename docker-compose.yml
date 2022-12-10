@@ -33,8 +33,8 @@ services:
   postgres:
     build:
       context: postgres
-      #dockerfile: Dockerfile
-      dockerfile: Dockerfile_debian
+      dockerfile: Dockerfile
+      #dockerfile: Dockerfile_debian
     shm_size: 2gb
     restart: unless-stopped
     environment:
@@ -47,7 +47,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/pgdata:/var/lib/postgresql/data/pgdata
+      - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
       - ./data/postgres/dump:/dump
       - ./postgres/conf:/etc/postgres
     healthcheck:
@@ -131,7 +131,8 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./data/nginx/static:/src/app/static
+      - ./sanic/static:/src/app/static
+      - ./sanic/templates:/src/app/templates
       - ./data/sanic/sqlite:/var/sqlite
       - ./data/sanic/uploads:/src/app/uploads
     healthcheck:
@@ -139,4 +140,9 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 

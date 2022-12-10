@@ -2,14 +2,13 @@
 
 """This module defines the search and completion handlers."""
 
-from sanic.views import HTTPMethodView
-from sanic.response import json
 from sanic.log import logger
+from sanic.response import json
+from sanic.views import HTTPMethodView
 
-class CompletionView(HTTPMethodView):
-    """
-    Handler definitions for Completion view.
-    """
+
+class CompletionView(HTTPMethodView):  # pylint: disable=W0612
+    """Handler definitions for Completion view."""
 
     query = """
     SELECT word
@@ -29,23 +28,15 @@ class CompletionView(HTTPMethodView):
         logger.debug(request.form)
         if "q" in request.form:
             conn = request.app.ctx.sqlite
-            cur = await conn.execute(
-                    self.query,
-                    (request.form["q"][0],)
-            )
+            cur = await conn.execute(self.query, (request.form["q"][0],))
             data = await cur.fetchall()
-            return json({
-                "results": [
-                    {
-                        "id": r[0],
-                        "text": r[0]
-                    }
-                    for r in data
-                ]
-            })
+            return json(
+                {"results": [{"id": r[0], "text": r[0]} for r in data]}
+            )
         return json({})
 
-class SearchView(HTTPMethodView):
+
+class SearchView(HTTPMethodView):  # pylint: disable=W0612
     """
     Handler definition for search.
 
@@ -65,26 +56,26 @@ class SearchView(HTTPMethodView):
     """
 
     async def post(self, request):  # pylint: disable=W0612
+        """
+        Handler definition for POST request.
+
+        Attributes:
+          request (request): Reqest to handle.
+        """
         logger.debug(request.form)
         if "q" in request.form:
             conn = request.app.ctx.sqlite
-            cur = await conn.execute(
-                    self.query,
-                    (request.form["q"][0],)
-            )
+            cur = await conn.execute(self.query, (request.form["q"][0],))
             data = await cur.fetchall()
-            return json([
-                {
-                  'title': r[0],
-                  'docpath': r[1]
-                }
-                for r in data
-            ])
+            return json([{"title": r[0], "docpath": r[1]} for r in data])
 
     async def get(self, request):
-        return request.app.ctx.jinja.render(
-                "search.html",
-                request,
-                sidebar=request.app.ctx.sidebar
-        )
+        """
+        Handler definition for GET request.
 
+        Attributes:
+          request (request): Reqest to handle.
+        """
+        return request.app.ctx.jinja.render(
+            "search.html", request, sidebar=request.app.ctx.sidebar
+        )

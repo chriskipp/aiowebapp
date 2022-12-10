@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 """
-This module initializes and closes a connection to a postgresql database in the app ctx.
+This module initializes and closes a connection to a postgresql database in.
+
+the app ctx.
 """
 
 import asyncpg
+from sanic.log import logger
 
 
 async def setup_pg(app):  # pylint: disable=W0612
@@ -15,6 +18,7 @@ async def setup_pg(app):  # pylint: disable=W0612
       app (app): App to initialize connetion to.
     """
     conf = app.config["POSTGRES"]
+    logger.info(conf)
     app.ctx.postgres = await asyncpg.create_pool(
         database=conf["DATABASE"],
         user=conf["USER"],
@@ -24,6 +28,7 @@ async def setup_pg(app):  # pylint: disable=W0612
         min_size=conf["MINSIZE"],
         max_size=conf["MAXSIZE"],
     )
+
 
 async def teardown_pg(app):  # pylint: disable=W0612
     """

@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
-"""This module defines a handler for a asyncpg postgres handler."""
+"""This module defines a handler for sanic-redis."""
 
 import traceback
 
-from asyncpg.exceptions import PostgresSyntaxError
 from sanic.log import logger
 from sanic.response import json
 from sanic.views import HTTPMethodView
 
 
-class PostgresView(HTTPMethodView):  # pylint: disable=W0612
-    """Handler definitions for Postgres view."""
+class RedisView(HTTPMethodView):  # pylint: disable=W0612
+    """Handler definitions for redis view."""
 
     async def post(self, request):
         """
@@ -22,18 +21,15 @@ class PostgresView(HTTPMethodView):  # pylint: disable=W0612
         """
         logger.debug(request.json)
         if "query" in request.json:
-            async with request.app.ctx.postgres.acquire() as conn:
+            async with request.app.ctx.redis as conn:
                 try:
-                    res = await conn.fetch(request.json["query"])
-                    res = [dict(row) for row in res]
-                    return json(res)
-                except PostgresSyntaxError:
-                    exc = traceback.format_exc()
-                    logger.error(exc)
-                    return json([{"Error": exc}])
+                    # res = await conn.fetch(request.json["query"])
+                    res = await conn.execute_command("PING")
+                    return json({"response": res})
                 except BaseException:
                     exc = traceback.format_exc()
                     logger.error(exc)
+                    return json([{"Error": exc}])
         return json([])
 
     async def get(self, request):
@@ -43,6 +39,10 @@ class PostgresView(HTTPMethodView):  # pylint: disable=W0612
         Attributes:
           request (request): Reqest to handle.
         """
+        info = await request.app.ctx.redis.execute_command("INFO")
+        parsed_sections = [{"title": 'blub', "rows": [[str(k), str(v)] for k, v in info.items()]}]
+
         return request.app.ctx.jinja.render(
-            "sql_editor.html", request, sidebar=request.app.ctx.sidebar
+            "redis_stats.html", request, pageheader="Redis Stats",
+            sections=info, sidebar=request.app.ctx.sidebar
         )

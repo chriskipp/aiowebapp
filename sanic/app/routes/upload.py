@@ -8,7 +8,7 @@ import aiofiles
 import ujson as json
 from sanic.log import logger
 from sanic.response import redirect
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename  # pylint: disable=C0411
 
 
 async def write_file(path: str, body: bytes):  # pylint: disable=W0612

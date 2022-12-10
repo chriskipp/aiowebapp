@@ -4,6 +4,8 @@ sanic-ext==22.9.1
 sanic-session==0.8.0
 sanic-dropzone==1.0.0
 sanic-jinja2==2022.1.13
+sanic-redis==0.3.0
+aiofiles==22.1.0
 ujson==5.5.0
 uvloop==0.16.0
 secure==0.3.0
@@ -12,3 +14,4 @@ aiosqlite==0.17.0
 toml==0.10.2
 werkzeug==2.2.2
 sanic-jwt-extended==0.4.2
+toml==0.10.2

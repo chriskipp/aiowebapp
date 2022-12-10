@@ -1,51 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+This module contains the main file to run sanic.
+
+Execute it by running:
+    sanic server.app
+"""
+
 import os
 
+import ujson as json
 from db import connect_to_sqlite, disconnect_from_sqlite
 from postgres import setup_pg, teardown_pg
 from routes.db import query
-from routes.postgres_handler import PostgresView
 from routes.index import index
-from routes.upload import upload
 from routes.leaflet import leaflet
+from routes.postgres_handler import PostgresView
+from routes.redis_handler import RedisView
 from routes.search import CompletionView, SearchView
 from routes.slickgrid import slickgrid, sql_editor
+from routes.upload import upload
 from sanic_dropzone import Dropzone
 from sanic_jinja2 import SanicJinja2
+from sanic_redis import SanicRedis
 from sanic_session import InMemorySessionInterface, Session
-import ujson as json
+from toml_config import TomlConfig
 
 from sanic import Sanic
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 app = Sanic(__name__)
 
-app.config.update(
-    HOST="0.0.0.0",
-    PORT=8000,
-    DEBUG=True,
-    WORKERS=4,
-    SECRET_KEY="dev key",  # the secret key used to generate CSRF token
-    UPLOADED_PATH=os.path.join(basedir, "uploads"),
-    UPLOAD_DIR=os.path.join(basedir, "uploads"),
-    # Sanic-Dropzone config:
-    DROPZONE_ALLOWED_FILE_TYPE="image",
-    DROPZONE_MAX_FILE_SIZE=3,
-    DROPZONE_MAX_FILES=4096,
-    FORWARDED_SECRET="YOUR SECRET",
-    POSTGRES={
-        "USER": 'postgres',
-        "PASSWORD": 'password',
-        "HOST": 'localhost',
-        "PORT": 5432,
-        "DATABASE": 'postgres',
-        "MINSIZE": 3,
-        "MAXSIZE": 30,
-    }
-)
+basedir = os.path.abspath(os.path.dirname(__file__))
+config = TomlConfig(path=basedir + "/config/config.toml")
+
+app.config.update(config)
 
 # Serves files from the static folder to the URL /static
 app.static("/static", "static")
@@ -53,7 +42,10 @@ app.static("/static", "static")
 session = Session(app, interface=InMemorySessionInterface())
 app.ctx.jinja = SanicJinja2(app, session=session)
 
-with open('routes.json') as f:
+redis = SanicRedis(config_name="REDIS")
+redis.init_app(app)
+
+with open("routes.json", encoding="UTF-8") as f:
     app.ctx.sidebar = json.loads(f.read())
 
 app.ctx.dropzone = Dropzone(app)
@@ -73,6 +65,7 @@ app.add_route(sql_editor, "/sql_editor", methods=["GET"])
 app.add_route(SearchView.as_view(), "/search")
 app.add_route(CompletionView.as_view(), "/completion")
 app.add_route(PostgresView.as_view(), "/postgres")
+app.add_route(RedisView.as_view(), "/redis")
 
 
 if __name__ == "__main__":
