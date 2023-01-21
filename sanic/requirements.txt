@@ -5,6 +5,7 @@ sanic-session==0.8.0
 sanic-dropzone==1.0.0
 sanic-jinja2==2022.1.13
 sanic-redis==0.3.0
+sanic-jwt==1.8.0
 aiofiles==22.1.0
 ujson==5.5.0
 uvloop==0.16.0

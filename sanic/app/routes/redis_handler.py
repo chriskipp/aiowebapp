@@ -40,9 +40,10 @@ class RedisView(HTTPMethodView):  # pylint: disable=W0612
           request (request): Reqest to handle.
         """
         info = await request.app.ctx.redis.execute_command("INFO")
-        parsed_sections = [{"title": 'blub', "rows": [[str(k), str(v)] for k, v in info.items()]}]
-
         return request.app.ctx.jinja.render(
-            "redis_stats.html", request, pageheader="Redis Stats",
-            sections=info, sidebar=request.app.ctx.sidebar
+            "redis_stats.html",
+            request,
+            pageheader="Redis Stats",
+            sections=info,
+            sidebar=request.app.ctx.sidebar,
         )

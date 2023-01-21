@@ -10,7 +10,7 @@ autoflake:
 	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app
 
 isort:
-	isort --thirdparty werkzeug app
+	isort app
 
 mypy:
 	mypy --install-types --non-interactive --ignore-missing-imports --exclude setup.py app

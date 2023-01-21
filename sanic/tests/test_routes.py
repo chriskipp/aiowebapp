@@ -24,11 +24,11 @@ http_methods = [
 def app():
     from app.server import app
 
-    try:
-        app = create_app()
-    except SanicException:
+    #try:
+    #    app = create_app()
+    #except SanicException:
     #if True:
-        app = Sanic.get_app(FALLBACK_NAME)
+    #    app = Sanic.get_app(FALLBACK_NAME)
 
     @app.route("/.method_test", methods=http_methods)
     @serializer(json)
