@@ -4,13 +4,20 @@ FROM python:3.10.5
 WORKDIR /usr/scheduler
 
 RUN apt-get update && \
-  apt-get install --yes --no-install-recommends libsasl2-dev libldap2-dev libssl-dev python3-dev
+  apt-get install \
+    --yes \
+    --no-install-recommends \
+      libsasl2-dev \
+      libldap2-dev \
+      libssl-dev \
+      python3-dev
 
 RUN python3 -m pip --no-cache-dir install -U pip wheel
 
 RUN git clone "https://github.com/chriskipp/ndscheduler" \
   && cd ndscheduler \
   && sed -i 's/ndscheduler-fork/ndscheduler/g' setup.py \
+  && sed -i 's/"SQLAlchemy >= 1.0.0"/"SQLAlchemy == 1.4.0"/g' setup.py \
   && python3 -m pip install . \
   && cd -\
   && rm -rf ndscheduler
@@ -27,8 +34,6 @@ RUN git clone "https://github.com/djacobs/PyAPNs.git" \
 WORKDIR /src/scheduler
 COPY ./config.yaml .
 
-COPY ./.pgpass /root/
-RUN chmod 0600 /root/.pgpass
 
 ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/src/scheduler/scripts/bin
 EXPOSE 7777
