@@ -13,9 +13,6 @@ RUN echo "cython<3" > constraint.txt
 ENV PIP_CONSTRAINT constraint.txt
 #=============================================
 
-RUN pip --no-cache-dir install -U pip && pip --no-cache-dir install -r requirements.txt
-RUN pip --no-cache-dir install -r requirements-dev.txt
-
 RUN apk add --update --virtual=buildutils make ca-certificates g++ gcc \
   && apk add --update curl \
   && python3 -m pip --no-cache-dir install -U pip \

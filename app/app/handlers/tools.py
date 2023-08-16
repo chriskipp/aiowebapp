@@ -1,6 +1,31 @@
+import markupsafe
 import aiohttp_jinja2
-
 from .base import BaseHandler
+from jinja2 import Template
+
+template = Template('''
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
+  <!-- ace extentions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-modelist.js"></script>
+  <div id="{{ elementId }}_editor" style="flex-flow:1;height:100%;width:100%;"></div>
+  <script>
+    function initEditor(elementId) {
+      ace.require("ace/ext/language_tools");
+      var editor = ace.edit(elementId);
+      editor.session.setMode("ace/mode/sql");
+      editor.setKeyboardHandler("ace/keyboard/vim");
+      editor.setTheme("ace/theme/merbivore");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+    }
+    //$(document.getElementById("tabList").children[0]).tab("show");
+    initEditor("{{ elementId }}_editor");
+  </script>
+''')
 
 
 class ToolsHandler(BaseHandler):

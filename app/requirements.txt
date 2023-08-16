@@ -1,7 +1,7 @@
 aiohttp[speedups]==3.8.1
 asyncio==3.4.3
 selectors==0.0.14
-cchardet==2.1.7
+#cchardet==2.1.7
 ujson==5.8.0
 aiopg==1.4.0
 aiopg[sa]
@@ -13,7 +13,6 @@ aiodns==3.0.0
 aioredis==2.0.1
 asyncpg==0.28.0
 passlib==1.7.4
-PyYAML==6.0.1
 redisearch==2.1.1
 uvloop==0.17.0
 websockets>=10.0

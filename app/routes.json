@@ -18,8 +18,8 @@
             "requires": ["logged_in"]
         },
             {"link": {
-                "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
-	        "requires": ["logged_out"]
+            "href": "/login", "icon": "fa-sign-in-alt", "label": "Login"},
+	    "requires": ["logged_out"]
         }, {
             "link": {
                 "href": "/logout",
@@ -36,7 +36,7 @@
             "requires": ["logged_in", "logged_out"]
         }
     ]}, {
-	    "title":"Admin",
+	    "title":"Monitor",
 	    "color":"orange",
             "data": [
 	{
@@ -54,8 +54,8 @@
                 "label": "LineChart"
 	    },
             "requires": ["logged_in", "logged_out"]
-	},
-        {
+    }
+            ]}, {
 	    "title":"Tools",
 	    "color":"yellow",
             "data": [
@@ -123,36 +123,8 @@
                 "label": "FileUpload"
 	    },
             "requires": ["logged_in", "logged_out"]
-	}]}, {
-	    "title":"Maps",
-	    "color":"lime",
-            "data": [
-	{
-            "link": {
-                "href": "/map",
-                "icon": "fa-map",
-                "label": "SimpleMap"
-	    },
-            "requires": ["logged_in", "logged_out"]
-        }, {
-            "link": {
-                "href": "/nominatim",
-                "icon": "fa-map",
-                "label": "Nominatim"
-	    },
-            "requires": ["logged_in", "logged_out"]
-	}]}, {
-	    "title":"Storage",
-	    "color":"cyan",
-            "data": [
-	{
-            "link": {
-                "href": "/storage",
-                "icon": "fa-hdd",
-                "label": "Storage"
-	    },
-            "requires": ["logged_in", "logged_out"]
-        }]}, {
+        }
+	]}, {
 	    "title":"Search",
 	    "color":"blue",
             "data": [

@@ -1,7 +1,6 @@
 #!/bin/sh
 
 #umask 000
-umask 000
 
 # To run app in docker container use:
 # python3 -m app -c config/dev.yaml
