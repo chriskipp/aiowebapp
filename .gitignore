@@ -1,4 +1,6 @@
 nginx/ssl
 nginx/dhparam.pem
 app/app/storage/*
-data/postgres
+data/postgres/*
+data/sqlite/*
+data/redis/*
