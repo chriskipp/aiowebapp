@@ -63,6 +63,9 @@ class DatabaseHandler(BaseHandler):
             context=await self.get_context(request, context),
         )
 
+        res = ujson.dumps([dict(d) for d in response])
+        return web.json_response(body=res)
+
     def configure(self, app):
         router = app.router
         router.add_route(
@@ -80,4 +83,9 @@ class DatabaseHandler(BaseHandler):
             self.list_chart_links,
             name="list_chart_links",
         )
-        router.add_route("GET", "/imprt", self.imprt, name="imprt")
+        router.add_route(
+            "GET",
+            "/imprt",
+            self.imprt,
+            name="imprt"
+        )

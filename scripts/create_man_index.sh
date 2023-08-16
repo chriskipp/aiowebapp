@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-#wget --recursive --level=1 --execute robots=off --no-parent --convert-links --page-requisites --user-agent="Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0" "https://en.wikipedia.org/wiki/List_of_popular_music_genres"
-
 # Autocompletion
 for i in /usr/share/man/man1/* /usr/share/man/man8/*; do
 	printf 'FT.SUGADD cmp_manpages "%s" 1\n' "${i:t:r:r}"
@@ -37,8 +35,8 @@ insertman() {
 }
 
 n=1
-#for i in en.wikipedia.org/wiki/*; do
-for i in /usr/share/man/man1/* /usr/share//man/man8/*; do
+for i in /usr/share/man/man1/* /usr/share/man/man8/*; do
+#for i in /usr/share/man/man1/a* ; do
 	n=$(printf '%s + 1\n' "${n}" | bc)
 	printf 'insertman "%s" "%s"\n' "${i}" "${n}"
 done | env_parallel -j 30 

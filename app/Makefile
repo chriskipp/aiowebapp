@@ -19,8 +19,10 @@ test_w_docker_config:
 	pytest -c config/test.yaml -vvv --disable-warnings --aiohttp-fast tests
 
 test:
-	docker exec -it aiowebapp2_app_1 make test_w_docker_config
 	docker exec -it app make test_w_docker_config
+
+cov_w_docker_config:
+	docker exec -it aiowebapp_aiowebapp_1 make test_w_docker_config
 
 cov_w_docker_config:
 	pytest --cov-config=.coveragerc --cov=app --cov-report=html:app/storage/coverage -c config/test.yaml -vvv --disable-warnings tests
@@ -49,12 +51,9 @@ clean:
 
 all:
 	autoflake -v -v --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports app tests
-
 	isort app tests
 	mypy --ignore-missing-imports app tests
-
 	black --line-length 79 --safe --force-exclude 'app/storage/uploads' --exclude '*.html' --exclude '__pycache__' --verbose app tests
-
 	make test
 
 .PHONY: flake isort black clean test

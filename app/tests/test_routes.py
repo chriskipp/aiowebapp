@@ -108,9 +108,6 @@ async def test_route_get(aiohttp_client, route, user):
 
     if user:
         res = await client.get("/session")
-        res = await client.post(
-            "/login", data={"loginField": user, "passwordField": "password"}
-        )
         assert res.status == 200
 
     res = await client.get(route)
@@ -125,7 +122,6 @@ async def test_route_post(aiohttp_client, route, user):
     client = await aiohttp_client(app)
 
     if user:
-        res = await client.get("/session")
         res = await client.post(
             "/login", data={"loginField": user, "passwordField": "password"}
         )

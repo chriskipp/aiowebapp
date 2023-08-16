@@ -265,8 +265,8 @@
       editor.setTheme("ace/theme/merbivore");
       editor.setOptions({
         enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true
+	enableSnippets: true,
+	enableLiveAutocompletion: true
       });
 
       modeselect = document.getElementById('modeselect')
@@ -274,8 +274,8 @@
         editor.session.setMode('ace/mode/' + modeselect.options[modeselect.selectedIndex].value);
         editor.setOptions({
           enableBasicAutocompletion: true,
-          enableSnippets: true,
-          enableLiveAutocompletion: true
+	  enableSnippets: true,
+	  enableLiveAutocompletion: true
         });
       });
 

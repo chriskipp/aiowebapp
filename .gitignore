@@ -1,8 +1,12 @@
-nginx/ssl/*
-nginx/nginx/dhparam.pem
 app/app/storage/*
 **/__pycache__
 data/*
 postgres/ssl/*
 **/.pgpass
 **/*.pem
+=======
+nginx/ssl
+app/app/storage/*
+data/postgres/*
+data/sqlite/*
+data/redis/*

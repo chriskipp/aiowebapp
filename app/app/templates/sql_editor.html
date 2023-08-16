@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headerbuttons.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headermenu.css" type="text/css"/>
     <link rel="stylesheet" href="{{url('static', filename='css/slick.gridmenu.css')}}" type="text/css"/>
-
+    
     <!-- jQuery-UI-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" type="text/css"/>
@@ -97,7 +97,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js" type="text/javascript" charset="utf-8"></script>
     <!-- ace extentions -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ext-language_tools.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-sql.min.js<Paste>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/snippets/sql.min.js"></script>
 {% endblock %}
 
@@ -199,21 +199,6 @@
       };
       reader.readAsText(input.files[0]);
     };
-
-    placeholder = new Array(
-      "SELECT *",
-      "  FROM information_schema.tables",
-      "  WHERE table_schema",
-      "    NOT IN ('pg_catalog');"
-    ).join('\n');
-    editor.setValue(placeholder);
-
-    $(document).ready(function() {
-      loadTables();
-      $(".select_table").on('select2:select', function (e) {
-        sendQuery("SELECT * FROM " + e.params.data["text"] + ";");
-      });
-    });
 
       function sendQuery(query) {
         if ( typeof(query) == undefined) {

@@ -1,28 +1,29 @@
 {% extends "layout.html" %}
 
 {% block head_css %}
-  {{ super() }}
-  <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
+    {{ super() }}
+    <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" rel="stylesheet" />
 {% endblock %}
 
 {% block head_js %}
-  {{ super() }}
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+    {{ super() }}
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
 {% endblock %}
 
 
 {% block main %}
-  {{ super() }}
-  <div style="display:flex;flex-direction:column;height:100%;">
-    <div id="search" style="height:auto;width:100%;display:flex;">
-    <input id="nominatim_search" class="form-control" type="text" style="flex-grow:1;"></input>
-    <button type="button" class="btn btn-outline-warning" onClick="searchNominatim()" style="width:auto;margin-left:5px;">Search</button>
+    {{ super() }}
+    <div id="search" style="height:20%;width:100%;">
+      <form>
+	<label for="nominatim_search">GeoSearch:</label>
+	<input id="nominatim_search" type="text" method="POST"></input>
+	<input type="submit" value="Submit">
+      </form>
     </div>
-    <div id="map" style="background-color:black;width:100%;margin:0;margin-top:10px;padding:0;border:0;flex-grow:1;">
+    <div id="map" style="background-color:black;height:80%;width:100%;margin:0;padding:0;border:0;">
     </div>
-  </div>
 {% endblock %}
 
 

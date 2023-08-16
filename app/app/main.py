@@ -1,7 +1,6 @@
 # main.py
 import pathlib
 
-
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2

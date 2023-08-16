@@ -1,7 +1,13 @@
 import pytest
 
-from app.db import (execute_sql, fetch_sql, setup_pg, setup_pgsa, teardown_pg,
-                    teardown_pgsa)
+from app.db import (
+    execute_sql,
+    fetch_sql,
+    setup_pg,
+    setup_pgsa,
+    teardown_pg,
+    teardown_pgsa,
+)
 from app.main import create_app
 
 

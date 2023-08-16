@@ -13,6 +13,9 @@ RUN echo "cython<3" > constraint.txt
 ENV PIP_CONSTRAINT constraint.txt
 #=============================================
 
+RUN pip --no-cache-dir install -U pip && pip --no-cache-dir install -r requirements.txt
+RUN pip --no-cache-dir install -r requirements-dev.txt
+
 RUN apk add --update --virtual=buildutils make ca-certificates g++ gcc \
   && apk add --update curl \
   && python3 -m pip --no-cache-dir install -U pip \
@@ -30,5 +33,4 @@ RUN sed -i '53s/, loop.*)/)/' /usr/local/lib/python3.10/site-packages/aiohttp/we
 
 COPY . /usr/src/
 
-#CMD ./run.sh
 CMD ["python3", "-m", "app", "-c", "config/dev.yaml"]

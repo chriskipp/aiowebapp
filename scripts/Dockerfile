@@ -5,7 +5,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y git man-db manpag
 RUN python3 -m pip install psycopg2 psycopg2-binary html2text
 RUN git clone 'https://github.com/chriskipp/sqlthemall' && cd sqlthemall && python3 setup.py install && cd .. && rm -r ./sqlthemall
 
-ADD . .
+COPY . .
 RUN ./install_parallel.sh
 RUN env_parallel --install
 RUN ./create_man_index.sh || : 

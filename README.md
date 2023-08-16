@@ -1,10 +1,10 @@
 # aiowebapp
 
-Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease of use as a (docker-compose based) docker swarm.
+Batteries included fully asyncronous (aiohttp based) web application. The web server comes together with a (postgres) database backend, a redis server and a (nginx) reverse proxy. Everything is packed for ease use as a little (docker-compose based) docker swarm.
 
 ## Features
 
-This repository is mainly ment as a skelleton for aiohttp based webapps, including certain features like login or (http/https) nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of tools including a database manager a redis based full text search engine or a nominatim based search for geographic entities as examples on how to use this skelleton. Further features include:
+This repository is mainly ment as a skelleton for a aiohttp based app, including certain features like login or nginx-reverse-proxy out-of-the-box. Beside this there are a hand full of sub applications including a database manager and search engines as examples on how to use this skelleton. Features include:
 
 ### Container based features
 - [aiohttp](https://github.com/aio-libs/aiohttp) is used as a asyncronous web server
@@ -28,6 +28,16 @@ This repository is mainly ment as a skelleton for aiohttp based webapps, includi
 - [asyncpg](https://github.com/MagicStack/asyncpg) ultra fast async database interface to handle raw SQL queries
 - [cchardet](https://github.com/PyYoshi/cChardet) and [aiodns](https://github.com/saghul/aiodns) as they are officially recommended to generally speed up aiohttp based applications
 
+### Web app features
+- [uvloop](https://github.com/MagicStack/uvloop) to generally speed up the web application
+- [aiohttp-session](https://github.com/aio-libs/aiohttp-session) session and login support
+- [orjson](https://github.com/ijl/orjson) to speed up JSON serialisation
+- [trafaret-config](https://github.com/tailhook/trafaret-config) to safely parse config files
+- [aiopg.sa](https://github.com/aio-libs/aiopg) as async database adapter to handle user login with SQLAlchemy support
+- [asyncio](https://github.com/MagicStack/asyncpg) ultra fast async database interface to handle raw SQL queries
+- [aiohttp-jinja2](https://github.com/aio-libs/aiohttp-jinja2) templating system
+- local file storage
+
 ### Web app tools/Example Pages
 - [leaflet Map](https://github.com/Leaflet/Leaflet) interactive Map
 - [ACE Editor](https://ace.c9.io/) high performance code editor with support for over 120 languages
@@ -39,6 +49,7 @@ This repository is mainly ment as a skelleton for aiohttp based webapps, includi
 - almost 100% test coverage using [pytest](https://github.com/pytest-dev/pytest) and [pytest-cov](https://github.com/pytest-dev/pytest-cov)
 - [aiohttp-debugtoolbar](https://github.com/aio-libs/aiohttp-debugtoolbar) including two extra pannels to analyse postgres and redis queries
 - automatic linting ([autoflake](https://github.com/myint/autoflake)) and code formatting ([black](https://github.com/psf/black), [isort](https://github.com/PyCQA/isort))
+- [Search Engine](https://github.com/RediSearch/RediSearch) with XHR based autocompletion (To generate a example index of locally installed man pages see the scripts section)
 
 ## Running the Application
 
@@ -46,16 +57,16 @@ This repository is mainly ment as a skelleton for aiohttp based webapps, includi
 
 The only required software packages to start this application are docker/docker-compose. After cloning this repository  this repository run the following command to start up the application:
 
-```
-$ docker-compose up
+```bash
+docker-compose up
 ```
 
 ### Using HTTPS
 
 To be able to use SSL Encryption you will need a certificate/key pair. To generate your own self-signed certificate run the provided shell script ```create_certificate.sh``` (you will need openssl to generate your own certificates):
 
-```
-$ ./create_certificate.sh
+```bash
+./create_certificate.sh
 ```
 
 Once you have your certificate the setup process is similar as described under HTTP except that docker-compose is executed with the option ```--file docker-compose_ssl.yml```:
@@ -80,7 +91,7 @@ The above commands will run the web application, the database backend, the redis
 
 Instead of installing the nessesary programs locally you can also run the docker container provided by the Dockerfile in the scripts directory:
 
-```
+```bash
 docker build -t aiowebapp_importer scripts && docker run --network=host aiowebapp_importer
 ```
 
@@ -90,6 +101,7 @@ Please note, that this container is only ment for providing the example data an 
 
 After successful startup of the web application you might want to run the provided tests to make sure all features are working properly. By default testing is automatically achieved from within the running docker container. You can initiate testing by using the ```Makefile``` in the ```app``` directory:
 
+```bash
+make test
 ```
-$ make test
-```
+
