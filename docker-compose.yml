@@ -16,16 +16,17 @@ services:
     networks:
       - aio
     ports:
-      - "8080:8080"
-    volumes:
-      - ./app/app:/usr/src/app
+      - "7777:7777"
+      - "7778:7778"
+    #volumes:
+    #  - ./app/app:/usr/src/app
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail -s http://localhost:8080/ || exit 1"]
+      test: ["CMD-SHELL", "curl --fail -s http://localhost:7778/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -35,27 +36,30 @@ services:
       context: postgres
       dockerfile: Dockerfile
       #dockerfile: Dockerfile_debian
-    shm_size: 2gb
+    shm_size: 4gb
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256
+      - POSTGRES_INITDB_ARGS=--auth-local=scram-sha-256 --auth-host=scram-sha-256
       - PGDATA=/var/lib/postgresql/data/pgdata
     networks:
       - aio
     ports:
-      - "5432:5432"
+      - 5433:5432
     volumes:
       - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
       - ./data/postgres/dump:/dump
       - ./postgres/conf:/etc/postgres
+      - ./data/postgres/ssl:/var/lib/postgresql/ssl:ro
+      - ./data/postgres/log:/var/log/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
     command: postgres -c config_file=/etc/postgres/postgresql.conf
+
 
   redis:
     build: redis

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import orjson
+import ujson
 import pytest
 
 from app.main import create_app
@@ -23,7 +23,7 @@ def get_json_objs():
     path = Path("tests/data")
     for jsonf in path.glob("*.json"):
         with open(jsonf) as f:
-            json_obj = orjson.loads(f.read())
+            json_obj = ujson.loads(f.read())
             yield ("test", json_obj)
 
 

@@ -13,4 +13,4 @@ RUN ./create_man_index.sh || :
 RUN ./import_js_libraries.sh || : 
 RUN ./import_rest_countries.sh || : 
 RUN ./import_pypi_pkgs.sh | :
-#CMD ./create_man_index.sh
+CMD ./create_man_index.sh

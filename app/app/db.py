@@ -1,4 +1,5 @@
 import aiopg.sa
+import sqlalchemy as sa
 import asyncpg
 
 
@@ -45,7 +46,7 @@ async def fetch_sql(query, pool):
             except Exception as e:
                 return e
 
-    # return orjson.dumps([dict(d) for d in res])
+    # return ujson.dumps([dict(d) for d in res])
     return res
 
 

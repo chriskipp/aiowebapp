@@ -5,9 +5,10 @@ CREATE DATABASE app;
 ALTER DATABASE app OWNER TO app;
 GRANT ALL PRIVILEGES ON DATABASE app TO app;
 
--- Setup api Database
+-- Setup crawler Database
 CREATE USER crawler WITH PASSWORD 'crawler';
 CREATE DATABASE crawler;
+ALTER DATABASE crawler OWNER TO crawler;
 GRANT ALL PRIVILEGES ON DATABASE crawler TO crawler;
 
 -- Setup test Database

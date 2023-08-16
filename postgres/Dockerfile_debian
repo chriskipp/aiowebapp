@@ -1,28 +1,32 @@
 #######################################################################
-# postgres:15beta2
+# postgres:15.3-bullseye
 #######################################################################
-FROM postgres:14.4-bullseye
-#FROM postgres:15beta3-bullseye
+FROM postgres:15.3-bullseye
 
-ENV PG_VERSION=14
-ENV POSTGRES_PASSWORD=password
-ENV POSTGRES_INITDB_ARGS="--auth-host=scram-sha-256"
-ENV PGDATA=/var/lib/postgresql/data/pgdata
 ENV DEBIAN_FRONTEND=noninteractive
+
+ENV PG_VERSION=15
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD="groEMUeKaaFUJpZxoJnC"
+ENV POSTGRESQL_DATABASE=postgres
+ENV POSTGRES_INITDB_ARGS="--auth-local=scram-sha-256 --auth-host=scram-sha-256"
+ENV PGDATA=/var/lib/postgresql/data/pgdata
+ENV PGCONFIG=/etc/postgres/postgresql.conf
 
 # extensions
 RUN apt-get update \
-    && apt-get install --no-install-recommends --yes \
-        postgresql-${PG_VERSION}-hypopg \
-        postgresql-${PG_VERSION}-similarity \
-        postgresql-${PG_VERSION}-cron \
-        postgresql-${PG_VERSION}-postgis-3 \
-        postgresql-${PG_VERSION}-postgis-3-scripts \
-        postgresql-${PG_VERSION}-pgrouting 
-#        postgresql-plpython3-${PG_VERSION} \
-#        postgresql-${PG_VERSION}-pgq3 \
-#  && rm -rf /var/lib/apt/lists/*
+  && apt-get install --no-install-recommends --yes \
+    postgresql-${PG_VERSION}-hypopg \
+    postgresql-${PG_VERSION}-similarity \
+    postgresql-${PG_VERSION}-cron \
+    postgresql-${PG_VERSION}-postgis-3 \
+    postgresql-${PG_VERSION}-postgis-3-scripts \
+    postgresql-${PG_VERSION}-pgrouting 
+#    postgresql-plpython3-${PG_VERSION} \
+#    postgresql-${PG_VERSION}-pgq3 \
+# && rm -rf /var/lib/apt/lists/*
 
+# Buildutils
 RUN apt-get update \
   && apt-get install --no-install-recommends --yes \
     cmake \
@@ -36,24 +40,33 @@ RUN apt-get update \
     flex \
     bison \
     libcurl4-gnutls-dev \
+    libreadline-dev \
+    gzip \
+    zlib1g zlib1g-dev \
+    libicu-dev \
+#
   && printf '%s\n' "Installing uriparser" \
-  && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.6/uriparser-0.9.6.tar.gz' \
+  && curl -L 'https://github.com/uriparser/uriparser/releases/download/uriparser-0.9.7/uriparser-0.9.7.tar.gz' \
     | tar -xzf - \
-  && cd uriparser-0.9.6 \
+  && cd uriparser-0.9.7 \
   && mkdir build \
   && cd build \
   && cmake -DCMAKE_BUILD_TYPE=Release -DURIPARSER_BUILD_DOCS=OFF -DCMAKE_INSTALL_PREFIX=/usr -DURIPARSER_BUILD_TESTS=OFF .. \
   && make \
   && make install \
   && cd - \
-  && rm -rf uriparser-0.9.6 \
+  && rm -rf uriparser-0.9.7 \
+#
   && printf '%s\n' "Installing pguri" \
   && git clone https://github.com/petere/pguri \
   && cd pguri && make && make install \
   && cd - && rm -rf pguri \
+#
+  && printf '%s\n' "Installing pgsql-http" \
   && git clone https://github.com/pramsey/pgsql-http \
   && cd pgsql-http && make && make install \
   && cd - && rm -rf pgsql-http \
+#
   && printf '%s\n' "Installing bloom" \
   && git clone https://github.com/postgres/postgres \
   && cd postgres \
@@ -61,10 +74,20 @@ RUN apt-get update \
   && cd contrib/bloom \
   && make all && make install \
   && cd - && rm -rf postgres \
-  && printf '%s\n' "Installing pgsql-http" \
-  && git clone https://github.com/pramsey/pgsql-http \
-  && cd pgsql-http && make && make install \
-  && cd - && rm -rf pgsql-http \
+#
+  && printf '%s\n' "Installing contrib" \
+  && git clone https://github.com/postgres/postgres \
+  && cd postgres \
+  && ./configure \
+  && cd contrib \
+  && make all && make install \
+  && cd - && rm -rf postgres \
+#
+  && printf '%s\n' "Installing plprofiler" \
+  && git clone https://github.com/bigsql/plprofiler \
+  && cd plprofiler && USE_PGXS=1 make install \
+  && cd - && rm -rf plprofiler \
+#
   && printf '%s\n' "Removing build dependencies" \
   && apt-get purge --yes \
     libgtest-dev \
@@ -77,8 +100,8 @@ RUN apt-get update \
     libbison-dev \
     flex \
     bison \
-  && apt-get autoremove --yes 
-#  && rm -rf /var/lib/apt/lists/*
+  && apt-get autoremove --yes \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update \
   && apt-get install --no-install-recommends --yes \
@@ -114,9 +137,4 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY ./initdb /docker-entrypoint-initdb.d
-COPY ssl /var/lib/postgresql/ssl
-RUN chown postgres:postgres /var/lib/postgresql/ssl/server.key \
-  && chmod 0600 /var/lib/postgresql/ssl/server.key
-
-EXPOSE 5432
 

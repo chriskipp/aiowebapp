@@ -1,4 +1,4 @@
-import orjson
+import ujson
 
 
 class BaseHandler:
@@ -7,7 +7,7 @@ class BaseHandler:
         sidebar_sections = ["User", "Tools"]
 
         with open("routes.json") as f:
-            self.routes = orjson.loads(f.read())
+            self.routes = ujson.loads(f.read())
 
         self.sidebar_sections_loggedin = [
             {

@@ -3,7 +3,7 @@ import inspect
 import time
 
 from aiohttp_debugtoolbar.panels.base import DebugPanel
-from aioredis import RedisConnection
+import aioredis
 
 __all__ = ["RequestRedisDebugPanel"]
 
@@ -13,7 +13,7 @@ class RequestHandler(object):
         self._queries = []
         self._total_time = 0
         # save original
-        self._tmp_execute = RedisConnection.execute
+        self._tmp_execute = aioredis.from_url('url') #.execute
 
     @property
     def queries(self):

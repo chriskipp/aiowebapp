@@ -1,6 +1,6 @@
 # database.py
 import aiohttp_jinja2
-import orjson
+import ujson
 from aiohttp import web
 
 from ..db import fetch_sql
@@ -21,7 +21,7 @@ class DatabaseHandler(BaseHandler):
         pool = request.app["db"]
 
         response = await fetch_sql(query, pool=pool)
-        res = orjson.dumps([dict(d) for d in response])
+        res = ujson.dumps([dict(d) for d in response])
         return web.json_response(body=res)
 
     async def list_chart_links(self, request):

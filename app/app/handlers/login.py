@@ -2,9 +2,12 @@ import time
 
 import aiohttp_jinja2
 from aiohttp import web
-from aiohttp_security import (check_authorized, check_permission, forget,
-                              remember)
-from aiohttp_session import new_session
+from aiohttp_security import (
+    check_authorized,
+    check_permission,
+    forget,
+    remember,
+)
 from passlib.hash import sha256_crypt
 
 from app.auth import check_credentials
@@ -85,7 +88,6 @@ class LoginHandler(BaseHandler):
         )
 
     async def login(self, request):
-        await new_session(request)
         response = web.HTTPFound("/me")
         form = await request.post()
         login = form.get("loginField")

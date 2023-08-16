@@ -101,8 +101,8 @@ password_encryption = 'scram-sha-256'		# md5 or scram-sha-256
 #  -c ssl=on \
 #  -c ssl_cert_file=/var/lib/postgresql/server.crt \
 #  -c ssl_key_file=/var/lib/postgresql/server.key \
-ssl = off
-#ssl_ca_file ='/var/lib/postgresql/ssl/server.req'
+ssl = on
+#ssl_ca_file = ''
 ssl_cert_file = '/var/lib/postgresql/ssl/server.crt'
 #ssl_crl_file = ''
 ssl_key_file = '/var/lib/postgresql/ssl/server.key'
@@ -111,7 +111,7 @@ ssl_prefer_server_ciphers = on
 ssl_ecdh_curve = 'prime256v1'
 ssl_min_protocol_version = 'TLSv1.2'
 #ssl_max_protocol_version = ''
-ssl_dh_params_file = '/var/lib/postgresql/ssl/dhparam.pem'
+#ssl_dh_params_file = ''
 #ssl_passphrase_command = ''
 #ssl_passphrase_command_supports_reload = off
 
@@ -180,7 +180,7 @@ dynamic_shared_memory_type = posix	# the default is the first option
 
 #effective_io_concurrency = 1		# 1-1000; 0 disables prefetching
 #maintenance_io_concurrency = 10	# 1-1000; 0 disables prefetching
-max_worker_processes = 20		# (change requires restart)
+#max_worker_processes = 8		# (change requires restart)
 #max_parallel_maintenance_workers = 2	# taken from max_parallel_workers
 #max_parallel_workers_per_gather = 2	# taken from max_parallel_workers
 #parallel_leader_participation = on
@@ -426,20 +426,19 @@ min_wal_size = 80MB
 
 # - Where to Log -
 
-log_destination =   'csvlog' # Valid values are combinations of
-#log_destination =   'stderr' # Valid values are combinations of
+log_destination = 'stderr'		# Valid values are combinations of
 					# stderr, csvlog, syslog, and eventlog,
 					# depending on platform.  csvlog
 					# requires logging_collector to be on.
 
 # This is used when logging to stderr:
-logging_collector = on # Enable capturing of stderr and csvlog
+logging_collector = on			# Enable capturing of stderr and csvlog
 					# into log files. Required to be on for
 					# csvlogs.
 					# (change requires restart)
 
 # These are only used if logging_collector is on:
-log_directory = '/var/log/postgresql' # directory where log files are written,
+log_directory = 'log'			# directory where log files are written,
 					# can be absolute or relative to PGDATA
 #log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'	# log file name pattern,
 					# can include strftime() escapes
@@ -586,7 +585,8 @@ track_activities = on
 track_counts = on
 track_io_timing = on
 track_functions = all			# none, pl, all
-track_activity_query_size = 1024  # (change requires restart)
+track_activity_query_size = 1024	# (change requires restart)
+stats_temp_directory = 'pg_stat_tmp'
 
 
 # - Monitoring -
@@ -783,11 +783,14 @@ default_text_search_config = 'pg_catalog.english'
 #------------------------------------------------------------------------------
 
 # Add settings for extensions here
-
-# PG_CRON
 #shared_preload_libraries = 'pg_cron'
-#cron.database_name = 'postgres'
-
+#cron.database_name = 'crawler'
 # Schedule jobs via background workers instead of localhost connections
 #cron.use_background_workers = on
+# Increase the number of available background workers from the default of 8
+#max_worker_processes = 20
 
+#shared_preload_libraries = 'pg_cron'
+#cron.database_name = 'crawler'
+shared_preload_libraries = 'pg_cron,pg_stat_statements'
+cron.database_name = 'crawler'

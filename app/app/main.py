@@ -1,12 +1,14 @@
 # main.py
 import pathlib
 
+
 import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 
 #from app._dev.extra_redis import RequestRedisDebugPanel
+from app._dev.extra_pgsql import RequestPgDebugPanel
 from app.db import setup_pg, teardown_pg, teardown_pgsa
 from app.middlewares import setup_middlewares
 from app.redis import setup_redis, teardown_redis
@@ -19,7 +21,6 @@ from app.settings import get_config
 # from aiohttp_security import SessionIdentityPolicy
 # from aiopg.sa import create_engine
 # from aioredis import create_pool
-
 
 def create_app(config=None) -> web.Application:
 
@@ -34,6 +35,7 @@ def create_app(config=None) -> web.Application:
     #                   SessionIdentityPolicy(),
     #                   DBAuthorizationPolicy(dbengine))
 
+
     app = web.Application()
     app["config"] = get_config(config)
 
@@ -44,9 +46,10 @@ def create_app(config=None) -> web.Application:
         app,
         intercept_redirects=False,
         check_host=True,
-        hosts=["172.18.0.0/24"],
+        hosts=["0.0.0.0/24"],
         extra_templates="/usr/src/app/_dev/extra_tpl",
         #extra_panels=[RequestPgDebugPanel, RequestRedisDebugPanel],
+        extra_panels=[RequestPgDebugPanel],
         exclude_prefixes=["/upload"],
     )
 

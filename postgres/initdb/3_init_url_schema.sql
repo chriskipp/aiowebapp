@@ -2,7 +2,7 @@
 -- Database
 --==========================================================
 
-\c crawler crawler
+\c crawler postgres
 
 CREATE SCHEMA urls;
 ALTER SCHEMA urls OWNER TO crawler;
@@ -12,7 +12,7 @@ GRANT ALL PRIVILEGES ON SCHEMA urls TO crawler;
 -- Extentions
 --==========================================================
 
-\c crawler crawler
+\c crawler postgres
 
 --==========================================================
 -- Define Trigger Functions

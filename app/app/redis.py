@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import aioredis
-import orjson
+import ujson
 
 
 async def setup_redis(app):
@@ -20,13 +20,13 @@ async def teardown_redis(app):
 
 
 async def set_redis_key(pool, key, value):
-    await pool.execute_command("SET", key, orjson.dumps(value))
+    await pool.execute_command("SET", key, ujson.dumps(value))
 
 
 async def get_redis_key(pool, key):
     value = await pool.execute_command("GET", key)
     if value is not None:
-        return orjson.loads(value)
+        return ujson.loads(value)
     else:
         return value
 
@@ -36,11 +36,11 @@ async def del_redis_key(pool, key):
 
 
 async def set_redis_json(pool, key, obj, path="."):
-    await pool.execute_command("JSON.SET", key, path, orjson.dumps(obj))
+    await pool.execute_command("JSON.SET", key, path, ujson.dumps(obj))
 
 
 async def get_redis_json(pool, key, path="."):
-    return orjson.loads(await pool.execute_command("JSON.GET", key, path))
+    return ujson.loads(await pool.execute_command("JSON.GET", key, path))
 
 
 async def del_redis_json(pool, key, path="."):

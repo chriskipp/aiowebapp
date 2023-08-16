@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headerbuttons.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/6pac-slickgrid/2.4.30/plugins/slick.headermenu.css" type="text/css"/>
     <link rel="stylesheet" href="{{url('static', filename='css/slick.gridmenu.css')}}" type="text/css"/>
-    
+
     <!-- jQuery-UI-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" type="text/css"/>
@@ -214,6 +214,82 @@
         sendQuery("SELECT * FROM " + e.params.data["text"] + ";");
       });
     });
+
+      function sendQuery(query) {
+        if ( typeof(query) == undefined) {
+          query = editor.getValue();
+        }
+        console.log(query);
+
+        // Sending and receiving data in JSON format using POST method
+        //
+        var xhr = new XMLHttpRequest();
+        var url = "/database";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(json);
+            slickGrid = initSlickGrid(json, 'gridcontainer', draggableGrouping=false);
+          }
+        };
+        var data = JSON.stringify({"query": query});
+        xhr.send(data);
+      };
+
+
+      function loadTables() {
+        var query = "select ROW_NUMBER () OVER (ORDER BY table_name) as id, table_name as text from information_schema.tables where table_schema not in ('pg_catalog', 'information_schema');";
+      console.log(query);
+
+      // Sending and receiving data in JSON format using POST method
+      //
+      var xhr = new XMLHttpRequest();
+      var url = "/database";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          console.log(json);
+          $('.select_table').select2({
+            data: json,
+            multiple: false,
+            allowClear: true,
+            placeholder: "Select Table...",
+            tags: false,
+            closeOnSelect: true,
+            scrollAfterSelect: false ,
+          });
+        }
+      };
+      var data = JSON.stringify({"query": query});
+      xhr.send(data);
+      };
+
+      var readTextFromFile = function(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+        editor.setValue(text, 1);
+        };
+        reader.readAsText(input.files[0]);
+      };
+
+      placeholder = new Array("SELECT *",
+"  FROM information_schema.tables",
+"  WHERE table_schema",
+"    NOT IN ('pg_catalog');");
+      editor.setValue(placeholder.join('\n'))
+
+      $(document).ready(function() {
+          loadTables();
+          $(".select_table").on('select2:select', function (e) {
+            sendQuery("SELECT * FROM " + e.params.data["text"] + ";");
+          });
+      });
     </script>
 {% endblock %}
 

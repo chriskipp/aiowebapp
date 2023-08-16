@@ -5,3 +5,4 @@ app/app/storage/*
 data/*
 postgres/ssl/*
 **/.pgpass
+**/*.pem

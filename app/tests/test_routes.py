@@ -99,65 +99,68 @@ async def test_handler_exception(aiohttp_client):
     assert res.status == 500
 
 
-#@pytest.mark.parametrize(("route"), routes_get.keys())
-#@pytest.mark.parametrize(("user"), users)
-#async def test_route_get(aiohttp_client, route, user):
-#
-#    app = create_app()
-#    client = await aiohttp_client(app)
-#
-#    if user:
-#        res = await client.post(
-#            "/login", data={"loginField": user, "passwordField": "password"}
-#        )
-#        assert res.status == 200
-#
-#    res = await client.get(route)
-#    assert res.status == routes_get[route][user]
-#
-#
-#@pytest.mark.parametrize(("route"), routes_post.keys())
-#@pytest.mark.parametrize(("user"), users)
-#async def test_route_post(aiohttp_client, route, user):
-#
-#    app = create_app()
-#    client = await aiohttp_client(app)
-#
-#    if user:
-#        res = await client.post(
-#            "/login", data={"loginField": user, "passwordField": "password"}
-#        )
-#        assert res.status == 200
-#
-#    res = await client.post(route, data=routes_post[route]["data"])
-#    assert res.status == routes_post[route][user]
-#    if "response" in routes_post[route].keys():
-#        text = await res.text()
-#        if "response_chars" in routes_post[route].keys():
-#            assert (
-#                text[: routes_post[route]["response_chars"]]
-#                == routes_post[route]["response"]
-#            )
-#        else:
-#            assert text == routes_post[route]["response"]
-#
-#
-#@pytest.mark.parametrize(("route"), routes_post_file.keys())
-#@pytest.mark.parametrize(("user"), users)
-#async def test_route_post_file(aiohttp_client, route, user):
-#
-#    app = create_app()
-#    client = await aiohttp_client(app)
-#
-#    if user:
-#        res = await client.post(
-#            "/login", data={"loginField": user, "passwordField": "password"}
-#        )
-#        assert res.status == 200
-#
-#    with open("run.sh", "rb") as f:
-#        res = await client.post(route, data={"fileUpload": f})
-#    assert res.status == routes_post_file[route][user]
+@pytest.mark.parametrize(("route"), routes_get.keys())
+@pytest.mark.parametrize(("user"), users)
+async def test_route_get(aiohttp_client, route, user):
+
+    app = create_app()
+    client = await aiohttp_client(app)
+
+    if user:
+        res = await client.get("/session")
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
+        assert res.status == 200
+
+    res = await client.get(route)
+    assert res.status == routes_get[route][user]
+
+
+@pytest.mark.parametrize(("route"), routes_post.keys())
+@pytest.mark.parametrize(("user"), users)
+async def test_route_post(aiohttp_client, route, user):
+
+    app = create_app()
+    client = await aiohttp_client(app)
+
+    if user:
+        res = await client.get("/session")
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
+        assert res.status == 200
+
+    res = await client.post(route, data=routes_post[route]["data"])
+    assert res.status == routes_post[route][user]
+    if "response" in routes_post[route].keys():
+        text = await res.text()
+        if "response_chars" in routes_post[route].keys():
+            assert (
+                text[: routes_post[route]["response_chars"]]
+                == routes_post[route]["response"]
+            )
+        else:
+            assert text == routes_post[route]["response"]
+
+
+@pytest.mark.parametrize(("route"), routes_post_file.keys())
+@pytest.mark.parametrize(("user"), users)
+async def test_route_post_file(aiohttp_client, route, user):
+
+    app = create_app()
+    client = await aiohttp_client(app)
+
+    if user:
+        res = await client.get("/session")
+        res = await client.post(
+            "/login", data={"loginField": user, "passwordField": "password"}
+        )
+        assert res.status == 200
+
+    with open("run.sh", "rb") as f:
+        res = await client.post(route, data={"fileUpload": f})
+    assert res.status == routes_post_file[route][user]
 
 
 async def test_method_not_allowed(aiohttp_client):

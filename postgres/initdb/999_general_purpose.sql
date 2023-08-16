@@ -1,5 +1,5 @@
 
-\c crawler crawler
+\c crawler postgres
 
 CREATE OR REPLACE VIEW v_table_sizes AS
   SELECT *, pg_size_pretty(total_bytes) AS total

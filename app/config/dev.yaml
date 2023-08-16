@@ -1,14 +1,32 @@
 host: 0.0.0.0
-port: 8080
+port: 7777
 
 postgres:
-  database: crawler
-  user: crawler
-  password: crawler
+  database: app
+  user: app
+  password: apppw
   host: postgres
   port: 5432
   minsize: 1
   maxsize: 5
+
+#postgres:
+#  database: crawler
+#  user: crawler
+#  password: crawler
+#  host: postgres
+#  port: 5432
+#  minsize: 1
+#  maxsize: 5
+
+#postgres:
+#  database: microformat
+#  user: microformat
+#  password: micro
+#  host: postgres
+#  port: 5432
+#  minsize: 1
+#  maxsize: 5
 
 postgres_sa:
   database: app
@@ -23,4 +41,4 @@ redis:
   host: redis
   port: 6379
   minsize: 1
-  maxsize: 5
+  maxsize: 35
