@@ -16,3 +16,4 @@ toml==0.10.2
 werkzeug==2.2.3
 sanic-jwt-extended==0.4.2
 toml==0.10.2
+websockets==10.0
