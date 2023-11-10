@@ -13,7 +13,7 @@ secure==0.3.0
 asyncpg==0.26.0
 aiosqlite==0.17.0
 toml==0.10.2
-werkzeug==2.2.3
+werkzeug==3.0.1
 sanic-jwt-extended==0.4.2
 toml==0.10.2
 websockets==10.0
